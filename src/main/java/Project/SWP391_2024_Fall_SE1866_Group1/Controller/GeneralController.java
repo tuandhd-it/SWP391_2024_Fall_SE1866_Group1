@@ -20,10 +20,10 @@ public class GeneralController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String loginPost(Model model) {
+    @PostMapping("/profile")
+    public String profile(Model model) {
 
-        return "login";
+        return "profile";
     }
 
     @GetMapping("/register")
