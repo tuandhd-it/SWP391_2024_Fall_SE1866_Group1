@@ -32,11 +32,16 @@ public class GeneralController {
     @PostMapping("/register")
     public String registerPost(@RequestBody ReceptionistCreationRequest request) {
         receptionistService.createReceptionist(request);
-        return "landing_page";
+        return "landing_Page";
     }
 
-    @GetMapping("/homePage")
+    @RequestMapping("/homePage")
     public String homePage(Model model) {
-        return "landing_page";
+        return "landing_Page";
+    }
+
+    @RequestMapping("/editProfile")
+    public String editProfile(Model model) {
+        return "edit_profile";
     }
 }
