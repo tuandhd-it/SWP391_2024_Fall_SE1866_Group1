@@ -17,6 +17,9 @@ public class Employee {
     String last_name;
     String email;
     String phone;
+    String password;
+    boolean is_active;
+    boolean is_accept;
     String address;
     String status;
     double salary;
@@ -32,17 +35,17 @@ public class Employee {
     @JoinColumn(name = "bran_id")
     private Branch branch;
 
-    @OneToOne
-    private Account account;
-
     public Employee() {
     }
 
-    public Employee(String first_name, String last_name, String email, String phone, String address, String status, double salary) {
+    public Employee(String first_name, String last_name, String email, String phone, String password, boolean is_active, boolean is_accept, String address, String status, double salary) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
         this.phone = phone;
+        this.password = password;
+        this.is_active = is_active;
+        this.is_accept = is_accept;
         this.address = address;
         this.status = status;
         this.salary = salary;

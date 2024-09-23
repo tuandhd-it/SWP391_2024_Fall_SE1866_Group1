@@ -9,16 +9,14 @@ import java.util.Collection;
 public class CustomEmployeeDetails implements UserDetails {
 
     private Employee employee;
-    private Account account;
     private Collection<? extends GrantedAuthority> authorities;
 
     public CustomEmployeeDetails() {
     }
 
-    public CustomEmployeeDetails(Employee employee, Account account, Collection<? extends GrantedAuthority> authorities) {
+    public CustomEmployeeDetails(Employee employee, Collection<? extends GrantedAuthority> authorities) {
         super();
         this.employee = employee;
-        this.account = employee.getAccount();
         this.authorities = authorities;
     }
 
@@ -29,12 +27,12 @@ public class CustomEmployeeDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return account.getPassword();
+        return employee.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return account.getUsername();
+        return employee.getEmail();
     }
 
     @Override
@@ -55,7 +53,7 @@ public class CustomEmployeeDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         boolean enabled;
-        if(account.getIsActivated().equalsIgnoreCase("Activated")) {
+        if(employee.is_active()) {
             enabled = true;
         } else {
             enabled = false;

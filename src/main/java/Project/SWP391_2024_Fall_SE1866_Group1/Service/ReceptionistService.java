@@ -1,6 +1,5 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Service;
 
-import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Account;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Branch;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.CustomEmployeeDetails;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
@@ -23,9 +22,6 @@ public class ReceptionistService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
     private DoctorRepository doctorRepository;
 
     @Autowired
@@ -36,24 +32,22 @@ public class ReceptionistService {
 
 
     public Employee findByUsername(String username) {
-        Account account = accountRepository.findByUsername(username);
-        return employeeRepository.findByAccount(account);
+        return employeeRepository.findByEmail(username);
     }
 
     //Create a new receptionist
     public void createReceptionist(ReceptionistCreationRequest request) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Employee employee = new Employee();
-        Account account = new Account();
 
         //Create branch to store in receptionist information
         Branch branch = branchRepository.findByBranchName(request.getBranch_name());
 
         //Create account to store in receptionist information
         String password = encoder.encode(request.getPassword());
-        account.setPassword(password);
-        account.setUsername(request.getUsername());
-        accountRepository.save(account);
+        employee.setPassword(password);
+        employee.set_active(request.is_active());
+        employee.set_accept(request.is_accept());
         employee.setFirst_name(request.getFirst_name());
         employee.setLast_name(request.getLast_name());
         employee.setEmail(request.getEmail());
@@ -68,10 +62,10 @@ public class ReceptionistService {
     }
 
     public CustomEmployeeDetails findAccountByUsername(String username) {
-        Employee employee = employeeRepository.findByAccount(accountRepository.findByUsername(username));
+        Employee employee = employeeRepository.findByEmail(username);
         Collection<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(employee.getRole().getRole_name()));
-        CustomEmployeeDetails details = new CustomEmployeeDetails(employee, employee.getAccount(), authorities);
+        CustomEmployeeDetails details = new CustomEmployeeDetails(employee, authorities);
 
         return details;
     }
