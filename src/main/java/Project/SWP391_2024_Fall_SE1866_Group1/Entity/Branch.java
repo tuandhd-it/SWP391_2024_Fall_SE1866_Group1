@@ -15,7 +15,7 @@ public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int bran_id;
-    String branch_name;
+    String branchName;
     String branch_description;
     String branch_address;
     String branch_phone;
@@ -27,7 +27,7 @@ public class Branch {
     }
 
     public Branch(String branch_name, String branch_description, String branch_address, String branch_phone) {
-        this.branch_name = branch_name;
+        this.branchName = branch_name;
         this.branch_description = branch_description;
         this.branch_address = branch_address;
         this.branch_phone = branch_phone;

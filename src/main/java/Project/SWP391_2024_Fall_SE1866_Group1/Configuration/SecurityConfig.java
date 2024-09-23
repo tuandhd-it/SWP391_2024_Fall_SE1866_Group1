@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     //Custom endpoints that can access without log in
-    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/images/**"};
+    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/test"};
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
@@ -22,7 +22,9 @@ public class SecurityConfig {
     //Authorization
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                 .requestMatchers("/admin/**").hasAuthority("Admin")
                 .requestMatchers("/manager/**").hasAuthority("Manager")
