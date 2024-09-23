@@ -1,8 +1,13 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Controller;
 
+import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
 import Project.SWP391_2024_Fall_SE1866_Group1.Service.ReceptionistService;
 import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,14 +18,16 @@ public class GeneralController {
     @Autowired
     private ReceptionistService receptionistService;
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     public String login() {
         return "login";
     }
 
     @RequestMapping("/profile")
-    public String profile(Model model) {
-
+    public String loginPost(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        model.addAttribute("employee", employee);
         return "profile";
     }
 

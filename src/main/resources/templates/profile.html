@@ -32,7 +32,7 @@
     <div class="sidebar">
         <div class="user-info">
             <img th:src="@{/img/avt.jpg}" alt="User Icon" class="user-icon">
-            <h2>Đỗ Khắc Nam</h2>
+            <h2 th:text="${employee.getFirst_name() + ' ' + employee.getLast_name()}"></h2>
         </div>
         <ul class="menu">
             <li class="menu-item active">Tài khoản</li>
@@ -46,7 +46,7 @@
         <div class="form-col">
             <div class="form-row">
                 <label>Họ và tên: </label>
-                <span>Đỗ Khắc Nam</span>
+                <span th:text="${employee.getFirst_name() + ' ' + employee.getLast_name()}"></span>
             </div>
             <div class="form-row">
                 <label>Giới tính: </label>
@@ -58,22 +58,22 @@
             </div>
             <div class="form-row">
                 <label>Chức vụ: </label>
-                <span>Bác sĩ</span>
+                <span th:text="${employee.getRole().getRole_name()}"></span>
             </div>
 
             <div class="form-row">
                 <label>Số điện thoại: </label>
-                <span>0900000000</span>
+                <span th:text="${employee.getPhone()}"></span>
             </div>
             <div class="form-row">
                 <label>Email: </label>
-                <span>abcxyz@gmail.com</span>
+                <span th:text="${employee.getEmail()}"></span>
             </div>
 
         </div>
         <div class="form-row">
         <label>Địa chỉ: </label>
-        <span>xxx, xxx, xxx, xxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+        <span th:text="${employee.getAddress()}"></span>
     </div>
     </form>
 
