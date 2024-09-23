@@ -4,22 +4,16 @@
     <title>Welcome to login page</title>
 </head>
 <body>
-<form th:action="@{/profile}" method="post">
-    <div th:if="${#fields.hasErrors('username')}" th:errors="@{username}">
-        <p>Username error</p>
+<form th:action="@{/login}" method="post">
+    <div class="container-input">
+        <input id="custom-input-user" class="nhap" type="text" name="username" placeholder="Username"><br />
     </div>
-    <label>
-        <input type="text" th:field="@{username}" placeholder="Username" name="username">
-    </label>
-    <div th:if="${#fields.hasErrors('password')}" th:errors="@{password}">
-        <p>Password error</p>
+    <div class="container-input">
+        <input id="custom-input-pass" class="nhap" type="password" name="password" placeholder="Password"><br />
     </div>
-    <label>
-        <input type="password" th:field="@{password}" placeholder="Password" name="password">
-    </label>
     <input type="checkbox" id="rememberMe">
     <label for="rememberMe">Remember me</label>
-    <a href="#">Forgot password?</a>
+    <a href="#">Forgot password?</a><br/>
     <button type="submit">Login</button>
 </form>
 </body>

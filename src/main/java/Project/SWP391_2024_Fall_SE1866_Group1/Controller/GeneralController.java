@@ -5,9 +5,7 @@ import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class GeneralController {
@@ -15,12 +13,12 @@ public class GeneralController {
     @Autowired
     private ReceptionistService receptionistService;
 
-    @GetMapping("/login")
+    @RequestMapping("/login")
     public String login() {
         return "login";
     }
 
-    @PostMapping("/profile")
+    @RequestMapping("/profile")
     public String profile(Model model) {
 
         return "profile";
@@ -34,6 +32,11 @@ public class GeneralController {
     @PostMapping("/register")
     public String registerPost(@RequestBody ReceptionistCreationRequest request) {
         receptionistService.createReceptionist(request);
+        return "landing_page";
+    }
+
+    @GetMapping("/homePage")
+    public String homePage(Model model) {
         return "landing_page";
     }
 }

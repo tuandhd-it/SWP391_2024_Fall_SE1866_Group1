@@ -18,7 +18,7 @@ public class CustomEmployeeDetails implements UserDetails {
     public CustomEmployeeDetails(Employee employee, Account account, Collection<? extends GrantedAuthority> authorities) {
         super();
         this.employee = employee;
-        this.account = account;
+        this.account = employee.getAccount();
         this.authorities = authorities;
     }
 

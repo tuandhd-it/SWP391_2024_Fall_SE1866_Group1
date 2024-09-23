@@ -11,5 +11,4 @@ public class Swp3912024FallSe1866Group1Application {
 	public static void main(String[] args) {
 		SpringApplication.run(Swp3912024FallSe1866Group1Application.class, args);
 	}
-
 }

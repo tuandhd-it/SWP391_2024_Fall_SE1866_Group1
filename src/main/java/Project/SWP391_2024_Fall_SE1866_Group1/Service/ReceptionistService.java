@@ -2,12 +2,19 @@ package Project.SWP391_2024_Fall_SE1866_Group1.Service;
 
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Account;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Branch;
+import Project.SWP391_2024_Fall_SE1866_Group1.Entity.CustomEmployeeDetails;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
 import Project.SWP391_2024_Fall_SE1866_Group1.Repository.*;
 import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 @Service
 public class ReceptionistService {
@@ -27,8 +34,10 @@ public class ReceptionistService {
     @Autowired
     private RoleRepository roleRepository;
 
+
     public Employee findByUsername(String username) {
-        return employeeRepository.findByUsername(username);
+        Account account = accountRepository.findByUsername(username);
+        return employeeRepository.findByAccount(account);
     }
 
     //Create a new receptionist
@@ -38,7 +47,7 @@ public class ReceptionistService {
         Account account = new Account();
 
         //Create branch to store in receptionist information
-        Branch branch = branchRepository.findByName(request.getBranch_name());
+        Branch branch = branchRepository.findByBranchName(request.getBranch_name());
 
         //Create account to store in receptionist information
         String password = encoder.encode(request.getPassword());
@@ -56,6 +65,15 @@ public class ReceptionistService {
         employee.setBranch(branch);
         employee.setRole(request.getRole());
         employeeRepository.save(employee);
+    }
+
+    public CustomEmployeeDetails findAccountByUsername(String username) {
+        Employee employee = employeeRepository.findByAccount(accountRepository.findByUsername(username));
+        Collection<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(new SimpleGrantedAuthority(employee.getRole().getRole_name()));
+        CustomEmployeeDetails details = new CustomEmployeeDetails(employee, employee.getAccount(), authorities);
+
+        return details;
     }
 
 
