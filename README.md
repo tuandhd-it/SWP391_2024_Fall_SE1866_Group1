@@ -11,7 +11,7 @@ INSERT INTO `dental_clinic_management`.`branch` (`bran_id`, `branch_name`, `bran
 
 ----------------------------------------------------------------------------------------------------------
 //Create data for Account table (create admin account)
-INSERT INTO `dental_clinic_management`.`account` (`acc_id`, `is_activated`, `password`, `username`) VALUES ('1', 'Yes', '$2a$10$Y9N0oLAIELmoe7wEgbbPu.Bp4lOZfg01MEOsUQmtCseVpTStQyO/2', 'admin');
+INSERT INTO `dental_clinic_management`.`account` (`acc_id`, `is_activated`, `password`, `username`) VALUES ('1', 'Activated', '$2a$10$Y9N0oLAIELmoe7wEgbbPu.Bp4lOZfg01MEOsUQmtCseVpTStQyO/2', 'admin');
 
 -----------------------------------------------------------------------------------------------------------
 //Create data for Employee table (Create admin infor)
