@@ -1,20 +1,53 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/">
 <head>
-    <title>Welcome to login page</title>
+    <title>Đăng nhập</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
-<form th:action="@{/login}" method="post">
-    <div class="container-input">
-        <input id="custom-input-user" class="nhap" type="text" name="username" placeholder="Username"><br />
-    </div>
-    <div class="container-input">
-        <input id="custom-input-pass" class="nhap" type="password" name="password" placeholder="Password"><br />
-    </div>
-    <input type="checkbox" id="rememberMe">
-    <label for="rememberMe">Remember me</label>
-    <a href="#">Forgot password?</a><br/>
-    <button type="submit">Login</button>
-</form>
+<div class="container">
+    <h1>Đăng nhập</h1>
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <span class="icon" id="username-icon"><i class="fa-solid fa-user"></i></span>
+            <input type="text" id="username-input" name="username" placeholder="Tài khoản email">
+        </div>
+        <div class="form-group">
+            <span class="icon" id="password-icon"><i class="fas fa-lock"></i></span>
+            <input type="password" id="password-input" name="password" placeholder="Mật khẩu">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" id="remember">
+            <label for="remember">Ghi nhớ mật khẩu</label>
+            <a href="#">Quên mật khẩu?</a>
+        </div>
+        <button type="submit">Đăng nhập</button>
+    </form>
+</div>
+<script th:src="@{https://kit.fontawesome.com/87d2440b4a.js}" crossorigin="anonymous"></script>
+<script>
+    const passwordInput = document.getElementById('password-input');
+    const passwordIcon = document.getElementById('password-icon');
+
+    passwordInput.addEventListener('input', function() {
+        if (this.value) {
+            passwordIcon.classList.add('hidden'); // Ẩn biểu tượng khi có dữ liệu
+        } else {
+            passwordIcon.classList.remove('hidden'); // Hiện lại biểu tượng khi không có dữ liệu
+        }
+    });
+</script>
+<script>
+    const usernameInput = document.getElementById('username-input');
+    const usernameIcon = document.getElementById('username-icon');
+
+    usernameInput.addEventListener('input', function() {
+        if (this.value) {
+            usernameIcon.classList.add('hidden'); // Ẩn biểu tượng khi có dữ liệu
+        } else {
+            usernameIcon.classList.remove('hidden'); // Hiện lại biểu tượng khi không có dữ liệu
+        }
+    });
+</script>
 </body>
 </html>

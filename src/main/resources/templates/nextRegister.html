@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+  <title>Đăng ký</title>
+  <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="container">
+  <h1>Đăng ký</h1>
+  <form>
+    <div class="form-group">
+      <input type="text" placeholder="Họ và tên">
+      <span class="icon"><i class="fas fa-user"></i></span>
+    </div>
+    <div class="form-group">
+      <input type="text" placeholder="Tài khoản">
+      <span class="icon"><i class="fa-solid fa-user"></i></span>
+    </div>
+    <div class="form-group">
+      <input type="email" placeholder="E-mail">
+      <span class="icon"><i class="fas fa-envelope"></i></span>
+    </div>
+    <div class="form-group">
+      <input type="tel" placeholder="Số điện thoại">
+      <span class="icon"><i class="fas fa-phone"></i></span>
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="Mật khẩu">
+      <span class="icon"><i class="fas fa-lock"></i></span>
+    </div>
+    <div class="form-group">
+      <input type="password" placeholder="Xác nhận mật khẩu">
+      <span class="icon"><i class="fas fa-lock"></i></span>
+    </div>
+    <div class="form-group">
+      <input type="text" placeholder="Link bằng cấp">
+    </div>
+    <button type="submit">Đăng ký</button>
+    <p>Hoặc</p>
+    <a href="#">Đăng nhập</a>
+  </form>
+</div>
+<script th:src="@{https://kit.fontawesome.com/87d2440b4a.js}" crossorigin="anonymous"></script>
+</body>
+</html>
