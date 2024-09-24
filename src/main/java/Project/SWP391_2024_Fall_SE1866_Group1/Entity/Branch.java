@@ -19,6 +19,7 @@ public class Branch {
     String branch_description;
     String branch_address;
     String branch_phone;
+    String branch_img;
 
     @OneToMany(mappedBy = "branch")
     private List<Employee> employees;
@@ -26,10 +27,11 @@ public class Branch {
     public Branch() {
     }
 
-    public Branch(String branch_name, String branch_description, String branch_address, String branch_phone) {
-        this.branchName = branch_name;
+    public Branch(String branchName, String branch_description, String branch_address, String branch_phone, String branch_img) {
+        this.branchName = branchName;
         this.branch_description = branch_description;
         this.branch_address = branch_address;
         this.branch_phone = branch_phone;
+        this.branch_img = branch_img;
     }
 }
