@@ -14,14 +14,14 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int role_id;
-    String role_name;
+    String roleName;
 
     @OneToMany(mappedBy = "role")
     private Set<Employee> employees;
     public Role() {
     }
 
-    public Role(String role_name) {
-        this.role_name = role_name;
+    public Role(String roleName) {
+        this.roleName = roleName;
     }
 }

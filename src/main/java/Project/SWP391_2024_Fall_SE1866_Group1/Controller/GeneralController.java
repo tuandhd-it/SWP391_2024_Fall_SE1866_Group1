@@ -1,16 +1,17 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Controller;
 
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
+import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Role;
 import Project.SWP391_2024_Fall_SE1866_Group1.Service.ReceptionistService;
 import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 
 @Controller
 public class GeneralController {
@@ -32,8 +33,21 @@ public class GeneralController {
     }
 
     @GetMapping("/register")
-    public String register() {
+    public String register(Model model) {
+        // Retreat role that can register
+        ArrayList<Role> registerRoles = new ArrayList<>();
+        registerRoles.add(receptionistService.findRoleById(3));
+        registerRoles.add(receptionistService.findRoleById(4));
+        registerRoles.add(receptionistService.findRoleById(5));
+        model.addAttribute("roles", registerRoles);
         return "register";
+    }
+
+    @PostMapping("/nextRegister")
+    public String nextRegister(Model model, @RequestParam("role") String role) {
+        Role choosenRole = receptionistService.findByRoleName(role);
+        model.addAttribute("role", choosenRole);
+        return "nextRegister";
     }
 
     @PostMapping("/register")

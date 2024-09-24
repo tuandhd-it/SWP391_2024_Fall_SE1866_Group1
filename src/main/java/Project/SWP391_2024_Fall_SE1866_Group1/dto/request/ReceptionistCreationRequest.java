@@ -16,17 +16,18 @@ import java.time.LocalDate;
 //Use this instead of entity
 public class ReceptionistCreationRequest {
 
-    @Size(min = 8, message = "PASSWORD_INVALID")
-    String password;
     String first_name;
     String last_name;
     String email;
     String phone;
+    String password;
+    LocalDate dob;
+    String gender;
+    boolean is_active;
+    boolean is_accept;
     String address;
     String status;
     double salary;
-    Role role;
     String branch_name;
-    boolean is_active;
-    boolean is_accept;
+    Role role;
 }
