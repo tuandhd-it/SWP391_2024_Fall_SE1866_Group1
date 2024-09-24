@@ -7,12 +7,11 @@ INSERT INTO `dental_clinic_management`.`role` (`role_id`, `role_name`) VALUES ('
 
 ---------------------------------------------------------------------------------------------------------
 //Create data for Branch table
-INSERT INTO `dental_clinic_management`.`branch` (`bran_id`, `branch_name`, `branch_address`, `branch_description`, `branch_phone`) VALUES ('1', 'Hai Phong\'s Dental', 'Hai Phong', 'The dental clinic top 1 Hai Phong', '0123456789');
-
-----------------------------------------------------------------------------------------------------------
-//Create data for Account table (create admin account)
-INSERT INTO `dental_clinic_management`.`account` (`acc_id`, `is_activated`, `password`, `username`) VALUES ('1', 'Activated', '$2a$10$Y9N0oLAIELmoe7wEgbbPu.Bp4lOZfg01MEOsUQmtCseVpTStQyO/2', 'admin');
+INSERT INTO `dental_clinic_management`.`branch` (`bran_id`, `branch_name`, `branch_address`, `branch_description`, `branch_img`, `branch_phone`) VALUES ('1', 'Hai Phong\'s Dental', 'Hai Phong', 'The dental clinic top 1 Hai Phong', '/img/banner.png', '0123456789');
 
 -----------------------------------------------------------------------------------------------------------
-//Create data for Employee table (Create admin infor)
-INSERT INTO `dental_clinic_management`.`employee` (`emp_id`, `address`, `email`, `first_name`, `last_name`, `phone`, `salary`, `status`, `account_acc_id`, `bran_id`, `role_id`) VALUES ('1', 'Van Khe - Me Linh - Ha Noi', 'admin@gmail.com', 'Đỗ', 'Tuấn', '0337851355', '4000', 'On', '1', '1', '1');
+//Create data for Employee table (Create admin infor) (password equals "123456")
+INSERT INTO `dental_clinic_management`.`employee` 
+(`address`, `dob`, `email`, `first_name`, `gender`, `is_accept`, `is_active`, `last_name`, `password`, `phone`, `salary`, `status`, `bran_id`, `role_id`) 
+VALUES 
+('Ha Noi', '2004-12-09', 'tuan6a1thcstv@gmail.com', 'Đỗ', 'Nam', 1, 1, 'Tuấn', '$2a$10$ou0A97XvoK6mzsi32vSwi.MurUhVug6VS7qBsmwlNAFTnEqQFaCO6', '0123456789', 4000, 'Check-in', 1, 1);
