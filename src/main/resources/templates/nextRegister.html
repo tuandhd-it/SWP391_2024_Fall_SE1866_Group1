@@ -19,6 +19,19 @@
       </div>
     </div>
     <div class="mb-3">
+      <select class="form-select" id="gender" aria-label="Giới tính">
+        <option value="" selected>Chọn giới tính</option>
+        <option value="male">Nam</option>
+        <option value="female">Nữ</option>
+        <option value="other">Khác</option>
+      </select>
+    </div>
+
+
+    <div class="mb-3">
+      <input type="date" class="form-control" id="dob" aria-label="Ngày sinh">
+    </div>
+    <div class="mb-3">
       <div class="input-group">
         <input type="text" placeholder="Tài khoản" class="form-control" aria-label="Tài khoản">
         <span class="input-group-text"><img th:src="@{/img/path2.png}" alt="User" class="path" style="width: 20px;"></span>
@@ -49,15 +62,7 @@
         <span class="input-group-text"><img th:src="@{/img/eye-password-see-view-svgrepo-com1.png}" alt="Eye" class="eye-password-see" style="width: 20px;"></span>
       </div>
     </div>
-    <div class="mb-3">
-      <div class="input-group">
-        <select class="form-control" aria-label="Chọn giới tính">
-          <option value="" disabled selected aria-label="Chọn giới tính">Chọn giới tính</option>
-          <option value="male" aria-label="Nam">Nam</option>
-          <option value="female" aria-label="Nữ">Nữ</option>
-        </select>
-      </div>
-    </div>
+
 
 
     <div class="mb-3">
