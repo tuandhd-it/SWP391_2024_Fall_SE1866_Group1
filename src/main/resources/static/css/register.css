@@ -30,3 +30,56 @@ button {
     border: none;
     cursor: pointer;
 }
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* Light background for contrast */
+}
+
+/* Card styles */
+.overlap-group {
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 10px; /* Rounded corners */
+}
+
+/* Heading styles */
+.text-wrapper-2 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Button styles */
+.btn-primary {
+    background-color: #3CADAF; /* Primary button color */
+    cursor: pointer;
+    border: none; /* Remove border */
+}
+
+.btn-primary:hover {
+    background-color: #3CADAF; /* Darker shade on hover */
+    border: none;
+}
+
+/* "Already have an account?" styles */
+.already-have-an {
+    text-align: center; /* Center the text */
+}
+
+.span {
+    color: #666; /* Lighter text color */
+}
+
+.text-primary {
+    color: #3CADAF; /* Link color */
+}
+
+.text-primary:hover {
+    text-decoration: #3CADAF; /* Underline on hover */
+    border: none;
+}

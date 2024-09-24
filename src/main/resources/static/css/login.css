@@ -56,3 +56,6 @@ button {
     opacity: 0; /* Ẩn biểu tượng */
     pointer-events: none; /* Ngăn không cho click */
 }
+.form-label {
+    margin-bottom: 5px;
+}
