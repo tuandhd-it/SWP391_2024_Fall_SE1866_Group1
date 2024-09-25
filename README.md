@@ -7,7 +7,7 @@ INSERT INTO `dental_clinic_management`.`role` (`role_id`, `role_name`) VALUES ('
 
 ---------------------------------------------------------------------------------------------------------
 //Create data for Branch table
-INSERT INTO `dental_clinic_management`.`branch` (`bran_id`, `branch_name`, `branch_address`, `branch_description`, `branch_img`, `branch_phone`) VALUES ('1', 'Hai Phong\'s Dental', 'Hai Phong', 'The dental clinic top 1 Hai Phong', '/img/banner.png', '0123456789');
+INSERT INTO `dental_clinic_management`.`branch` (`branch_name`, `branch_address`, `branch_description`, `branch_img`, `branch_phone`) VALUES ('Hai Phong\'s Dental', 'Hai Phong', 'The dental clinic top 1 Hai Phong', '/img/banner.png', '0123456789');
 
 -----------------------------------------------------------------------------------------------------------
 //Create data for Employee table (Create admin infor) (password equals "123456")
