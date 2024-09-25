@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ClinicBranchRequest {
+public class ClinicBranchCreationRequest {
     String branchName;
     String branch_description;
     String branch_address;
