@@ -21,9 +21,15 @@
         <li><a href="#">Liên hệ</a></li>
       </ul>
     </nav>
-    <form th:action="@{/login}" method="get">
-      <button  class="login-button"  type="submit">Đăng nhập</button>
-    </form>
+    <div th:if="${loginSuccess == null}">
+      <a th:href="@{/login}"><button  class="login-button">Đăng nhập</button></a>
+    </div>
+    <div th:if="${loginSuccess != null}">
+      <a th:href="@{/profile}"><button  class="login-button" th:text="${'Hello ' + employee.getFirst_name() + ' ' + employee.getLast_name()}"></button></a>
+    </div>
+    <div>
+      <a th:href="@{/logout}"><button class="login-button">Đăng xuất</button></a>
+    </div>
   </div>
 </header>
 
