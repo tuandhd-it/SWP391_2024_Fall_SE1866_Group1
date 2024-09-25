@@ -172,3 +172,13 @@ span {
         grid-template-columns: 1fr;
     }
 }
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline; /* nếu muốn có gạch chân khi hover */
+}
+
+

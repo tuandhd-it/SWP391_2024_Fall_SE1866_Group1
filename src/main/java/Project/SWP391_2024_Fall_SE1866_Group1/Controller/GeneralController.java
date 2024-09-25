@@ -71,11 +71,24 @@ public class GeneralController {
 
     @RequestMapping("/homePage")
     public String homePage(Model model) {
+
         return "landing_Page";
     }
 
-    @RequestMapping("/editProfile")
-    public String editProfile(Model model) {
+    @GetMapping("/editProfile")
+    public String editProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        model.addAttribute("employee", employee);
         return "edit_profile";
     }
+    @GetMapping("/changePass")
+    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // You can also add employee information here if needed
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        model.addAttribute("employee", employee);
+        return "changePass";
+    }
+
 }

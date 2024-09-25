@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đổi mật khẩu</title>
+  <link rel="stylesheet" th:href="@{/css/edit_profile.css}">
+</head>
+<body>
+<!-- Header -->
+<header>
+  <div class="container-header">
+    <div class="logo">
+      <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#">Danh sách bệnh nhân</a></li>
+        <li><a th:href="@{homePage}">Giới thiệu</a></li>
+        <li><a href="#">Trợ giúp</a></li>
+        <li><a href="#">Liên hệ</a></li>
+      </ul>
+    </nav>
+    <div class="lang-login">
+      <button>**Tiếng Việt**</button>
+      <button>Đăng xuất</button>
+    </div>
+  </div>
+</header>
+
+<!-- Main Body -->
+<div class="container">
+  <div class="sidebar">
+    <div class="user-info">
+      <img th:src="@{/img/avt.jpg}" alt="User Icon" class="user-icon">
+      <h2 th:text="${employee.getFirst_name() + ' ' + employee.getLast_name()}"></h2>
+    </div>
+    <ul class="menu">
+      <li class="menu-item">
+        <a th:href="@{/profile}" >Tài khoản</a></li>
+      <li class="menu-item">
+        <a th:href="@{/editProfile}" >Sửa thông tin cá nhân</a>
+      </li>
+
+      <li class="menu-item active">Đổi mật khẩu</a>
+      </li>
+    </ul>
+
+
+  </div>
+
+  <div class="profile">
+    <h1>Đổi mật khẩu</h1>
+  <form th:action="@{/changePass}" method="post">
+
+        <div class="form-group3">
+          <label>Mật khẩu cũ:</label>
+          <input type="password" name="oldPassword" required>
+        </div>
+        <div class="form-group3">
+          <label>Mật khẩu mới:</label>
+          <input type="password" name="newPassword" required>
+        </div>
+        <div class="form-group3">
+          <label>Xác nhận mật khẩu:</label>
+          <input type="password" name="confirmPassword" required>
+        </div>
+
+      <div class="buttons">
+        <button type="submit" class="save-button">Save</button>
+        <button type="reset" class="cancel-button">Cancel</button>
+      </div>
+   </form>
+  </div>
+</div>
+</body>
+</html>

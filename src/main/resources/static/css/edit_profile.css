@@ -149,7 +149,9 @@ form {
 
 }
 
-
+.form-group3 label{
+    margin-bottom: 10px;
+}
 .form-group label {
     margin-bottom: 10px;
 }
@@ -163,6 +165,15 @@ form {
 }
 .form-group1 input[type="text"],
 .form-group1 select {
+    width: 80%; /* Full-width inputs */
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 4px; /* Subtle rounding */
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+.form-group3 input[type="password"],
+.form-group3 select {
     width: 80%; /* Full-width inputs */
     padding: 10px;
     border: 2px solid #ccc;
@@ -206,4 +217,12 @@ button {
     .sidebar, .profile {
         width: 100%; /* Full width for both components */
     }
+}
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    text-decoration: underline; /* nếu muốn có gạch chân khi hover */
 }
