@@ -17,6 +17,10 @@ body {
     padding: 20px;
 }
 
+#certificateFields input{
+    margin-bottom: 10px;
+}
+
 select, button {
     width: 80%;
     padding: 10px;
