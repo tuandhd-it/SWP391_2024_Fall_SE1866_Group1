@@ -59,3 +59,17 @@ button {
 .form-label {
     margin-bottom: 5px;
 }
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form-check {
+    display: inline-block;
+}
+
+a.text-decoration-none {
+    margin-left: auto;
+}

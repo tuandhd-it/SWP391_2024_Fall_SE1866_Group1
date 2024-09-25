@@ -20,18 +20,20 @@
         <li><a href="#">Liên hệ</a></li>
       </ul>
     </nav>
-    <div class="lang-login">
-      <button>**Tiếng Việt**</button>
-      <button>Đăng nhập</button>
-    </div>
+    <form th:action="@{/login}" method="get">
+      <button  class="login-button"  type="submit">Đăng nhập</button>
+    </form>
   </div>
 </header>
 
 <section class="hero">
   <div class="hero-content">
     <img th:src="@{/img/banner.png}"alt="Dental Clinic Banner" class="hero-banner">
-    <a href="#" class="cta-button">Đăng ký ngay</a>
-  </div>
+    <form th:action="@{/register}" method="get">
+      <button class="cta-button" type="submit">Đăng ký ngay</button>
+    </form>
+<!-- <a href="#" class="cta-button">Đăng ký ngay</a>&ndash;&gt;-->
+</div>-->
 </section>
 
 <section class="features">

@@ -51,15 +51,11 @@ nav ul li a:hover {
     gap: 10px;
 }
 
-.lang-login button {
-    border: none;
-    padding: 10px 20px;
-    background-color: #ff4d4d;
-    color: white;
-    cursor: pointer;
-}
+
 
 .lang-login button:nth-child(1) {
+    border-radius: 5px;
+    border: none;
     background-color: #f1f1f1;
     color: black;
 }
@@ -99,6 +95,7 @@ nav ul li a:hover {
     font-weight: bold;
     border-radius: 5px;
     transition: background-color 0.3s ease;
+    border: none;
 }
 
 .cta-button:hover {
@@ -143,4 +140,13 @@ nav ul li a:hover {
 
 .feature-item p {
     color: #666;
+}
+
+.login-button{
+    border-radius: 5px;
+    border: none;
+    padding: 10px 20px;
+    background-color: #ff4d4d;
+    color: white;
+    cursor: pointer;
 }
