@@ -1,7 +1,6 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.dto.request;
 
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Role;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -21,10 +20,11 @@ public class ReceptionistCreationRequest {
     String email;
     String phone;
     String password;
+    String re_password;
     LocalDate dob;
     String gender;
-    boolean is_active;
-    boolean is_accept;
+    boolean active;
+    boolean accept;
     String address;
     String status;
     double salary;
