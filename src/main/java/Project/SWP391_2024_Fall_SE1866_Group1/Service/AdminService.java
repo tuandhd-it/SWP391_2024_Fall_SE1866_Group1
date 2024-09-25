@@ -1,8 +1,12 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Service;
 
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Branch;
+import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
 import Project.SWP391_2024_Fall_SE1866_Group1.Repository.*;
-import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ClinicBranchRequest;
+import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ClinicBranchCreationRequest;
+import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ClinicBranchUpdateRequest;
+import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.EmployeeChangePasswordRequest;
+import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.EmployeeUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +27,46 @@ public class AdminService {
     @Autowired
     private RoleRepository roleRepository;
 
+    //Load all employee
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
+    //Find employee by Id
+    public Employee getEmployeeById(int id) {
+        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+    }
+
+    //Change password employee
+    public Employee changePassword(int id, EmployeeChangePasswordRequest employeeChangePasswordRequest) {
+        Employee employee = getEmployeeById(id);
+        if (!employeeChangePasswordRequest.getNewPassword().equals(employeeChangePasswordRequest.getConfirmPassword())) {
+            throw new IllegalArgumentException("New password and confirm password do not match");
+        }
+        employee.setPassword(employeeChangePasswordRequest.getNewPassword());
+        return employeeRepository.save(employee);
+    }
+
+    //Update Employee
+    public Employee updateEmployee(int id, EmployeeUpdateRequest employeeUpdateRequest) {
+        Employee employee = getEmployeeById(id);
+
+        employee.setFirst_name(employeeUpdateRequest.getFirst_name());
+        employee.setLast_name(employeeUpdateRequest.getLast_name());
+        employee.setEmail(employeeUpdateRequest.getEmail());
+        employee.setPhone(employeeUpdateRequest.getPhone());
+        employee.setAddress(employeeUpdateRequest.getAddress());
+        employee.setGender(employeeUpdateRequest.getGender());
+        employee.setDob(employeeUpdateRequest.getDob());
+        employee.setSalary(employeeUpdateRequest.getSalary());
+        employee.setRole(employeeUpdateRequest.getRole());
+        employee.setStatus(employeeUpdateRequest.getStatus());
+
+        return employeeRepository.save(employee);
+    }
+
     //Add Branch to database
-    public Branch createBranch(ClinicBranchRequest request) {
+    public Branch createBranch(ClinicBranchCreationRequest request) {
         Branch newBranch = new Branch();
 
         newBranch.setBranch_address(request.getBranch_address());
@@ -47,7 +89,7 @@ public class AdminService {
     }
 
     //Update Branch
-    public Branch updateBranch(int id, ClinicBranchRequest updateBranchRequest) {
+    public Branch updateBranch(int id, ClinicBranchUpdateRequest updateBranchRequest) {
         Branch branch = getBranchById(id);
         branch.setBranch_address(updateBranchRequest.getBranch_address());
         branch.setBranch_description(updateBranchRequest.getBranch_description());
@@ -61,4 +103,6 @@ public class AdminService {
     public void deleteBranch(int id) {
         branchRepository.deleteById(id);
     }
+
+
 }
