@@ -7,6 +7,9 @@
 <body>
 <div class="container">
     <h1>Đăng nhập</h1>
+    <h3 th:text="${param.error == null ? '' : 'Username or password incorrect'}" style="color: red"></h3>
+    <h3 th:text="${existed == null ? '' : existed}" style="color: red"></h3>
+    <h3 th:text="${message == null ? '' : message}" style="color: green"></h3>
     <form th:action="@{/login}" method="post">
         <div class="form-group">
             <span class="icon" id="username-icon"><i class="fa-solid fa-user"></i></span>

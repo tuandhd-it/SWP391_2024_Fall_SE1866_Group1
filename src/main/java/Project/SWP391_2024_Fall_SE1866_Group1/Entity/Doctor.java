@@ -16,17 +16,13 @@ public class Doctor {
     int doctor_id; // Khóa ngoại từ bảng Employee
     String doctor_img;
     String doctor_description;
+    String doctorCertification;
+    String doctorSpecification;
 
     @OneToOne
     @MapsId // Sử dụng để ánh xạ doctor_id với emp_id
     @JoinColumn(name = "doctor_id", referencedColumnName = "emp_id")
     private Employee employee;
-
-    @OneToMany(mappedBy = "doctor")
-    private Set<Certification> certification;
-
-    @OneToMany(mappedBy = "doctor")
-    private Set<Specification> specification;
 
     public Doctor() {
     }

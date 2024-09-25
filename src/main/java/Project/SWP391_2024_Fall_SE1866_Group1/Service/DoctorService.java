@@ -1,24 +1,22 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Service;
 
-import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Branch;
-import Project.SWP391_2024_Fall_SE1866_Group1.Entity.CustomEmployeeDetails;
-import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
-import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Role;
+import Project.SWP391_2024_Fall_SE1866_Group1.Entity.*;
 import Project.SWP391_2024_Fall_SE1866_Group1.Repository.*;
+import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.DoctorCreationRequest;
 import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
-public class ReceptionistService {
+public class DoctorService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -32,15 +30,15 @@ public class ReceptionistService {
     @Autowired
     private RoleRepository roleRepository;
 
-
     public Employee findByUsername(String username) {
         return employeeRepository.findByEmail(username);
     }
 
     //Create a new receptionist
-    public void createReceptionist(ReceptionistCreationRequest request) {
+    public void createDoctor(DoctorCreationRequest request) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         Employee employee = new Employee();
+
 
         //Create branch to store in receptionist information
         Branch branch = branchRepository.findByBranchName(request.getBranch_name());
@@ -63,6 +61,16 @@ public class ReceptionistService {
         employee.setBranch(branch);
         employee.setRole(request.getRole());
         employeeRepository.save(employee);
+
+        Doctor doctor = new Doctor();
+        doctor.setDoctor_img(request.getDoctor_img());
+        doctor.setDoctor_description(request.getDoctor_description());
+        doctor.setDoctorCertification(request.getDoctorCertification());
+        doctor.setDoctorSpecification(request.getDoctorSpecification());
+        doctor.setEmployee(employee);
+        employee.setDoctor(doctor);
+        doctorRepository.save(doctor);
+        employeeRepository.save(employee);
     }
 
     public Role findRoleById(int id) {
@@ -77,24 +85,8 @@ public class ReceptionistService {
         return branchRepository.findAll();
     }
 
-    public Employee findByEmail(String email) {
-        return employeeRepository.findByEmail(email);
+    public Doctor findDoctorById(int id) {
+        return doctorRepository.findById(id);
     }
-
-    public Employee findByPhone(String phone) {
-        return employeeRepository.findByPhone(phone);
-    }
-
-    public String checkExistedEmployee(String email, String phone) {
-        Employee existedEmail = findByEmail(email);
-        Employee existedPhone = findByPhone(phone);
-        if(existedEmail != null) {
-            return  "Email already exists";
-        } else if (existedPhone != null) {
-            return  "Phone already exists";
-        }
-        return null;
-    }
-
 
 }

@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
 logging:
-      level:
-        org:
-          springframework:
-            security=DEBUG:
+  level:
+    org:
+      springframework:
+        security: DEBUG

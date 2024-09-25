@@ -40,6 +40,10 @@ public class Employee {
     @JoinColumn(name = "bran_id")
     private Branch branch;
 
+    @OneToOne
+//    @JoinColumn(name = "managedBranchId", referencedColumnName = "bran_id", insertable = false, updatable = false)
+    private Employee branchManaged;
+
     public Employee() {
     }
 
