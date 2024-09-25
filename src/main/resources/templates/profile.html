@@ -16,7 +16,7 @@
         <nav>
             <ul>
                 <li><a href="#">Danh sách bệnh nhân</a></li>
-                <li><a href="landing_Page.html">Giới thiệu</a></li>
+                <li><a th:href="@{homePage}">Giới thiệu</a></li>
                 <li><a href="#">Trợ giúp</a></li>
                 <li><a href="#">Liên hệ</a></li>
             </ul>
@@ -36,9 +36,14 @@
         </div>
         <ul class="menu">
             <li class="menu-item active">Tài khoản</li>
-            <li class="menu-item">Sửa thông tin cá nhân</li>
+
+                <form th:action="@{/editProfile}" method="get">
+                    <li class="menu-item" type="submit">Sửa thông tin cá nhân</li>
+                </form>
+
             <li class="menu-item">Đổi mật khẩu</li>
         </ul>
+
     </div>
 <div class="profile">
     <h1>Thông tin cá nhân</h1>
