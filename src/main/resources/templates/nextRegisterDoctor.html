@@ -12,7 +12,7 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="overlap-group card p-4 shadow" style="width: 400px;">
         <h1 class="text-center text-wrapper-2 mb-4">Register</h1>
-        <form th:action="@{/register}" method="post" th:object="${request}">
+        <form th:action="@{register}" method="post" th:object="${request}">
             <div class="mb-3">
                 <div class="input-group">
                     <input type="text" placeholder="Họ" class="form-control" aria-label="Họ" th:field="*{first_name}">
@@ -72,25 +72,16 @@
                                                         class="eye-password-see" style="width: 20px;"></span>
                 </div>
             </div>
+
+
             <div class="mb-3">
-                <div class="input-group">
-                    <input type="text" placeholder="Địa chỉ" class="form-control" aria-label="Địa chỉ" th:field="*{address}">
-                    <span class="input-group-text"><img th:src="@{/img/Vector.png}" alt="Lock" class="vector"
-                                                        style="width: 20px;"></span>
-                </div>
+                <input type="text" placeholder="Link bằng cấp" class="form-control" aria-label="Link bằng cấp">
             </div>
-            <div class="mb-3">
-                <select class="form-select" id="branch" aria-label="Branch" th:field="*{branch_name}">
-                    <option value="" selected>Chọn chi nhánh</option>
-                    <option th:each="branch : ${branches}" th:value="${branch.getBranchName()}" th:text="${branch.getBranchName()}" ></option>
-                </select>
-            </div>
-            <input type="hidden" th:value="${roleValue}" name="roleValue">
-            <button class="btn btn-primary w-100" type="submit">Register</button>
+            <button class="btn btn-primary w-100">Register</button>
         </form>
         <div class="already-have-an text-center mt-3">
             <span class="span">Already have an account?</span>
-            <a th:href="@{/login}" class="text-primary text-decoration-none">Login</a>
+            <a href="login.html" class="text-primary text-decoration-none">Login</a>
         </div>
     </div>
 </div>

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 @Service
 public class ReceptionistService {
@@ -49,8 +50,8 @@ public class ReceptionistService {
         employee.setPassword(password);
         employee.setDob(request.getDob());
         employee.setGender(request.getGender());
-        employee.set_active(request.is_active());
-        employee.set_accept(request.is_accept());
+        employee.set_active(request.isActive());
+        employee.set_accept(request.isAccept());
         employee.setFirst_name(request.getFirst_name());
         employee.setLast_name(request.getLast_name());
         employee.setEmail(request.getEmail());
@@ -79,6 +80,10 @@ public class ReceptionistService {
 
     public Role findByRoleName(String roleName) {
         return roleRepository.findByRoleName(roleName);
+    }
+
+    public List<Branch> findAllBranches() {
+        return branchRepository.findAll();
     }
 
 

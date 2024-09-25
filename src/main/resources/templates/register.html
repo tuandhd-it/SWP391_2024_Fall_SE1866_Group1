@@ -10,7 +10,7 @@
     <h1>Chọn nghiệp vụ của bạn</h1>
     <form th:action="@{/nextRegister}" method="post">
         <select id="role" name="role">
-            <option th:each="role : ${roles}" th:value="${role.getRoleName()}" th:text="${role.getRoleName()}" >Bác sĩ</option>
+            <option th:each="role : ${roles}" th:value="${role.getRoleName()}" th:text="${role.getRoleName()}" ></option>
         </select>
         <button type="submit">Tiếp tục</button>
     </form>

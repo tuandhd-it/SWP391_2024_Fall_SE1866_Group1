@@ -1,5 +1,6 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Controller;
 
+import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Branch;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Role;
 import Project.SWP391_2024_Fall_SE1866_Group1.Service.ReceptionistService;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class GeneralController {
@@ -35,7 +37,7 @@ public class GeneralController {
     @GetMapping("/register")
     public String register(Model model) {
         // Retreat role that can register
-        ArrayList<Role> registerRoles = new ArrayList<>();
+        List<Role> registerRoles = new ArrayList<>();
         registerRoles.add(receptionistService.findRoleById(3));
         registerRoles.add(receptionistService.findRoleById(4));
         registerRoles.add(receptionistService.findRoleById(5));
@@ -45,15 +47,26 @@ public class GeneralController {
 
     @PostMapping("/nextRegister")
     public String nextRegister(Model model, @RequestParam("role") String role) {
-        Role choosenRole = receptionistService.findByRoleName(role);
-        model.addAttribute("role", choosenRole);
+//        Role choosenRole = receptionistService.findByRoleName(role);
+        model.addAttribute("roleValue", role);
+        ReceptionistCreationRequest receptionistCreationRequest = new ReceptionistCreationRequest();
+        model.addAttribute("request", receptionistCreationRequest);
+        List<Branch> branches = new ArrayList<>();
+        branches = receptionistService.findAllBranches();
+        model.addAttribute("branches", branches);
         return "nextRegister";
     }
 
     @PostMapping("/register")
-    public String registerPost(@RequestBody ReceptionistCreationRequest request) {
+    public String registerPost(@ModelAttribute ReceptionistCreationRequest request, @RequestParam("roleValue") String role, Model model) {
+        request.setAccept(false);
+        request.setActive(true);
+        request.setStatus("Check out");
+        request.setSalary(0);
+        Role choosenRole = receptionistService.findByRoleName(role);
+        request.setRole(choosenRole);
         receptionistService.createReceptionist(request);
-        return "landing_Page";
+        return "login";
     }
 
     @RequestMapping("/homePage")

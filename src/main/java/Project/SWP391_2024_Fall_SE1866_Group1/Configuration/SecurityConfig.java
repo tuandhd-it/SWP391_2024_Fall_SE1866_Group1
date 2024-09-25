@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     //Custom endpoints that can access without log in
-    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/homePage", "/nextRegister"};
+    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/homePage", "/nextRegister", "/nextRegisterDoctor"};
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
