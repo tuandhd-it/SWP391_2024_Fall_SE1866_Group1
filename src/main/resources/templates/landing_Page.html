@@ -7,25 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<header>
-  <div class="container">
-    <div class="logo">
-      <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo">
-    </div>
-    <nav>
-      <ul>
-        <li><i class="fa-brands fa-youtube"></i></li>
-        <li><a href="#">Tính năng</a></li>
-        <li><a href="#">Giới thiệu</a></li>
-        <li><a href="#">Trợ giúp</a></li>
-        <li><a href="#">Liên hệ</a></li>
-      </ul>
-    </nav>
-    <form th:action="@{/login}" method="get">
-      <button  class="login-button"  type="submit">Đăng nhập</button>
-    </form>
-  </div>
-</header>
+<div th:replace="headerLandingPage :: header"></div>
 
 <section class="hero">
   <div class="hero-content">
@@ -33,8 +15,8 @@
     <form th:action="@{/register}" method="get">
       <button class="cta-button" type="submit">Đăng ký ngay</button>
     </form>
-<!-- <a href="#" class="cta-button">Đăng ký ngay</a>&ndash;&gt;-->
-</div>-->
+    <!-- <a href="#" class="cta-button">Đăng ký ngay</a>&ndash;&gt;-->
+  </div>-->
 </section>
 
 <section class="features">
