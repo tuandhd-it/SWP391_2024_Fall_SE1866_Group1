@@ -24,6 +24,10 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<Employee> employees;
 
+    @OneToOne
+    @JoinColumn(name = "manager_id", referencedColumnName = "emp_id", insertable = false, updatable = false)
+    private Employee manager;
+
     public Branch() {
     }
 
