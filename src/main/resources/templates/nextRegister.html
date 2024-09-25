@@ -12,23 +12,23 @@
 <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="overlap-group card p-4 shadow" style="width: 400px;">
         <h1 class="text-center text-wrapper-2 mb-4">Register</h1>
-        <form th:action="@{/register}" method="post" th:object="${request}">
+        <form th:action="@{/register}" method="post" th:object="${request}" id="validationForm">
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="text" placeholder="Họ" class="form-control" aria-label="Họ" th:field="*{first_name}">
+                    <input type="text" placeholder="Họ" class="form-control" aria-label="Họ" th:field="*{first_name}" required>
                     <span class="input-group-text"><img th:src="@{/img/icon1.png}" alt="Edit" class="bxs-edit"
                                                         style="width: 20px;"></span>
                 </div>
             </div>
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="text" placeholder="Tên" class="form-control" aria-label="Tên" th:field="*{last_name}">
+                    <input type="text" placeholder="Tên" class="form-control" aria-label="Tên" th:field="*{last_name}" required>
                     <span class="input-group-text"><img th:src="@{/img/icon1.png}" alt="Edit" class="bxs-edit"
                                                         style="width: 20px;"></span>
                 </div>
             </div>
             <div class="mb-3">
-                <select class="form-select" id="gender" aria-label="Giới tính" th:field="*{gender}">
+                <select class="form-select" id="gender" aria-label="Giới tính" th:field="*{gender}" required>
                     <option value="" selected>Chọn giới tính</option>
                     <option value="male">Nam</option>
                     <option value="female">Nữ</option>
@@ -38,11 +38,11 @@
 
 
             <div class="mb-3">
-                <input type="date" class="form-control" id="dob" aria-label="Ngày sinh" th:field="*{dob}">
+                <input type="date" class="form-control" id="dob" aria-label="Ngày sinh" th:field="*{dob}" required>
             </div>
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="email" placeholder="E-mail" class="form-control" aria-label="E-mail" th:field="*{email}">
+                    <input type="email" id="email" placeholder="E-mail" class="form-control" aria-label="E-mail" th:field="*{email}" required>
                     <span class="input-group-text"><img th:src="@{/img/bxs-envelope1.png}" alt="Email"
                                                         class="bxs-envelope"
                                                         style="width: 20px;"></span>
@@ -50,7 +50,7 @@
             </div>
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="tel" placeholder="Số điện thoại" class="form-control" aria-label="Số điện thoại" th:field="*{phone}">
+                    <input type="text" id="phone" placeholder="Số điện thoại" class="form-control" aria-label="Số điện thoại" th:field="*{phone}" required>
                     <span class="input-group-text"><img th:src="@{/img/bxs-phone1.png}" alt="Phone" class="bxs-phone"
                                                         style="width: 20px;"></span>
                 </div>
@@ -58,15 +58,15 @@
 
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="password" placeholder="Mật khẩu" class="form-control" aria-label="Mật khẩu" th:field="*{password}">
+                    <input type="password" id="password" placeholder="Mật khẩu" class="form-control" aria-label="Mật khẩu" th:field="*{password}" required>
                     <span class="input-group-text"><img th:src="@{/img/Vector.png}" alt="Lock" class="vector"
                                                         style="width: 20px;"></span>
                 </div>
             </div>
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="password" placeholder="Xác nhận mật khẩu" class="form-control"
-                           aria-label="Xác nhận mật khẩu" th:field="*{re_password}">
+                    <input type="password" id="re_password" placeholder="Xác nhận mật khẩu" class="form-control"
+                           aria-label="Xác nhận mật khẩu" th:field="*{re_password}" required>
                     <span class="input-group-text"><img th:src="@{/img/eye-password-see-view-svgrepo-com1.png}"
                                                         alt="Eye"
                                                         class="eye-password-see" style="width: 20px;"></span>
@@ -74,7 +74,7 @@
             </div>
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="text" placeholder="Địa chỉ" class="form-control" aria-label="Địa chỉ" th:field="*{address}">
+                    <input type="text" placeholder="Địa chỉ" class="form-control" aria-label="Địa chỉ" th:field="*{address}" required>
                     <span class="input-group-text"><img th:src="@{/img/Vector.png}" alt="Lock" class="vector"
                                                         style="width: 20px;"></span>
                 </div>
@@ -97,5 +97,6 @@
 
 <!-- Bootstrap JS Bundle with Popper -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/ValidateRegisterInput.js}"></script>
 </body>
 </html>
