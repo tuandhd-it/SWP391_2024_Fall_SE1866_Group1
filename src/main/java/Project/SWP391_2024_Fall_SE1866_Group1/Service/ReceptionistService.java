@@ -65,15 +65,6 @@ public class ReceptionistService {
         employeeRepository.save(employee);
     }
 
-    public CustomEmployeeDetails findAccountByUsername(String username) {
-        Employee employee = employeeRepository.findByEmail(username);
-        Collection<GrantedAuthority> authorities = new HashSet<>();
-        authorities.add(new SimpleGrantedAuthority(employee.getRole().getRoleName()));
-        CustomEmployeeDetails details = new CustomEmployeeDetails(employee, authorities);
-
-        return details;
-    }
-
     public Role findRoleById(int id) {
         return roleRepository.findById(id);
     }
@@ -84,6 +75,25 @@ public class ReceptionistService {
 
     public List<Branch> findAllBranches() {
         return branchRepository.findAll();
+    }
+
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
+    }
+
+    public Employee findByPhone(String phone) {
+        return employeeRepository.findByPhone(phone);
+    }
+
+    public String checkExistedEmployee(String email, String phone) {
+        Employee existedEmail = findByEmail(email);
+        Employee existedPhone = findByPhone(phone);
+        if(existedEmail != null) {
+            return  "Email already exists";
+        } else if (existedPhone != null) {
+            return  "Phone already exists";
+        }
+        return null;
     }
 
 
