@@ -19,9 +19,6 @@ public class AdminService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private DoctorRepository doctorRepository;
-
-    @Autowired
     private BranchRepository branchRepository;
 
     @Autowired
