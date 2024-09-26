@@ -116,13 +116,7 @@ public class GeneralController {
         return "landing_Page";
     }
 
-    @GetMapping("/editProfile")
-    public String editProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        Employee employee = receptionistService.findByUsername(username);
-        model.addAttribute("employee", employee);
-        return "edit_profile";
-    }
+
     @GetMapping("/changePass")
     public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         // You can also add employee information here if needed
