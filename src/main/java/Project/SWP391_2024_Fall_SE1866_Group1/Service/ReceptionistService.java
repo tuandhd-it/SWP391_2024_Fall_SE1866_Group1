@@ -24,9 +24,6 @@ public class ReceptionistService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private DoctorRepository doctorRepository;
-
-    @Autowired
     private BranchRepository branchRepository;
 
     @Autowired
@@ -59,7 +56,8 @@ public class ReceptionistService {
         employee.setAddress(request.getAddress());
         employee.setSalary(request.getSalary());
         employee.setStatus(request.getStatus());
-        employee.setDoctor(null);
+        employee.setImg(request.getImg());
+        employee.setDescription(request.getDescription());
         employee.setBranch(branch);
         employee.setRole(request.getRole());
         employeeRepository.save(employee);

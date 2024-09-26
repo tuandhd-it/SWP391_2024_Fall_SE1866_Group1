@@ -30,4 +30,6 @@ public class ReceptionistCreationRequest {
     double salary;
     String branch_name;
     Role role;
+    String img;
+    String description;
 }

@@ -86,6 +86,20 @@
                 </select>
             </div>
             <input type="hidden" th:value="${roleValue}" name="roleValue">
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="text" placeholder="Ảnh" class="form-control" aria-label="Ảnh" th:field="*{img}" required>
+                    <span class="input-group-text"><img th:src="@{/img/Vector.png}" alt="Lock" class="vector"
+                                                        style="width: 20px;"></span>
+                </div>
+            </div>
+            <div class="mb-3">
+                <div class="input-group">
+                    <input type="text" placeholder="Mô tả" class="form-control" aria-label="Mô tả" th:field="*{description}" required>
+                    <span class="input-group-text"><img th:src="@{/img/Vector.png}" alt="Lock" class="vector"
+                                                        style="width: 20px;"></span>
+                </div>
+            </div>
             <button class="btn btn-primary w-100" type="submit">Register</button>
         </form>
         <div class="already-have-an text-center mt-3">

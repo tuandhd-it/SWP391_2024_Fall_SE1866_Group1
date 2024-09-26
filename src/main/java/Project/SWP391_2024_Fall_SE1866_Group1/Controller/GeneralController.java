@@ -1,9 +1,7 @@
 package Project.SWP391_2024_Fall_SE1866_Group1.Controller;
 
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.*;
-import Project.SWP391_2024_Fall_SE1866_Group1.Service.DoctorService;
 import Project.SWP391_2024_Fall_SE1866_Group1.Service.ReceptionistService;
-import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.DoctorCreationRequest;
 import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,18 +11,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class GeneralController {
 
     @Autowired
     private ReceptionistService receptionistService;
-
-    @Autowired
-    private DoctorService doctorService;
 
     @GetMapping("/login")
     public String login() {
@@ -56,35 +49,9 @@ public class GeneralController {
         List<Branch> branches = new ArrayList<>();
         branches = receptionistService.findAllBranches();
         model.addAttribute("branches", branches);
-        if (role.equalsIgnoreCase("Receptionist")) {
             ReceptionistCreationRequest receptionistCreationRequest = new ReceptionistCreationRequest();
             model.addAttribute("request", receptionistCreationRequest);
             return "nextRegister";
-        } else {
-            DoctorCreationRequest doctorCreationRequest = new DoctorCreationRequest();
-            model.addAttribute("doctorRequest", doctorCreationRequest);
-            return "nextRegisterDoctor";
-        }
-    }
-
-    @PostMapping("/registerDoctor")
-    public String registerPost(@ModelAttribute DoctorCreationRequest request,
-                               @RequestParam("roleValue") String role,
-                               Model model) {
-        String existed = receptionistService.checkExistedEmployee(request.getEmail(), request.getPhone());
-        if (existed != null) {
-            model.addAttribute("existed", existed);
-        } else {
-            request.setAccept(false);
-            request.setActive(true);
-            request.setStatus("Check out");
-            request.setSalary(0);
-            Role choosenRole = doctorService.findByRoleName(role);
-            request.setRole(choosenRole);
-            doctorService.createDoctor(request);
-            model.addAttribute("message", "Registered successfully");
-        }
-        return "login";
     }
 
     @PostMapping("/register")

@@ -28,9 +28,8 @@ public class Employee {
     String address;
     String status;
     double salary;
-
-    @OneToOne(mappedBy = "employee")
-    private Doctor doctor;
+    String img;
+    String description;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
