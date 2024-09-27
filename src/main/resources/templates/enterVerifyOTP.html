@@ -3,19 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <title>Enter OTP</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" th:href="@{/css/register.css}">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background color */
+        }
+        .container {
+            max-width: 400px; /* Limit the width of the form */
+            margin-top: 100px; /* Center vertically */
+            padding: 20px; /* Padding inside the container */
+            border: 1px solid #ced4da; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: white; /* White background for the form */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+            height: 300px;
+
+        }
+        h1 {
+            font-size: 24px; /* Heading size */
+            margin-bottom: 20px; /* Space below the heading */
+        }
+        input[type="number"], input[type="submit"] {
+            width: 100%; /* Full width inputs */
+            margin-bottom: 10px; /* Space between inputs */
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo">
-    <h3 th:text="${otpMsg == null ? '' : otpMsg}" style="color: red"></h3>
-    <h1>Nhập mã OTP</h1>
+    <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo" class="img-fluid mb-4"> <!-- Make the logo responsive -->
+    <h3 th:text="${otpMsg == null ? '' : otpMsg}" style="color: red;" class="text-center mb-3"></h3>
+    <h1 class="text-center">Nhập mã OTP</h1>
     <form th:action="@{/verifyEmail/verifyOTP}" method="post">
         <input type="hidden" name="roleValue" th:value="${roleValue}">
-        <input type="number" name="otp" placeholder="Enter OTP">
+        <input type="number" class="form-control" name="otp" placeholder="Enter OTP" required>
         <input type="hidden" name="email" th:value="${email}">
-        <input type="submit" name="Verify OTP">
+        <input type="submit" class="btn btn-primary" name="Verify OTP" value="Verify OTP">
     </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
