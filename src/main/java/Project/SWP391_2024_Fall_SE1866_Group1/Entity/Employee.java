@@ -39,6 +39,9 @@ public class Employee {
     @JoinColumn(name = "bran_id")
     private Branch branch;
 
+    @OneToOne(mappedBy = "employee")
+    private ForgotPassword forgotPassword;
+
     @OneToOne
 //    @JoinColumn(name = "managedBranchId", referencedColumnName = "bran_id", insertable = false, updatable = false)
     private Employee branchManaged;

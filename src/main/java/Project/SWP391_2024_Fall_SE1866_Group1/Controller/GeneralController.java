@@ -54,24 +54,6 @@ public class GeneralController {
             return "nextRegister";
     }
 
-    @PostMapping("/register")
-    public String registerDoctorPost(@ModelAttribute ReceptionistCreationRequest request, @RequestParam("roleValue") String role, Model model) {
-        String existed = receptionistService.checkExistedEmployee(request.getEmail(), request.getPhone());
-        if (existed != null) {
-            model.addAttribute("existed", existed);
-        } else {
-            request.setAccept(false);
-            request.setActive(true);
-            request.setStatus("Check out");
-            request.setSalary(0);
-            Role choosenRole = receptionistService.findByRoleName(role);
-            request.setRole(choosenRole);
-            receptionistService.createReceptionist(request);
-            model.addAttribute("message", "Registered successfully");
-        }
-        return "login";
-    }
-
     @RequestMapping("/homePage")
     public String homePage(Model model,  @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
@@ -92,5 +74,7 @@ public class GeneralController {
         model.addAttribute("employee", employee);
         return "changePass";
     }
+
+
 
 }
