@@ -9,6 +9,8 @@
 <!-- Include Container -->
 <div class="container">
     <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo">
+    <h1 th:text="${otpMsg}" style="color: red"></h1>
+    <h1 th:value="${existed}"></h1>
     <h1>Chọn nghiệp vụ của bạn</h1>
     <form th:action="@{/nextRegister}" method="post">
         <select id="role" name="role">

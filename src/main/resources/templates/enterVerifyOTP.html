@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter OTP</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="container">
+    <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo">
+    <h3 th:text="${otpMsg == null ? '' : otpMsg}" style="color: red"></h3>
+    <h1>Nhập mã OTP</h1>
+    <form th:action="@{/verifyEmail/verifyOTP}" method="post">
+        <input type="hidden" name="roleValue" th:value="${roleValue}">
+        <input type="number" name="otp" placeholder="Enter OTP">
+        <input type="hidden" name="email" th:value="${email}">
+        <input type="submit" name="Verify OTP">
+    </form>
+</div>
+</body>
+</html>
