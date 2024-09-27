@@ -25,4 +25,6 @@ public class EmployeeUpdateRequest {
     String status;
     double salary;
     Role role;
+
+
 }

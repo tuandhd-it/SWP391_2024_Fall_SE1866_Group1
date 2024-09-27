@@ -4,38 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/profile.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <script>
         function toggleEditMode() {
             let spans = document.querySelectorAll(".profile span");
-            let inputs = document.querySelectorAll(".profile input");
-            let selects = document.querySelectorAll(".profile select"); // Add select elements
+            let inputs = document.querySelectorAll(".profile input, .profile select");
 
-            // Toggle visibility between span and input elements
-            spans.forEach(span => {
-                span.style.display = span.style.display === "none" ? "inline-block" : "none";
-            });
-
-            inputs.forEach(input => {
-                input.style.display = input.style.display === "none" ? "inline-block" : "none";
-            });
-
-            selects.forEach(select => {
-                select.style.display = select.style.display === "none" ? "inline-block" : "none"; // Handle select elements
-            });
+            // Toggle display between input fields and spans
+            spans.forEach(span => span.style.display = span.style.display === 'none' ? 'inline-block' : 'none');
+            inputs.forEach(input => input.style.display = input.style.display === 'none' ? 'inline-block' : 'none');
 
             // Toggle buttons
-            document.getElementById("edit-button").style.display = "none";
-            document.getElementById("save-button").style.display = "inline-block";
-        }
-
-        function saveChanges() {
-            alert("Thông tin đã được cập nhật!"); // Hiển thị thông báo
-
-            // Chuyển hướng đến trang profile (có thể thay thế đường dẫn phù hợp)
-            setTimeout(function() {
-                window.location.href = "/profile"; // Chuyển về trang profile sau 1 giây
-            }, 1000); // Chờ 1 giây trước khi chuyển trang
+            let editButton = document.getElementById("edit-button");
+            let saveButton = document.getElementById("save-button");
+            editButton.style.display = editButton.style.display === 'none' ? 'inline-block' : 'none';
+            saveButton.style.display = saveButton.style.display === 'none' ? 'inline-block' : 'none';
         }
     </script>
 </head>
@@ -61,35 +46,26 @@
 </header>
 
 <div class="container">
-    <div class="sidebar">
-        <div class="user-info">
-            <img th:src="@{/img/avt.jpg}" alt="User Icon" class="user-icon">
-            <h2 th:text="${employee.getFirst_name() + ' ' + employee.getLast_name()}"></h2>
-        </div>
-        <ul class="menu">
-            <li class="menu-item active">Tài khoản</li>
-            <li class="menu-item">
-                <a th:href="@{/editProfile}" >Sửa thông tin cá nhân</a>
-            </li>
-            <li class="menu-item">
-                <a th:href="@{/changePass}" >Đổi mật khẩu</a>
-            </li>
-        </ul>
-    </div>
+    <div th:replace="dashboard :: sidebar"></div>
 
     <div class="profile">
         <h1>Thông tin cá nhân</h1>
-        <form>
+        <div th:if="${message}" class="alert alert-success" role="alert">
+            <span th:text="${message}"></span>
+        </div>
+        <form th:action="@{/profile/update}" th:object="${employee}" method="post">
+
             <div class="form-col">
                 <div class="form-row">
                     <label>Họ và tên: </label>
-                    <span th:text="${employee.getFirst_name() + ' ' + employee.getLast_name()}" style="display:inline-block;"></span>
-                    <input type="text" th:value="${employee.getFirst_name() + ' ' + employee.getLast_name()}" style="display:none;">
+                    <span th:text="${employee.first_name} + ' ' + ${employee.last_name}" style="display:inline-block;"></span>
+                    <input type="text" th:field="*{first_name}" placeholder="First Name" style="display:none;" required>
+                    <input type="text" th:field="*{last_name}" placeholder="Last Name" style="display:none;" required>
                 </div>
                 <div class="form-row">
                     <label>Giới tính: </label>
                     <span th:text="${employee.getGender()}" style="display:inline-block;"></span>
-                    <select name="gender" style="display:none;">
+                    <select th:field="*{gender}" style="display:none;" required>
                         <option value="Nam" th:selected="${employee.getGender() == 'Nam'}">Nam</option>
                         <option value="Nữ" th:selected="${employee.getGender() == 'Nữ'}">Nữ</option>
                         <option value="Khác" th:selected="${employee.getGender() == 'Khác'}">Khác</option>
@@ -98,37 +74,39 @@
                 <div class="form-row">
                     <label>Ngày sinh: </label>
                     <span th:text="${employee.getDob()}" style="display:inline-block;"></span>
-                    <input type="date" th:value="${employee.getDob()}" style="display:none;">
+                    <input type="date" th:field="*{dob}" style="display:none;" required>
                 </div>
                 <div class="form-row">
                     <label>Chức vụ: </label>
                     <span th:text="${employee.getRole().getRoleName()}" style="display:inline-block;"></span>
-                    <input type="text" th:value="${employee.getRole().getRoleName()}" style="display:none;">
                 </div>
                 <div class="form-row">
                     <label>Số điện thoại: </label>
                     <span th:text="${employee.getPhone()}" style="display:inline-block;"></span>
-                    <input type="text" th:value="${employee.getPhone()}" style="display:none;">
+                    <input type="number" th:field="*{phone}" style="display:none;" required>
                 </div>
                 <div class="form-row">
                     <label>Email: </label>
                     <span th:text="${employee.getEmail()}" style="display:inline-block;"></span>
-                    <input type="email" th:value="${employee.getEmail()}" style="display:none;">
+                    <input type="email" th:field="*{email}" style="display:none;" required>
+                </div>
+                <div class="form-row">
+                    <label>Địa chỉ: </label>
+                    <span th:text="${employee.getAddress()}" style="display:inline-block;"></span>
+                    <input type="text" th:field="*{address}" style="display:none;" required>
                 </div>
             </div>
-            <div class="form-row">
-                <label>Địa chỉ: </label>
-                <span th:text="${employee.getAddress()}" style="display:inline-block;"></span>
-                <input type="text" th:value="${employee.getAddress()}" style="display:none;">
+
+            <!-- Buttons for Edit and Save -->
+            <div>
+                <button id="edit-button" type="button" class="btn btn-secondary" th:if="${!editMode}" onclick="toggleEditMode()">Chỉnh sửa</button>
+                <button id="save-button" type="submit" class="btn btn-primary" style="display:none;">Lưu thay đổi</button>
             </div>
-            <div class="form-row">
-                <button type="button" id="edit-button" onclick="toggleEditMode()">Chỉnh sửa</button>
-                <button type="button" id="save-button" style="display:none;" onclick="saveChanges()">Lưu</button>
-            </div>
+
         </form>
     </div>
-
 </div>
 
+<script th:src="@{/js/bootstrap.min.js}"></script>
 </body>
 </html>

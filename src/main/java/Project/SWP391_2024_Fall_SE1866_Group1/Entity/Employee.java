@@ -35,6 +35,8 @@ public class Employee {
     @JoinColumn(name = "role_id")
     private Role role;
 
+
+
     @ManyToOne
     @JoinColumn(name = "bran_id")
     private Branch branch;
