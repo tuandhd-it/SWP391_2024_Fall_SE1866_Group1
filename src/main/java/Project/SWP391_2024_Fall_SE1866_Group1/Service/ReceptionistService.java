@@ -5,6 +5,7 @@ import Project.SWP391_2024_Fall_SE1866_Group1.Entity.CustomEmployeeDetails;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Employee;
 import Project.SWP391_2024_Fall_SE1866_Group1.Entity.Role;
 import Project.SWP391_2024_Fall_SE1866_Group1.Repository.*;
+import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.EmployeeUpdateRequest;
 import Project.SWP391_2024_Fall_SE1866_Group1.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -86,13 +87,14 @@ public class ReceptionistService {
     public String checkExistedEmployee(String email, String phone) {
         Employee existedEmail = findByEmail(email);
         Employee existedPhone = findByPhone(phone);
-        if(existedEmail != null) {
-            return  "Email already exists";
+        if (existedEmail != null) {
+            return "Email already exists";
         } else if (existedPhone != null) {
-            return  "Phone already exists";
+            return "Phone already exists";
         }
         return null;
     }
+
 
 
 }

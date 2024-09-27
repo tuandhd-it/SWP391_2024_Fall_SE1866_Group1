@@ -54,14 +54,15 @@ public class AdminController {
     public String changeEmployeePass(@RequestBody EmployeeChangePasswordRequest employeeRequest,  RedirectAttributes redirectAttributes) {
         adminService.changePassword(employeeRequest.getId(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
-        return "redirect:/";
+        return "redirect:/profile";
     }
 
-    @PutMapping("/updateEmployee")
-    public String updateEmployee(@RequestBody EmployeeUpdateRequest employeeRequest, RedirectAttributes redirectAttributes) {
+    @PostMapping("/updateEmployee")
+    public String updateEmployee(@ModelAttribute EmployeeUpdateRequest employeeRequest, RedirectAttributes redirectAttributes) {
         adminService.updateEmployee(employeeRequest.getEmp_id(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Employee updated successfully!");
-        return "redirect:/";
+        return "redirect:/profile";
     }
+
 
 }
