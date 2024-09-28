@@ -20,7 +20,6 @@ public class EmployeeUpdateRequest {
     LocalDate dob;
     String gender;
     String address;
-    String status;
     double salary;
     Role role;
 
