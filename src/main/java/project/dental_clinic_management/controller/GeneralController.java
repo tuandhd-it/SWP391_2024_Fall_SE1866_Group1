@@ -74,14 +74,14 @@ public class GeneralController {
     }
 
 
-//    @GetMapping("/changePass")
-//    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-//        // You can also add employee information here if needed
-//        String username = userDetails.getUsername();
-//        Employee employee = receptionistService.findByUsername(username);
-//        model.addAttribute("employee", employee);
-//        return "changePass";
-//    }
+    @GetMapping("/changePass")
+    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // You can also add employee information here if needed
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        model.addAttribute("employee", employee);
+        return "changePass";
+    }
     @GetMapping("/manageAcc")
     public String manageAcc(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         // You can also add employee information here if needed
