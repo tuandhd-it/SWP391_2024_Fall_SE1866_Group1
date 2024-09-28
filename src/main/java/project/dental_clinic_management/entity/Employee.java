@@ -23,9 +23,7 @@ public class Employee {
     LocalDate dob;
     String gender;
     boolean is_active;
-    boolean is_accept;
     String address;
-    String status;
     double salary;
     String img;
     String description;

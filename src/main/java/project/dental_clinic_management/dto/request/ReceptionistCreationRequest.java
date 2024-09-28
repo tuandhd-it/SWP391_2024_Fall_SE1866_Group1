@@ -24,9 +24,7 @@ public class ReceptionistCreationRequest {
     LocalDate dob;
     String gender;
     boolean active;
-    boolean accept;
     String address;
-    String status;
     double salary;
     String branch_name;
     Role role;

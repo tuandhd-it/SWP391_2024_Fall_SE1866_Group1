@@ -89,9 +89,7 @@ public class VerifyOTPController {
             return "login";
         }
 
-        request.setAccept(false);
         request.setActive(true);
-        request.setStatus("Check out");
         request.setSalary(0);
         Role choosenRole = receptionistService.findByRoleName(role);
         request.setRole(choosenRole);
