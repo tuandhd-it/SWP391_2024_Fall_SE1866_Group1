@@ -20,6 +20,7 @@ public class Branch {
     String branch_address;
     String branch_phone;
     String branch_img;
+    boolean active;
 
     @OneToMany(mappedBy = "branch")
     private List<Employee> employees;
@@ -31,11 +32,12 @@ public class Branch {
     public Branch() {
     }
 
-    public Branch(String branchName, String branch_description, String branch_address, String branch_phone, String branch_img) {
+    public Branch(String branchName, String branch_description, String branch_address, String branch_phone, String branch_img, boolean active) {
         this.branchName = branchName;
         this.branch_description = branch_description;
         this.branch_address = branch_address;
         this.branch_phone = branch_phone;
         this.branch_img = branch_img;
+        this.active = active;
     }
 }
