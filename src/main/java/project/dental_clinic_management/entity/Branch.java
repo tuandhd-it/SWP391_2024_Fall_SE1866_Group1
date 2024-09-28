@@ -1,8 +1,7 @@
 package project.dental_clinic_management.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
@@ -10,6 +9,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@AllArgsConstructor
 public class Branch {
 
     @Id

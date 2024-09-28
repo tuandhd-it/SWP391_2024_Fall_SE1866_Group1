@@ -39,9 +39,11 @@ public class CustomUserDetailService implements UserDetailsService {
     public Employee findByUsername(String username) {
         return employeeRepository.findByEmail(username);
     }
+
     public void saveEmployee(Employee employee) {
         employeeRepository.save(employee);
     }
+
     public void updateEmployee(EmployeeUpdateRequest employeeUpdateRequest) {
         // Tìm Employee theo emp_id (nếu bạn có ý định cập nhật theo id, nếu không bạn có thể dùng username)
         Employee employee = employeeRepository.findById(employeeUpdateRequest.getEmp_id())

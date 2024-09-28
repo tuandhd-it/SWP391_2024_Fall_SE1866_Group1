@@ -48,6 +48,10 @@ public class AdminService {
     public Employee updateEmployee(int id, EmployeeUpdateRequest employeeUpdateRequest) {
         Employee employee = getEmployeeById(id);
 
+        if (employee == null) {
+            throw new RuntimeException("Employee with id " + id + " not found.");
+        }
+
         employee.setFirst_name(employeeUpdateRequest.getFirst_name());
         employee.setLast_name(employeeUpdateRequest.getLast_name());
         employee.setEmail(employeeUpdateRequest.getEmail());
@@ -57,13 +61,13 @@ public class AdminService {
         employee.setDob(employeeUpdateRequest.getDob());
         employee.setSalary(employeeUpdateRequest.getSalary());
         employee.setRole(employeeUpdateRequest.getRole());
+
         return employeeRepository.save(employee);
     }
 
     //Add Branch to database
     public Branch createBranch(ClinicBranchCreationRequest request) {
         Branch newBranch = new Branch();
-
         newBranch.setBranch_address(request.getBranch_address());
         newBranch.setBranch_description(request.getBranch_description());
         newBranch.setBranch_img(request.getBranch_img());
@@ -86,6 +90,10 @@ public class AdminService {
     //Update Branch
     public Branch updateBranch(int id, ClinicBranchUpdateRequest updateBranchRequest) {
         Branch branch = getBranchById(id);
+
+        if (branch == null) {
+            throw new RuntimeException("Branch with id " + id + " not found.");
+        }
         branch.setBranch_address(updateBranchRequest.getBranch_address());
         branch.setBranch_description(updateBranchRequest.getBranch_description());
         branch.setBranch_img(updateBranchRequest.getBranch_img());

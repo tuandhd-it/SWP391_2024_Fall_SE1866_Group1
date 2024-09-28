@@ -1,8 +1,7 @@
 package project.dental_clinic_management.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -10,6 +9,8 @@ import java.time.LocalDate;
 @Entity
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
+@AllArgsConstructor
 public class Employee {
 
     @Id
