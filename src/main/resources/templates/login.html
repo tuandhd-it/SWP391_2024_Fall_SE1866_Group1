@@ -3,45 +3,52 @@
 <head>
     <title>Đăng nhập</title>
     <link rel="stylesheet" th:href="@{/css/login.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <h1>Đăng nhập</h1>
-    <h3 th:text="${param.error == null ? '' : 'Username or password incorrect'}" style="color: red"></h3>
-    <h3 th:text="${existed == null ? '' : existed}" style="color: red"></h3>
-    <h3 th:text="${message == null ? '' : message}" style="color: green"></h3>
-    <h3 th:text="${msgChangePass == null ? '' : msgChangePass}" style="color: green"></h3>
-    <form th:action="@{/login}" method="post">
-        <div class="form-group">
-            <span class="icon" id="username-icon"><i class="fa-solid fa-user"></i></span>
-            <input type="text" id="username-input" name="username" placeholder="Tài khoản email">
-        </div>
-        <div class="form-group">
-            <span class="icon" id="password-icon"><i class="fas fa-lock"></i></span>
-            <input type="password" id="password-input" name="password" placeholder="Mật khẩu">
-        </div>
-        <div class="d-flex justify-content-between align-items-left mb-4">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="remember" name="remember">
-                <label class="form-check-label" for="remember">Ghi nhớ mật khẩu</label>
+<div class="d-block flex-column w-100 h-100">
+    <header th:replace="headerLandingPage :: header"></header>
+    <div class="mx-auto login-container mt-5">
+        <h1>Đăng nhập</h1>
+        <h3 th:text="${param.error == null ? '' : 'Username or password incorrect'}" style="color: red"></h3>
+        <h3 th:text="${existed == null ? '' : existed}" style="color: red"></h3>
+        <h3 th:text="${message == null ? '' : message}" style="color: green"></h3>
+        <h3 th:text="${msgChangePass == null ? '' : msgChangePass}" style="color: green"></h3>
+        <form class="my-3" th:action="@{/login}" method="post">
+            <div class="form-group form-outline mb-4">
+                <span class="icon" id="username-icon"><i class="fa-solid fa-user"></i></span>
+                <input class="form-control" type="text" id="username-input" name="username"
+                       placeholder="Tài khoản email">
             </div>
-            <a th:href="@{/forgotPassword/enterEmail}" class="text-decoration-none">Quên mật khẩu?</a>
-        </div>
-        <button type="submit">Đăng nhập</button>
-    </form>
+            <div class="form-group">
+                <span class="icon" id="password-icon"><i class="fas fa-lock"></i></span>
+                <input class="form-control" type="password" id="password-input" name="password" placeholder="Mật khẩu">
+            </div>
+            <div class="d-flex justify-content-between align-items-left mb-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                    <label class="form-check-label form-label" for="remember">Ghi nhớ mật khẩu</label>
+                </div>
+                <a th:href="@{/forgotPassword/enterEmail}" class="text-decoration-none">Quên mật khẩu?</a>
+            </div>
+            <button type="submit">Đăng nhập</button>
+        </form>
 
-    <form th:action="@{/register}" method="post">
-        <a class="text-center mt-4"> Bạn chưa có tài khoản?</a>
-        <a th:href="@{register}" class="text-primary text-decoration-none">Đăng ký ngay</a>
+        <form th:action="@{/register}" method="post">
+            <label class="form-label"> Bạn chưa có tài khoản?</label>
+            <a th:href="@{register}" class="text-primary text-decoration-none">Đăng ký ngay</a>
 
-    </form>
+        </form>
+    </div>
 </div>
 <script th:src="@{https://kit.fontawesome.com/87d2440b4a.js}" crossorigin="anonymous"></script>
 <script>
     const passwordInput = document.getElementById('password-input');
     const passwordIcon = document.getElementById('password-icon');
 
-    passwordInput.addEventListener('input', function() {
+    passwordInput.addEventListener('input', function () {
         if (this.value) {
             passwordIcon.classList.add('hidden'); // Ẩn biểu tượng khi có dữ liệu
         } else {
@@ -53,7 +60,7 @@
     const usernameInput = document.getElementById('username-input');
     const usernameIcon = document.getElementById('username-icon');
 
-    usernameInput.addEventListener('input', function() {
+    usernameInput.addEventListener('input', function () {
         if (this.value) {
             usernameIcon.classList.add('hidden'); // Ẩn biểu tượng khi có dữ liệu
         } else {

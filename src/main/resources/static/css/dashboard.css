@@ -274,15 +274,15 @@ aside {
 }
 
 .profile {
-    max-width: 900px; /* Set a max width if needed */
-    margin: 0 auto;
-    width: 100%;
+    max-width: 100%; /* Set a max width if needed */
+    margin: 20px auto;
+    width: 90%;
     background-color: #fff;
     display: flex;
     flex-direction: column; /* Align items vertically */
     justify-content: center; /* Center vertically */
     align-items: center; /* Center horizontally */
-    padding: 20px;
+    padding: 30px;
 }
 
 #profile-view {
@@ -309,5 +309,13 @@ aside {
     background-color: #ff4d4d;
     color: white;
     cursor: pointer;
+}
+
+.button-group{
+    padding-top: 20px;
+    text-align: end;
+}
+.button-item{
+    width: 80px;
 }
 
