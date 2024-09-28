@@ -56,7 +56,6 @@ public class CustomUserDetailService implements UserDetailsService {
         employee.setGender(employeeUpdateRequest.getGender());
         employee.setAddress(employeeUpdateRequest.getAddress());
         employee.setSalary(employeeUpdateRequest.getSalary());
-        employee.setStatus(employeeUpdateRequest.getStatus());
 
         // Nếu role có thay đổi, cập nhật Role
         if (employeeUpdateRequest.getRole() != null) {

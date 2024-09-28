@@ -57,8 +57,6 @@ public class AdminService {
         employee.setDob(employeeUpdateRequest.getDob());
         employee.setSalary(employeeUpdateRequest.getSalary());
         employee.setRole(employeeUpdateRequest.getRole());
-        employee.setStatus(employeeUpdateRequest.getStatus());
-
         return employeeRepository.save(employee);
     }
 
