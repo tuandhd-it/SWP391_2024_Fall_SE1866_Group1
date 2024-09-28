@@ -14,99 +14,112 @@
 <div class="d-flex">
     <aside th:replace="~{dashboard :: sidebar}"></aside>
     <div class="main">
-
         <nav class="navbar navbar-expand">
             <button class="toggler-btn" type="button">
                 <i class="lni lni-text-align-left"></i>
             </button>
         </nav>
-        <main class="container mt-5">
+        <main class="container mt-1">
             <div class="profile p-4 border rounded shadow" id="profile-view">
                 <h1 class="mb-4 text-center">Thông tin cá nhân</h1>
                 <div class="row">
-                    <div class="col-md-6 text-center">
+                    <div class="col-md-4 text-center">
                         <img th:src="@{/img/avt.jpg}" alt="User Icon" class="user-icon img-fluid rounded-circle mb-3"
                              style="max-width: 200px;">
                     </div>
-        <!-- Hiển thị thông báo thành công nếu có -->
-        <div th:if="${message}" class="alert alert-success" role="alert">
-            <span th:text="${message}"></span>
-        </div>
+                    <!-- Hiển thị thông báo thành công nếu có -->
+                    <div th:if="${message}" class="alert alert-success col-md-12" role="alert">
+                        <span th:text="${message}"></span>
+                    </div>
 
-        <!-- Form chỉnh sửa thông tin cá nhân -->
-        <form th:action="@{/profile/update}" th:object="${employee}" method="post">
+                    <!-- Form chỉnh sửa thông tin cá nhân -->
+                    <div class="col-md-8 ps-5">
+                        <form th:action="@{/profile/update}" th:object="${employee}" method="post">
+                            <!-- Họ và tên -->
+                            <div class="row-md-6 row">
+                                <div class="mb-3 col-md-6">
+                                    <label><b>Họ và tên: </b></label><br>
+                                    <span th:text="${employee.first_name} + ' ' + ${employee.last_name}"
+                                          style="display:inline-block;"></span>
+                                    <input type="text" th:field="*{first_name}" placeholder="First Name"
+                                           style="display:none;" class="form-control" required>
+                                    <input type="text" th:field="*{last_name}" placeholder="Last Name"
+                                           style="display:none;" class="form-control" required>
+                                </div>
 
-            <div class="col-md-6">
-                <!-- Họ và tên -->
-                <div class="row-md-6 row">
-                <div class="mb-3 col-md-6">
-                    <label>Họ và tên: </label>
-                    <span th:text="${employee.first_name} + ' ' + ${employee.last_name}" style="display:inline-block;"></span>
-                    <input type="text" th:field="*{first_name}" placeholder="First Name" style="display:none;" class="form-control" required>
-                    <input type="text" th:field="*{last_name}" placeholder="Last Name" style="display:none;" class="form-control" required>
-                </div>
+                                <!-- Giới tính -->
+                                <div class="mb-3 col-md-6">
+                                    <label><b>Giới tính: </b></label><br>
+                                    <span th:text="${employee.getGender()}" style="display:inline-block;"></span>
+                                    <select th:field="*{gender}" class="form-control" style="display:none;" required>
+                                        <option value="Nam" th:selected="${employee.getGender() == 'Nam'}">Nam</option>
+                                        <option value="Nữ" th:selected="${employee.getGender() == 'Nữ'}">Nữ</option>
+                                        <option value="Khác" th:selected="${employee.getGender() == 'Khác'}">Khác
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Ngày sinh -->
+                            <div class="row-md-6 row">
+                                <div class="mb-3 col-md-6">
+                                    <label ><b>Ngày sinh: </b></label><br>
+                                    <span th:text="${employee.getDob()}" style="display:inline-block;"></span>
+                                    <input type="date" th:field="*{dob}" class="form-control" style="display:none;"
+                                           required>
+                                </div>
 
-                <!-- Giới tính -->
-                <div class="mb-3 col-md-6">
-                    <label>Giới tính: </label>
-                    <span th:text="${employee.getGender()}" style="display:inline-block;"></span>
-                    <select th:field="*{gender}" class="form-control" style="display:none;" required>
-                        <option value="Nam" th:selected="${employee.getGender() == 'Nam'}">Nam</option>
-                        <option value="Nữ" th:selected="${employee.getGender() == 'Nữ'}">Nữ</option>
-                        <option value="Khác" th:selected="${employee.getGender() == 'Khác'}">Khác</option>
-                    </select>
-                </div>
-                </div>
-                <!-- Ngày sinh -->
-                <div class="row-md-6 row">
-                <div class="mb-3 col-md-6">
-                    <label>Ngày sinh: </label>
-                    <span th:text="${employee.getDob()}" style="display:inline-block;"></span>
-                    <input type="date" th:field="*{dob}" class="form-control" style="display:none;" required>
-                </div>
+                                <!-- Chức vụ -->
+                                <div class="mb-3 col-md-6">
+                                    <label><b>Chức vụ: </b></label><br>
+                                    <span th:text="${employee.getRole().getRoleName()}"
+                                          style="display:inline-block;"></span>
+                                    <input type="text" th:field="*{role.roleName}" class="form-control" style="display:none;" readonly>
+                                </div>
+                            </div>
+                            <!-- Số điện thoại -->
+                            <div class="row-md-6 row">
+                                <div class="mb-3 col-md-6">
+                                    <label><b>Số điện thoại: </b></label><br>
+                                    <span th:text="${employee.getPhone()}" style="display:inline-block;"></span>
+                                    <input type="number" th:field="*{phone}" class="form-control" style="display:none;"
+                                           required>
+                                </div>
 
-                <!-- Chức vụ -->
-                <div class="mb-3 col-md-6">
-                    <label>Chức vụ: </label>
-                    <span th:text="${employee.getRole().getRoleName()}" style="display:inline-block;"></span>
-                    <input type="hidden" th:field="*{role.roleName}" class="form-control">
-                </div>
-                </div>
-                <!-- Số điện thoại -->
-                <div class="row-md-6 row">
-                <div class="mb-3 col-md-6">
-                    <label>Số điện thoại: </label>
-                    <span th:text="${employee.getPhone()}" style="display:inline-block;"></span>
-                    <input type="number" th:field="*{phone}" class="form-control" style="display:none;" required>
-                </div>
-
-                <!-- Email -->
-                <div class="mb-3 col-md-6">
-                    <label>Email: </label>
-                    <span th:text="${employee.getEmail()}" style="display:inline-block;"></span>
-                    <input type="email" th:field="*{email}" class="form-control" style="display:none;" required>
-                </div>
-                </div>
-                <!-- Địa chỉ -->
-                <div class="mb-3 col-md-6">
-                    <label>Địa chỉ: </label>
-                    <span th:text="${employee.getAddress()}" style="display:inline-block;"></span>
-                    <input type="text" th:field="*{address}" class="form-control" style="display:none;" required>
-                </div>
+                                <!-- Email -->
+                                <div class="mb-3 col-md-6">
+                                    <label><b>Email: </b></label><br>
+                                    <span th:text="${employee.getEmail()}" style="display:inline-block;"></span>
+                                    <input type="email" th:field="*{email}" class="form-control" style="display:none;"
+                                           required>
+                                </div>
+                            </div>
+                            <!-- Địa chỉ -->
+                            <div class="mb-3 col-md-6">
+                                <label><b>Địa chỉ: </b></label><br>
+                                <span th:text="${employee.getAddress()}" style="display:inline-block;"></span>
+                                <input type="text" th:field="*{address}" class="form-control" style="display:none;"
+                                       required>
+                            </div>
 
 
-            <!-- Buttons for Edit and Save -->
-            <div class="form-group text-left">
-                <button id="edit-button" type="button" class="btn btn-outline-secondary" th:if="${!editMode}" onclick="toggleEditMode()">Chỉnh sửa</button>
-                <button id="save-button" type="submit" class="btn btn-success" style="display:none;">Lưu thay đổi</button>
-                <button id="cancel-button" type="button" class="btn btn-light border" style="display:none;" onclick="toggleEditMode()">Hủy</button>
+                            <!-- Buttons for Edit and Save -->
+                            <div class="form-group text-left">
+                                <button id="edit-button" type="button" class="btn btn-outline-secondary"
+                                        th:if="${!editMode}" onclick="toggleEditMode()">Chỉnh sửa
+                                </button>
+                                <button id="save-button" type="submit" class="btn btn-success" style="display:none;">Lưu
+                                    thay đổi
+                                </button>
+                                <button id="cancel-button" type="button" class="btn btn-light border"
+                                        style="display:none;" onclick="toggleEditMode()">Hủy
+                                </button>
+                            </div>
+                    </div>
+                    </form>
+                </div>
             </div>
-            </div>
-        </form>
-                </div>
+        </main>
     </div>
-    </main>
-        </div>
     <script th:src="@{/js/dashboard.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
