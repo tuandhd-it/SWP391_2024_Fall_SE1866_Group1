@@ -48,7 +48,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String first_name, String last_name, String email, String phone, String password, LocalDate dob, String gender, boolean is_active, boolean is_accept, String address, String status, double salary) {
+    public Employee(String first_name, String last_name, String email, String phone, String password, LocalDate dob, String gender, boolean is_active, String address, double salary) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
@@ -57,9 +57,7 @@ public class Employee {
         this.dob = dob;
         this.gender = gender;
         this.is_active = is_active;
-        this.is_accept = is_accept;
         this.address = address;
-        this.status = status;
         this.salary = salary;
     }
 }
