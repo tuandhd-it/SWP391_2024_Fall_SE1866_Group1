@@ -12,13 +12,9 @@
 </head>
 <body>
 <div class="d-flex">
-    <aside th:replace="~{dashboard :: sidebar}"></aside>
+    <aside th:replace="~{dashboardNav :: sidebar}"></aside>
     <div class="main">
-        <nav class="navbar navbar-expand">
-            <button class="toggler-btn" type="button">
-                <i class="lni lni-text-align-left"></i>
-            </button>
-        </nav>
+        <nav th:replace="~{dashboardHeader :: header}"></nav>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 profile">
