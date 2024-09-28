@@ -1,15 +1,16 @@
-body {
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
-}
+
+/*body {*/
+/*    margin: 0;*/
+/*    padding: 0;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    height: 100vh;*/
+/*    width: 100vw;*/
+/*}*/
 .container {
     text-align: center;
-    margin: 0 auto;
+    margin: 100px auto;
     width: 500px;
     height: 280px;
     border: 2px solid #ccc; /* Thêm border */
