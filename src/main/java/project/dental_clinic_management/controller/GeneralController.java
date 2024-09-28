@@ -70,7 +70,7 @@ public class GeneralController {
             Employee employee = receptionistService.findByUsername(userDetails.getUsername());
             model.addAttribute("employee", employee);
         }
-        return "landing_Page";
+        return "LandingPage";
     }
 
 
