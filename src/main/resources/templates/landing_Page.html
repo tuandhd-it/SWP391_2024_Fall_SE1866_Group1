@@ -12,10 +12,11 @@
 <section class="hero">
   <div class="hero-content">
     <img th:src="@{/img/banner.png}"alt="Dental Clinic Banner" class="hero-banner">
-    <form th:action="@{/register}" method="get">
-      <button class="cta-button" type="submit">Đăng ký ngay</button>
-    </form>
-    <!-- <a href="#" class="cta-button">Đăng ký ngay</a>&ndash;&gt;-->
+    <div th:if="${employee == null}">
+      <form th:action="@{/register}" method="get">
+        <button class="cta-button" type="submit">Đăng ký ngay</button>
+      </form>
+    </div>
   </div>-->
 </section>
 
