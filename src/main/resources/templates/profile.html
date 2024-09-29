@@ -25,7 +25,7 @@
                     </div>
                     <!-- Hiển thị thông báo thành công nếu có -->
                     <div th:if="${message}" class="alert alert-success col-md-12" role="alert">
-                        <span th:text="${message}"></span>
+                        <span class="label-span" th:text="${message}"></span>
                     </div>
 
                     <!-- Form chỉnh sửa thông tin cá nhân -->
@@ -35,7 +35,7 @@
                             <div class="row-md-6 row">
                                 <div class="mb-3 col-md-6">
                                     <label><b>Họ và tên: </b></label><br>
-                                    <span th:text="${employee.first_name} + ' ' + ${employee.last_name}"
+                                    <span class="label-span" th:text="${employee.first_name} + ' ' + ${employee.last_name}"
                                           style="display:inline-block;"></span>
                                     <input type="text" th:field="*{first_name}" placeholder="First Name"
                                            style="display:none;" class="form-control" required>
@@ -46,7 +46,7 @@
                                 <!-- Giới tính -->
                                 <div class="mb-3 col-md-6">
                                     <label><b>Giới tính: </b></label><br>
-                                    <span th:text="${employee.getGender()}" style="display:inline-block;"></span>
+                                    <span class="label-span" th:text="${employee.getGender()}" style="display:inline-block;"></span>
                                     <select th:field="*{gender}" class="form-control" style="display:none;" required>
                                         <option value="Nam" th:selected="${employee.getGender() == 'Nam'}">Nam</option>
                                         <option value="Nữ" th:selected="${employee.getGender() == 'Nữ'}">Nữ</option>
@@ -58,8 +58,8 @@
                             <!-- Ngày sinh -->
                             <div class="row-md-6 row">
                                 <div class="mb-3 col-md-6">
-                                    <label ><b>Ngày sinh: </b></label><br>
-                                    <span th:text="${employee.getDob()}" style="display:inline-block;"></span>
+                                    <label><b>Ngày sinh: </b></label><br>
+                                    <span class="label-span" th:text="${employee.getDob()}" style="display:inline-block;"></span>
                                     <input type="date" th:field="*{dob}" class="form-control" style="display:none;"
                                            required>
                                 </div>
@@ -67,16 +67,17 @@
                                 <!-- Chức vụ -->
                                 <div class="mb-3 col-md-6">
                                     <label><b>Chức vụ: </b></label><br>
-                                    <span th:text="${employee.getRole().getRoleName()}"
+                                    <span class="label-span" th:text="${employee.getRole().getRoleName()}"
                                           style="display:inline-block;"></span>
-                                    <input type="text" th:field="*{role.roleName}" class="form-control" style="display:none;" readonly>
+                                    <input type="text" th:field="*{role.roleName}" class="form-control"
+                                           style="display:none;" readonly>
                                 </div>
                             </div>
                             <!-- Số điện thoại -->
                             <div class="row-md-6 row">
                                 <div class="mb-3 col-md-6">
                                     <label><b>Số điện thoại: </b></label><br>
-                                    <span th:text="${employee.getPhone()}" style="display:inline-block;"></span>
+                                    <span class="label-span" th:text="${employee.getPhone()}" style="display:inline-block;"></span>
                                     <input type="number" th:field="*{phone}" class="form-control" style="display:none;"
                                            required>
                                 </div>
@@ -84,7 +85,7 @@
                                 <!-- Email -->
                                 <div class="mb-3 col-md-6">
                                     <label><b>Email: </b></label><br>
-                                    <span th:text="${employee.getEmail()}" style="display:inline-block;"></span>
+                                    <span class="label-span" th:text="${employee.getEmail()}" style="display:inline-block;"></span>
                                     <input type="email" th:field="*{email}" class="form-control" style="display:none;"
                                            required>
                                 </div>
@@ -92,7 +93,7 @@
                             <!-- Địa chỉ -->
                             <div class="mb-3 col-md-6">
                                 <label><b>Địa chỉ: </b></label><br>
-                                <span th:text="${employee.getAddress()}" style="display:inline-block;"></span>
+                                <span class="label-span" th:text="${employee.getAddress()}" style="display:inline-block;"></span>
                                 <input type="text" th:field="*{address}" class="form-control" style="display:none;"
                                        required>
                             </div>
@@ -110,8 +111,8 @@
                                         style="display:none;" onclick="toggleEditMode()">Hủy
                                 </button>
                             </div>
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
         </main>

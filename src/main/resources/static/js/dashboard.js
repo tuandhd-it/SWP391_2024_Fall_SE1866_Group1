@@ -17,11 +17,11 @@ toggler.addEventListener("click", function () {
     input.style.display = (input.style.display === 'none' || input.style.display === '') ? 'inline-block' : 'none';
 });
 
-    // Ẩn/Hiện span
-    const spans = document.querySelectorAll('span');
-    spans.forEach(span => {
-    span.style.display = (span.style.display === 'none' || span.style.display === '') ? 'inline-block' : 'none';
-});
+    // Ẩn/Hiện span có class là label-span
+        const spans = document.querySelectorAll('span.label-span');
+        spans.forEach(span => {
+            span.style.display = (span.style.display === 'none' || span.style.display === '') ? 'inline-block' : 'none';
+        });
 
     // Ẩn/Hiện nút
     if (editButton.style.display === 'none') {
