@@ -27,12 +27,6 @@
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
-                                <th>
-<!--                                    <span th:text="${list.getEmp_id()}"></span>-->
-                                </th>
-                                <th>
-<!--                                    <span th:text="${.getEmp_id()}"></span>-->
-                                </th>
                                 <th>Email</th>
                                 <th>Số điện thoại</th>
                                 <th>Tên</th>
@@ -46,20 +40,15 @@
                                 <td th:text="${emp.getEmail()}"></td>
                                 <td th:text="${emp.getPhone()}"></td>
                                 <td th:text="${emp.getFirst_name()}"></td>
-                                <td th:text="${emp.getRole()}"></td>
+                                <td th:text="${emp.getRole().getRoleName()}"></td>
                                 <td th:text="${emp.is_active()}"></td>
-                                <td></td>
-                            <span class="table-action-icons">
-                                 <a th:href="@{/#}">
-                                     <img th:src="@{/img/edit.png}" class="editIcon" title="Edit">
-                                 </a>
-                               <a th:href="@{/#}">
-                                   <img th:src="@{/img/thungrac.png}" class="deleteIcon" title="Delete">
-                               </a>
-                            </span>
+                                <td>
+                                    <span class="table-action-icons">
+                                         <a th:href="@{/#}">
+                                             <img th:src="@{/img/edit.png}" class="editIcon" title="Edit">
+                                         </a>
+                                    </span>
                                 </td>
-                            </tr>
-                            <!-- Add similar rows as needed -->
                             </tbody>
                         </table>
                     </div>

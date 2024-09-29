@@ -20,7 +20,6 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-
     private AdminService adminService;
 
     @PostMapping("/branchCreate")
@@ -29,21 +28,21 @@ public class AdminController {
         return "redirect:/";
     }
 
-    @GetMapping("/branchList")
+    @GetMapping("/manageBranch")
     public String getAllBranches(Model model) {
         //Get list Branch
         List<Branch> list = adminService.getAllBranches();
         model.addAttribute("branches", list);
         ClinicBranchCreationRequest request = new ClinicBranchCreationRequest();
         model.addAttribute("request", request);
-        return "redirect:/";
+        return "/manageBranch";
     }
 
     @PutMapping("/editBranch")
     public String editBranch(@ModelAttribute ClinicBranchUpdateRequest branchRequest, RedirectAttributes redirectAttributes) {
         adminService.updateBranch(branchRequest.getId(), branchRequest);
         redirectAttributes.addFlashAttribute("message","");
-        return "redirect:/";
+        return "/";
     }
 
     @GetMapping("/manageAcc")
