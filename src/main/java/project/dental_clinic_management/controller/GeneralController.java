@@ -32,14 +32,6 @@ public class GeneralController {
         return "login";
     }
 
-    @RequestMapping("/profile")
-    public String loginPost(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        Employee employee = receptionistService.findByUsername(username);
-        model.addAttribute("employee", employee);
-        return "profile";
-    }
-
     @GetMapping("/register")
     public String register(Model model) {
         // Retreat role that can register
