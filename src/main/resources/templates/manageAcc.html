@@ -33,25 +33,22 @@
                                 <th>
 <!--                                    <span th:text="${.getEmp_id()}"></span>-->
                                 </th>
-                                <th>Username</th>
-                                <th>Số điện thoại</th>
                                 <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th>Số điện thoại</th>
+                                <th>Tên</th>
+                                <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
-
-                            <tr>
-                                <td>1</td>
-                                <td>Jane Doe</td>
-                                <td>abcxyz</td>
-                                <td>0966666666</td>
-                                <td>jane.doe@example.com</td>
-                                <td>Bác sĩ</td>
-                                <td>Active</td>
-                                <td>
+                            <tr th:each="emp : ${employees}">
+                                <td th:text="${emp.getEmail()}"></td>
+                                <td th:text="${emp.getPhone()}"></td>
+                                <td th:text="${emp.getFirst_name()}"></td>
+                                <td th:text="${emp.getRole()}"></td>
+                                <td th:text="${emp.is_active()}"></td>
+                                <td></td>
                             <span class="table-action-icons">
                                  <a th:href="@{/#}">
                                      <img th:src="@{/img/edit.png}" class="editIcon" title="Edit">
