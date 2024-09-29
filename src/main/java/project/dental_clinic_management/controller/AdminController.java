@@ -20,10 +20,11 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
+
     private AdminService adminService;
 
     @PostMapping("/branchCreate")
-    public String createBranch(@RequestBody ClinicBranchCreationRequest branchRequest) {
+    public String createBranch(@ModelAttribute ClinicBranchCreationRequest branchRequest) {
         adminService.createBranch(branchRequest);
         return "redirect:/";
     }
@@ -33,25 +34,27 @@ public class AdminController {
         //Get list Branch
         List<Branch> list = adminService.getAllBranches();
         model.addAttribute("branches", list);
+        ClinicBranchCreationRequest request = new ClinicBranchCreationRequest();
+        model.addAttribute("request", request);
         return "redirect:/";
     }
 
     @PutMapping("/editBranch")
-    public String editBranch(@RequestBody ClinicBranchUpdateRequest branchRequest, RedirectAttributes redirectAttributes) {
+    public String editBranch(@ModelAttribute ClinicBranchUpdateRequest branchRequest, RedirectAttributes redirectAttributes) {
         adminService.updateBranch(branchRequest.getId(), branchRequest);
         redirectAttributes.addFlashAttribute("message","");
         return "redirect:/";
     }
 
-    @GetMapping("/listEmployee")
+    @GetMapping("/manageAcc")
     public String getAllEmployees(Model model) {
         List<Employee> list = adminService.getAllEmployees();
         model.addAttribute("employees", list);
-        return "redirect:/";
+        return "manageAcc";
     }
 
     @PutMapping("/changeEmployeePass")
-    public String changeEmployeePass(@RequestBody EmployeeChangePasswordRequest employeeRequest,  RedirectAttributes redirectAttributes) {
+    public String changeEmployeePass(@ModelAttribute EmployeeChangePasswordRequest employeeRequest,  RedirectAttributes redirectAttributes) {
         adminService.changePassword(employeeRequest.getId(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
         return "redirect:/profile";
