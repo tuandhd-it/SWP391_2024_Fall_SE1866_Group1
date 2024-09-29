@@ -84,7 +84,7 @@ public class AdminServiceTest {
     @Test
     void updateEmployeeTest() {
         // Tạo một đối tượng yêu cầu cập nhật
-        EmployeeUpdateRequest updateRequest = new EmployeeUpdateRequest();
+            EmployeeUpdateRequest updateRequest = new EmployeeUpdateRequest();
         updateRequest.setFirst_name("Nguyễn");
         updateRequest.setLast_name("An");
         updateRequest.setEmail("nguyena@example.com");
