@@ -16,7 +16,7 @@
         <nav th:replace="~{dashboardHeader :: header}"></nav>
 
         <div class="card mb-3 w-100 h-100" >
-            <h2 class="mt-4" style="text-align: center"><b>Quản Lý Cơ Sở </b></h2>
+            <h2 class="mt-5" style="text-align: center"><b>Quản Lý Cơ Sở</b></h2>
             <div class="row g-0 my-3" style="margin-left: 18%" th:each="branch : ${branches}">
                 <div class="col-md-4 mt-3">
                     <img th:src="${branch.getBranch_img()}" class="img-fluid rounded-start" alt="...">
