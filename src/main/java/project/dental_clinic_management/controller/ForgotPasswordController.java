@@ -46,6 +46,7 @@ public class ForgotPasswordController {
         model.addAttribute("email", email);
         if(checkRightOTP == null) {
             model.addAttribute("msg", "Wrong OTP");
+            model.addAttribute("otp", otp);
             return "enterForgotOTP";
         }
 
@@ -63,6 +64,11 @@ public class ForgotPasswordController {
     @PostMapping("/verify")
     public String forgotPassword(@RequestParam("email") String email, Model model) {
         Employee employee = employeeRepository.findByEmail(email);
+
+        if(employee == null) {
+            model.addAttribute("emailError", "This email does not exist");
+            return "enterEmail";
+        }
 
         int otp = otpGenerator();
 

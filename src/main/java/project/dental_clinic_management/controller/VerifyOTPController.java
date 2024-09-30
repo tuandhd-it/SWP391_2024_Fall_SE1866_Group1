@@ -78,10 +78,21 @@ public class VerifyOTPController {
         RegisterOTPVerify checkRightOTP = registerOTPVerifyRepository.findByOtp(otp);
         if (checkRightOTP == null) {
             model.addAttribute("otpMsg", "Wrong OTP");
+            model.addAttribute("otp", otp);
+            model.addAttribute("email", email);
+            model.addAttribute("roleValue", role);
+            model.addAttribute("creationRequest", request);
             return "enterVerifyOTP";
         }
 
-        RegisterOTPVerify rv = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP not for this email"));
+        RegisterOTPVerify rv = new RegisterOTPVerify();
+        try {
+            rv = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP is not for this email"));
+        } catch (RuntimeException e) {
+            model.addAttribute("otpMsg", e.getMessage());
+            return "login";
+        }
+
 
         if (rv.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("otpMsg", "The OTP has expired");
