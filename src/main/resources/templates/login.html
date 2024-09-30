@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="d-block flex-column w-100 h-100">
-    <header th:replace="headerLandingPage :: header"></header>
+    <header th:replace="~{headerLandingPage :: header}"></header>
     <div class="mx-auto login-container mt-5">
         <h1>Đăng nhập</h1>
         <h3 th:text="${param.error == null ? '' : 'Username or password incorrect'}" style="color: red"></h3>
