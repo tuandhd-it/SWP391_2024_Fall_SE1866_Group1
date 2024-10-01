@@ -1,6 +1,7 @@
 
 package project.dental_clinic_management.controller;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.service.CustomUserDetailService;
 import project.dental_clinic_management.service.ReceptionistService;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,11 @@ public class GeneralController {
 
     @Autowired
     private CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
     @GetMapping("/login")
     public String login() {
@@ -74,12 +81,55 @@ public class GeneralController {
         model.addAttribute("employee", employee);
         return "changePass";
     }
+    @PostMapping("/changePass")
+    public String changePass(@RequestParam String currentPassword,
+                             @RequestParam String newPassword,
+                             @RequestParam String confirmNewPassword,
+                             RedirectAttributes redirectAttributes,
+                             @AuthenticationPrincipal UserDetails userDetails,
+                             Model model) {
+    try {
+        // Lấy username từ đối tượng UserDetails đã xác thực
+        String username = userDetails.getUsername();
+
+        // Lấy thông tin Employee từ username
+        Employee employee = receptionistService.findByUsername(username);
+
+        // Kiểm tra nếu mật khẩu hiện tại không khớp
+        if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
+            model.addAttribute("error", "Hãy nhập đúng mật khẩu cũ");
+            return "changePass"; // Quay lại trang đổi mật khẩu nếu sai
+        }
+
+        // Kiểm tra mật khẩu mới và mật khẩu xác nhận có trùng khớp không
+        if (!newPassword.equals(confirmNewPassword)) {
+            model.addAttribute("error", "Mật khẩu không trùng khớp");
+            return "changePass";
+        }
+
+        // Cập nhật mật khẩu mới (sau khi mã hóa)
+        employee.setPassword(passwordEncoder.encode(newPassword));
+        customUserDetailService.saveEmployee(employee);
+
+        // Thông báo thành công
+        redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
+    } catch (Exception e) {
+        // Bắt và xử lý ngoại lệ
+        model.addAttribute("error", "An error occurred: " + e.getMessage());
+        return "changePass";
+    }
+
+    return "redirect:/profile"; // Chuyển hướng về trang profile sau khi đổi mật khẩu thành công
+}
 
     @GetMapping("/profile")
-    public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails,@ModelAttribute("messageChange") String messageChange) {
         String username = userDetails.getUsername();
         Employee employee = customUserDetailService.findByUsername(username);
         model.addAttribute("employee", employee);
+        if (messageChange != null && !messageChange.isEmpty()) {
+            model.addAttribute("messageChange", messageChange);
+        }
         model.addAttribute("editMode", false); // Initial load without edit mode
         return "profile";
     }
@@ -113,7 +163,7 @@ public class GeneralController {
             // Save the updated employee
             customUserDetailService.saveEmployee(existingEmployee);
 
-            redirectAttributes.addFlashAttribute("message", "Profile updated successfully!");
+            redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
         }
 
         return "redirect:/profile"; // Redirect to avoid resubmission

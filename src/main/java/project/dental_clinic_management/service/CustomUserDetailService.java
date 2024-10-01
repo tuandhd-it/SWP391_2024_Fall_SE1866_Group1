@@ -1,5 +1,10 @@
 package project.dental_clinic_management.service;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import project.dental_clinic_management.dto.request.EmployeeChangePasswordRequest;
 import project.dental_clinic_management.entity.CustomEmployeeDetails;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.repository.EmployeeRepository;
@@ -22,6 +27,13 @@ public class CustomUserDetailService implements UserDetailsService {
     private ReceptionistService employeeService;
     @Autowired
     private EmployeeRepository employeeRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public CustomUserDetailService(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
 
     //Custom login retreat information from database and to assign authority
     @Override
@@ -67,6 +79,9 @@ public class CustomUserDetailService implements UserDetailsService {
         // Lưu lại thông tin Employee sau khi cập nhật
         employeeRepository.save(employee);
     }
+
+
+
 
 
 }

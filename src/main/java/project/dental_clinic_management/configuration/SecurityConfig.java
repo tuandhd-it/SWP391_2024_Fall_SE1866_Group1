@@ -1,6 +1,8 @@
 package project.dental_clinic_management.configuration;
 
 
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -14,10 +16,16 @@ public class SecurityConfig {
 
     //Custom endpoints that can access without log in
     private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/js/**", "/homePage", "/nextRegister", "/nextRegisterDoctor", "/registerDoctor", "/verifyEmail/**", "/forgotPassword/**"};
+    public SecurityConfig( PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService) {
+        this.customUserDetailService=customUserDetailService;
+        this.passwordEncoder = passwordEncoder;
+    }
+    private final PasswordEncoder passwordEncoder;
+    private final CustomUserDetailService customUserDetailService;
 
-    @Autowired
-    private CustomUserDetailService customUserDetailService;
-
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder);
+    }
 
     //Authorization
     @Bean
@@ -30,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/manager/**").hasAuthority("Manager")
                         .requestMatchers("/doctor/**").hasAnyAuthority("Doctor", "Nurse")
                         .requestMatchers("/receptionist/**").hasAuthority("Receptionist")
+                        .requestMatchers("changePass").permitAll()
                         .anyRequest().authenticated()
                 ).formLogin(login -> login
                         //Custom login page and retreat data from form login
@@ -38,6 +47,7 @@ public class SecurityConfig {
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .defaultSuccessUrl("/homePage", true)
+                        .permitAll()
                 ).logout(logout -> logout
                         .logoutUrl("/logout") // URL cho logout
                         .logoutSuccessUrl("/login?logout") // URL chuyển hướng sau khi logout
@@ -47,8 +57,5 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 }

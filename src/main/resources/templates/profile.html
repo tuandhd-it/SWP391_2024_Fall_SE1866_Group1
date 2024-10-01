@@ -24,10 +24,13 @@
                              style="max-width: 200px;">
                     </div>
                     <!-- Hiển thị thông báo thành công nếu có -->
-                    <div th:if="${message}" class="alert alert-success col-md-12" role="alert">
+                    <div th:if="${message != null && !message.isEmpty()}" class="alert alert-success col-md-12" role="alert">
                         <span class="label-span" th:text="${message}"></span>
                     </div>
 
+                    <div th:if="${messageChange != null && !messageChange.isEmpty()}" class="alert alert-success col-md-12" role="alert">
+                        <span class="label-span" th:text="${messageChange}"></span>
+                    </div>
                     <!-- Form chỉnh sửa thông tin cá nhân -->
                     <div class="col-md-8 ps-5">
                         <form th:action="@{/profile/update}" th:object="${employee}" method="post">
