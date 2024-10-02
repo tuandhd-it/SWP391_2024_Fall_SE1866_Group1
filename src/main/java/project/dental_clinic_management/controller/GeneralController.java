@@ -53,8 +53,7 @@ public class GeneralController {
     @PostMapping("/nextRegister")
     public String nextRegister(Model model, @RequestParam("role") String role) {
         model.addAttribute("roleValue", role);
-        List<Branch> branches = new ArrayList<>();
-        branches = receptionistService.findAllBranches();
+        List<Branch> branches = receptionistService.findAllBranches();
         model.addAttribute("branches", branches);
         ReceptionistCreationRequest receptionistCreationRequest = new ReceptionistCreationRequest();
         model.addAttribute("request", receptionistCreationRequest);
