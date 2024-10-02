@@ -1,0 +1,49 @@
+.employee-details {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.employee-image {
+    width: 30%;
+    text-align: center;
+}
+
+.employee-image img {
+    max-width: 100%;
+    height: auto;
+}
+
+.employee-info {
+    width: 70%;
+    padding-left: 20px;
+}
+
+.employee-info h2 {
+    margin-top: 0;
+}
+
+.employee-info table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.employee-info table th, .employee-info table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.employee-info table th {
+    text-align: left;
+    font-weight: bold;
+    width: 30%;
+}
+
+
+.btn-custom {
+    margin-left: 10px;
+}
+
+.hidden {
+    display: none;
+}

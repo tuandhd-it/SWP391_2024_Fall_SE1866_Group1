@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Employee</title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+<div class="d-flex">
+    <aside th:replace="~{dashboardNav :: sidebar}"></aside>
+    <div class="main">
+        <nav th:replace="~{dashboardHeader :: header}"></nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 profile">
+                    <h1>Danh sách Nhân viên</h1>
+                    <div class="search mb-3">
+                        <input type="text" class="form-control" placeholder="Search">
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                            <tr>
+                                <th>Mã NV</th>
+                                <th>Họ và Tên</th>
+                                <th>Số điện thoại</th>
+                                <th>Cơ sở</th>
+                                <th>Vai trò</th>
+                                <th>Lương</th>
+                                <th>Sửa</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="emp : ${employees}">
+                                <td th:text="${emp.getEmp_id()}"></td>
+                                <td th:text="${emp.getFirst_name() + ' ' + emp.getLast_name()}"></td>
+                                <td th:text="${emp.getPhone()}"></td>
+                                <td th:text="${emp.getBranch() != null ? emp.getBranch().getBranchName() : 'N/A'}"></td>
+                                <td th:text="${emp.getRole().getRoleName()}"></td>
+                                <td th:text="${emp.getSalary()}"></td>
+                                <td>
+                                    <span class="table-action-icons">
+                                         <a th:href="@{/admin/employeesDetails/{id}(id=${emp.getEmp_id()})}">
+                                             Chi tiết
+                                         </a>
+                                    </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1">Previous</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item "><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">4</a></li>
+                            <li class="page-item"><a class="page-link" href="#">5</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/dashboard.js}"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

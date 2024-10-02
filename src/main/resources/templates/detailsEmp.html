@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Details</title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/detailsEmp.css}">
+</head>
+<body>
+<div class="d-flex">
+    <aside th:replace="~{dashboardNav :: sidebar}"></aside>
+    <div class="main">
+        <nav th:replace="~{dashboardHeader :: header}"></nav>
+        <form id="employee-form" th:action="@{/admin/updateEmployee}" method="post" th:object="${editEmployees}">
+            <div class="employee-details mt-4">
+                <div class="employee-image">
+                    <img th:src="${employee.getImg()}" alt="Employees Image">
+                    <label class="form-check-label hidden input" for="imgURL"><b><i>Link Ảnh</i></b></label>
+                    <input th:field="*{img}" id="imgURL" type="url" class="form-control hidden input"
+                           th:value="${employee.getImg()}">
+                </div>
+                <div class="employee-info">
+                    <h2 th:text="'Mã NV '+${employee.getEmp_id()}"></h2>
+                    <input th:field="*{emp_id}" class="hidden" th:value="${employee.getEmp_id()}">
+                    <table>
+                        <tr>
+                            <th>Họ</th>
+                            <td>
+                                <span class="text" th:text="${employee.getFirst_name()}"></span>
+                                <input th:field="*{first_name}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getFirst_name()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Tên</th>
+                            <td>
+                                <span class="text" th:text="${employee.getLast_name()}"></span>
+                                <input th:field="*{last_name}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getLast_name()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Vai trò</th>
+                            <td>
+                                <span class="text" th:text="${employee.getRole().getRoleName()}"></span>
+                                <div class="input-group hidden input">
+                                    <select th:field="*{role}" class="form-select" id="role">
+                                        <option th:value="${employee.getRole().getRole_id()}"
+                                                th:text="${employee.getRole().getRoleName()}"
+                                                selected></option>
+                                        <th:block th:each="role : ${listRoles}">
+                                            <th:block th:if="${employee.getRole().getRole_id() != role.getRole_id()}">
+                                                <option th:value="${role.getRole_id()}"
+                                                        th:text="${role.getRoleName()}"></option>
+                                            </th:block>
+                                        </th:block>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Trạng thái:</th>
+                            <td>
+                                <span class="text"
+                                      th:text="${employee.is_active() ? 'Đang hoạt động' : 'Dừng hoạt động'}"></span>
+                                <input th:field="*{active}" class="form-check-input hidden input" type="radio"
+                                       id="active"
+                                       value="true" th:checked="${employee.is_active()}">
+                                <label class="form-check-label hidden input" for="active">Hoạt động</label>
+                                <input th:field="*{active}" class="form-check-input hidden input" type="radio"
+                                       id="inactive"
+                                       value="false" th:checked="${!employee.is_active()}">
+                                <label class="form-check-label hidden input" for="inactive">Dừng hoạt động</label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>
+                                <span class="text" th:text="${employee.getEmail()}"></span>
+                                <input th:field="*{email}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getEmail()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Số điện thoại</th>
+                            <td>
+                                <span class="text" th:text="${employee.getPhone()}"></span>
+                                <input th:field="*{phone}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getPhone()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Địa chỉ</th>
+                            <td>
+                                <span class="text" th:text="${employee.getAddress()}"></span>
+                                <input th:field="*{address}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getAddress()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Lương</th>
+                            <td>
+                                <span class="text" th:text="${employee.getSalary()}"></span>
+                                <input th:field="*{salary}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getSalary()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Số điện thoại</th>
+                            <td>
+                                <span class="text" th:text="${employee.getPhone()}"></span>
+                                <input th:field="*{phone}" type="text" class="form-control hidden input"
+                                       th:value="${employee.getPhone()}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Chi nhánh:</th>
+                            <td>
+                                <span class="text"
+                                      th:text="${employee.getBranch().getBranchName()} + ' ' + ${employee.getBranch().getBranch_address()}"></span>
+                                <div class="input-group hidden input">
+                                    <select th:field="*{branch_id}" class="form-select">
+                                        <option th:value="${employee.getBranch().getBran_id()}"
+                                                th:text="${employee.getBranch().getBranchName()}"
+                                                selected>
+                                        </option>
+                                        <th:block th:each="branch : ${listBranches}">
+                                            <th:block th:if="${employee.getBranch().getBranchName() != branch.getBranchName()}">
+                                                <option th:value="${branch.getBran_id()}"
+                                                        th:text="${branch.getBranchName()}"></option>
+                                            </th:block>
+                                        </th:block>
+                                    </select>
+                                    <a href="#" class="btn btn-outline-secondary">Thêm Mới</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="btn-group d-flex" style="width: 100%">
+                        <div class="p-2">
+                            <button class="btn btn-dark edit-btn mt-4" style="width: 80px;"><i
+                                    style="font-size: 20px" class="fa-solid fa-pen-to-square"></i></button>
+                            <!-- Edit button -->
+                            <button class="btn btn-success save-btn mt-4 hidden input" style="width: 80px;"><i
+                                    class="fa-regular fa-floppy-disk"></i></button> <!-- Save button -->
+                            <button class="btn btn-dark cancel-btn mt-4 hidden input" style="width: 80px;">Hủy
+                            </button> <!-- Cancel button -->
+                        </div>
+                    </div>
+                    <div class="ml-auto p-2" style="margin-left: auto">
+                        <a th:href="@{/admin/manageEmp}" class="btn btn-dark mt-4">
+                            <i style="font-size: 13px" class="fa-solid fa-arrow-left"></i>&nbsp;
+                            Quay lại</a> <!-- Back button -->
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    document.querySelector('.edit-btn').addEventListener('click', function () {
+        document.querySelectorAll('.text').forEach(function (element) {
+            element.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.input').forEach(function (element) {
+            element.classList.toggle('hidden');
+        });
+        document.querySelector('.edit-btn').classList.add('hidden');
+        document.querySelector('.save-btn').classList.remove('hidden');
+        document.querySelector('.cancel-btn').classList.remove('hidden');
+        document.getElementById('employee-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    });
+
+    document.querySelector('.cancel-btn').addEventListener('click', function () {
+        document.querySelectorAll('.text').forEach(function (element) {
+            element.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.input').forEach(function (element) {
+            element.classList.toggle('hidden');
+        });
+        document.querySelector('.edit-btn').classList.remove('hidden');
+        document.querySelector('.save-btn').classList.add('hidden');
+        document.querySelector('.cancel-btn').classList.add('hidden');
+
+        document.getElementById('employee-form').removeEventListener('submit', function (event) {
+            event.preventDefault();
+        });
+    });
+</script>
+<script th:src="@{/js/dashboard.js}"></script>
+<script crossorigin="anonymous"
+        integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://kit.fontawesome.com/d39499d76a.js" crossorigin="anonymous"></script>
+
+</body>
+</html>
