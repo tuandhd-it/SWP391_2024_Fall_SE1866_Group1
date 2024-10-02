@@ -2,6 +2,7 @@ package project.dental_clinic_management.controller;
 
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
 import project.dental_clinic_management.dto.request.ClinicBranchUpdateRequest;
@@ -54,6 +55,28 @@ public class AdminController {
         return "manageAcc";
     }
 
+    @GetMapping("/manageEmp")
+    public String getAllEmployeesInfo(Model model) {
+        List<Employee> list = adminService.getAllEmployees();
+        model.addAttribute("employees", list);
+        return "manageEmp";
+    }
+
+    @GetMapping("employeesDetails/{id}")
+    public String showEmployeeDetails(@PathVariable("id") Integer empId, Model model) {
+        Employee employee = adminService.getEmployeeById(empId);
+        List<Branch> listBranch = adminService.getAllBranches();
+        List<Role> listRole = adminService.getAllRole();
+        EmployeeUpdateRequest editEmployees =  new EmployeeUpdateRequest();
+        model.addAttribute("employee", employee);
+        model.addAttribute("listBranches", listBranch);
+        model.addAttribute("listRoles", listRole);
+        model.addAttribute("editEmployees", editEmployees);
+        return "detailsEmp";
+    }
+
+
+
     @PutMapping("/changeEmployeePass")
     public String changeEmployeePass(@ModelAttribute EmployeeChangePasswordRequest employeeRequest,  RedirectAttributes redirectAttributes) {
         adminService.changePassword(employeeRequest.getEmp_id(), employeeRequest);
@@ -65,7 +88,7 @@ public class AdminController {
     public String updateEmployee(@ModelAttribute EmployeeUpdateRequest employeeRequest, RedirectAttributes redirectAttributes) {
         adminService.updateEmployee(employeeRequest.getEmp_id(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Employee updated successfully!");
-        return "redirect:/profile";
+        return "/manageEmp";
     }
 
 

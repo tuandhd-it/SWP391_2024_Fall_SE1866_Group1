@@ -3,6 +3,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,11 @@ public class AdminService {
     public static void saveEmployee(Employee employee) {
     }
 
+
+    //Get all Role
+    public List<Role> getAllRole(){
+        return roleRepository.findAll();
+    }
 
     //Load all employee
     public List<Employee> getAllEmployees() {
@@ -59,8 +65,8 @@ public class AdminService {
         employee.setEmail(employeeUpdateRequest.getEmail());
         employee.setPhone(employeeUpdateRequest.getPhone());
         employee.setAddress(employeeUpdateRequest.getAddress());
-        employee.setGender(employeeUpdateRequest.getGender());
-        employee.setDob(employeeUpdateRequest.getDob());
+//        employee.setGender(employeeUpdateRequest.getGender());
+//        employee.setDob(employeeUpdateRequest.getDob());
         employee.setSalary(employeeUpdateRequest.getSalary());
         employee.setRole(employeeUpdateRequest.getRole());
 

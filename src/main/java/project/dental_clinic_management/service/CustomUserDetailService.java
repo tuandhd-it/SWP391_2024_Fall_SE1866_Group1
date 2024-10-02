@@ -66,8 +66,8 @@ public class CustomUserDetailService implements UserDetailsService {
         employee.setLast_name(employeeUpdateRequest.getLast_name());
         employee.setEmail(employeeUpdateRequest.getEmail());
         employee.setPhone(employeeUpdateRequest.getPhone());
-        employee.setDob(employeeUpdateRequest.getDob());
-        employee.setGender(employeeUpdateRequest.getGender());
+//        employee.setDob(employeeUpdateRequest.getDob());
+//        employee.setGender(employeeUpdateRequest.getGender());
         employee.setAddress(employeeUpdateRequest.getAddress());
         employee.setSalary(employeeUpdateRequest.getSalary());
 
