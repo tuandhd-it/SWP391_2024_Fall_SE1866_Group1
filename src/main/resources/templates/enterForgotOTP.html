@@ -17,25 +17,34 @@
             border-radius: 5px; /* Rounded corners */
             background-color: white; /* White background for the form */
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-            height: 400px;
+            height: 350px;
             font-family: "Arial";
         }
         h1 {
-            font-size: 24px; /* Heading size */
-            margin-bottom: 20px; /* Space below the heading */
+            font-size: 20px; /* Heading size */
+            margin-bottom: 10px; /* Space below the heading */
+            font-weight: bold;
+
         }
         input[type="number"], input[type="submit"] {
             width: 100%; /* Full width inputs */
             margin-bottom: 10px; /* Space between inputs */
+        }
+        h3{
+            width: 100%; /* Full width inputs */
+            margin-bottom: 20px; /* Space between inputs */
+            font-size: 16px;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
 <div class="container">
     <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo" class="img-fluid mb-4"> <!-- Make the logo responsive -->
-    <h3 th:text="${msg}" style="color:red;" class="text-center mb-3"></h3>
     <h1 class="text-center">Nhập mã OTP</h1>
-    <form th:action="@{/forgotPassword/verifyOTP}" method="post">
+    <h3 th:text="${msg}" style="color:gray;" class="text-center mb-3"></h3>
+
+        <form th:action="@{/forgotPassword/verifyOTP}" method="post">
         <input type="number" class="form-control" name="otp" placeholder="Enter OTP" required>
         <input type="hidden" name="email" th:value="${email}">
         <input type="submit" class="btn btn-primary" name="Verify OTP" value="Verify OTP">
