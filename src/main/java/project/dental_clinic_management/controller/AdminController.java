@@ -1,12 +1,10 @@
 package project.dental_clinic_management.controller;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.service.AdminService;
-import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
-import project.dental_clinic_management.dto.request.ClinicBranchUpdateRequest;
-import project.dental_clinic_management.dto.request.EmployeeChangePasswordRequest;
-import project.dental_clinic_management.dto.request.EmployeeUpdateRequest;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +16,8 @@ import java.util.List;
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private AdminService adminService;
@@ -65,6 +65,28 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("message", "Employee updated successfully!");
         return "redirect:/profile";
     }
+    @GetMapping("/searchEmployees")
+    public String searchEmployees(@RequestParam("keyword") String keyword, Model model) {
+        List<Employee> employees = adminService.searchEmployeesByNameOrPhone(keyword);
+        model.addAttribute("employees", employees);
+        model.addAttribute("keyword", keyword);
+        return "manageAcc";
+    }
 
 
+
+    @GetMapping("/editEmployee/{id}")
+    public String editEmployee(@PathVariable("id") int id, Model model) {
+        Employee employee = adminService.getEmployeeById(id);
+        model.addAttribute("employee", employee);
+        return "editEmployeePassword";
+    }
+
+    // Cập nhật mật khẩu
+    @PostMapping("/updatePassword")
+    public String updatePassword(@RequestParam("emp_id") int empId, @RequestParam("password") String newPassword, RedirectAttributes redirectAttributes) {
+        adminService.updatePassword(empId, newPassword);
+        redirectAttributes.addFlashAttribute("message", "Password updated successfully!");
+        return "redirect:/manageAcc";
+    }
 }

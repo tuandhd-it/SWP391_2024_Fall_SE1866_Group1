@@ -1,12 +1,9 @@
 package project.dental_clinic_management.service;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.repository.*;
-import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
-import project.dental_clinic_management.dto.request.ClinicBranchUpdateRequest;
-import project.dental_clinic_management.dto.request.EmployeeChangePasswordRequest;
-import project.dental_clinic_management.dto.request.EmployeeUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +21,10 @@ public class AdminService {
     @Autowired
     private RoleRepository roleRepository;
 
+    public static void saveEmployee(Employee employee) {
+    }
+
+
     //Load all employee
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
@@ -37,13 +38,14 @@ public class AdminService {
     //Change password employee
     public Employee changePassword(int id, EmployeeChangePasswordRequest employeeChangePasswordRequest) {
         Employee employee = getEmployeeById(id);
+
         if (!employeeChangePasswordRequest.getNewPassword().equals(employeeChangePasswordRequest.getConfirmPassword())) {
             throw new IllegalArgumentException("New password and confirm password do not match");
         }
         employee.setPassword(employeeChangePasswordRequest.getNewPassword());
         return employeeRepository.save(employee);
     }
-
+    
     //Update Employee
     public Employee updateEmployee(int id, EmployeeUpdateRequest employeeUpdateRequest) {
         Employee employee = getEmployeeById(id);
@@ -65,6 +67,20 @@ public class AdminService {
         return employeeRepository.save(employee);
     }
 
+    public List<Employee> searchEmployeesByNameOrPhone(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return employeeRepository.findAll(); // Nếu không có từ khóa, trả về tất cả
+        }
+        return employeeRepository.findByNameContainingOrPhoneContaining(keyword, keyword);
+    }
+
+    public void updatePassword(int empId, String newPassword) {
+        Employee employee = getEmployeeById(empId);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        employee.setPassword(encodedPassword);
+        employeeRepository.save(employee);
+    }
     //Add Branch to database
     public Branch createBranch(ClinicBranchCreationRequest request) {
         Branch newBranch = new Branch();
