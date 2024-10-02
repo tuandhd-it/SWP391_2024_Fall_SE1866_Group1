@@ -89,6 +89,7 @@ public class AdminService {
         newBranch.setBranch_img(request.getBranch_img());
         newBranch.setBranch_phone(request.getBranch_phone());
         newBranch.setBranchName(request.getBranchName());
+        newBranch.setActive(true);
 
         return  branchRepository.save(newBranch);
     }
