@@ -34,10 +34,10 @@ public class AdminController {
         //Get list Branch
         List<Branch> list = adminService.getAllBranches();
         model.addAttribute("branches", list);
-        ClinicBranchUpdateRequest request1 = new ClinicBranchUpdateRequest();
-        model.addAttribute("branch1", request1);
-        ClinicBranchCreationRequest request = new ClinicBranchCreationRequest();
-        model.addAttribute("branch", request);
+        ClinicBranchUpdateRequest updateRequest = new ClinicBranchUpdateRequest();
+        model.addAttribute("updateBranch", updateRequest);
+        ClinicBranchCreationRequest creationRequest = new ClinicBranchCreationRequest();
+        model.addAttribute("createBranch", creationRequest);
         return "/manageBranch";
     }
 

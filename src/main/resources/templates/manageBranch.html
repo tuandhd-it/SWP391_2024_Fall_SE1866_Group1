@@ -56,7 +56,8 @@
                             th:data-name="${branch.getBranchName()}"
                             th:data-description="${branch.getBranch_description()}"
                             th:data-address="${branch.getBranch_address()}"
-                            th:data-phone="${branch.getBranch_phone()}">
+                            th:data-phone="${branch.getBranch_phone()}"
+                            th:data-img="${branch.getBranch_img()}">
                         <i class="fa-solid fa-pen-to-square fa-2x"></i>
                     </button>
                 </div>
@@ -72,7 +73,7 @@
 
 <!--Edit Modal -->
 <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-    <form id="editForm" th:action="@{/admin/editBranch}" th:object="${branch1}" method="post">
+    <form id="editForm" th:action="@{/admin/editBranch}" th:object="${updateBranch}" method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -101,6 +102,10 @@
                         <label for="branchPhone" class="form-label">Điện Thoại</label>
                         <input type="text" class="form-control" id="branchPhone" th:field="*{branch_phone}">
                     </div>
+                    <div class="mb-3">
+                        <label for="branchImage" class="form-label">Điện Thoại</label>
+                        <input type="text" class="form-control" id="branchImage" th:field="*{branch_img}">
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
@@ -113,7 +118,7 @@
 
 <!--Create Modal-->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <form id="createForm" th:action="@{/admin/branchCreate}" method="post" th:object="${branch}">
+    <form id="createForm" th:action="@{/admin/branchCreate}" method="post" th:object="${createBranch}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -171,6 +176,7 @@
                 var branchDescription = this.getAttribute('data-description');
                 var branchAddress = this.getAttribute('data-address');
                 var branchPhone = this.getAttribute('data-phone');
+                var branchImg = this.getAttribute('data-img');
 
                 // Điền vào các trường trong modal
                 document.getElementById('branchId').value = branchId;
@@ -178,6 +184,7 @@
                 document.getElementById('branchDescription').value = branchDescription;
                 document.getElementById('branchAddress').value = branchAddress;
                 document.getElementById('branchPhone').value = branchPhone;
+                document.getElementById('branchImage').value = branchImg;
             });
         });
 
