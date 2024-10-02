@@ -54,7 +54,7 @@ public class AdminController {
 
     @PutMapping("/changeEmployeePass")
     public String changeEmployeePass(@ModelAttribute EmployeeChangePasswordRequest employeeRequest,  RedirectAttributes redirectAttributes) {
-        adminService.changePassword(employeeRequest.getId(), employeeRequest);
+        adminService.changePassword(employeeRequest.getEmp_id(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Password changed successfully!");
         return "redirect:/profile";
     }

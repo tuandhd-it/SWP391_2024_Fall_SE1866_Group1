@@ -11,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EmployeeChangePasswordRequest {
-    int id;
+    int emp_id;
 
     @NotEmpty(message = "New password is required")
-    @Size(min = 8, message = "New password must be at least 8 characters")
+    @Size(min = 2, message = "New password must be at least 8 characters")
     String newPassword;
 
     @NotEmpty(message = "Confirm password is required")
