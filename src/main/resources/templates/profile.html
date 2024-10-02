@@ -23,14 +23,7 @@
                         <img th:src="@{/img/avt.jpg}" alt="User Icon" class="user-icon img-fluid rounded-circle mb-3"
                              style="max-width: 200px;">
                     </div>
-                    <!-- Hiển thị thông báo thành công nếu có -->
-                    <div th:if="${message != null && !message.isEmpty()}" class="alert alert-success col-md-12" role="alert">
-                        <span class="label-span" th:text="${message}"></span>
-                    </div>
 
-                    <div th:if="${messageChange != null && !messageChange.isEmpty()}" class="alert alert-success col-md-12" role="alert">
-                        <span class="label-span" th:text="${messageChange}"></span>
-                    </div>
                     <!-- Form chỉnh sửa thông tin cá nhân -->
                     <div class="col-md-8 ps-5">
                         <form th:action="@{/profile/update}" th:object="${employee}" method="post">
@@ -90,7 +83,7 @@
                                     <label><b>Email: </b></label><br>
                                     <span class="label-span" th:text="${employee.getEmail()}" style="display:inline-block;"></span>
                                     <input type="email" th:field="*{email}" class="form-control" style="display:none;"
-                                           required>
+                                           required readonly>
                                 </div>
                             </div>
                             <!-- Địa chỉ -->
@@ -115,6 +108,14 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                    <!-- Hiển thị thông báo thành công nếu có -->
+                    <div th:if="${message != null && !message.isEmpty()}" class="alert alert-success col-md-12" role="alert">
+                        <span class="label-span" th:text="${message}"></span>
+                    </div>
+
+                    <div th:if="${messageChange != null && !messageChange.isEmpty()}" class="alert alert-success col-md-12" role="alert">
+                        <span class="label-span" th:text="${messageChange}"></span>
                     </div>
                 </div>
             </div>
