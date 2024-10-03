@@ -1,5 +1,6 @@
 package project.dental_clinic_management.dto.request;
 
+import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,8 +18,8 @@ public class EmployeeUpdateRequest {
     String last_name;
     String email;
     String phone;
-//    LocalDate dob;
-//    String gender;
+    LocalDate dob;
+    String gender;
     String address;
     double salary;
     String img;
