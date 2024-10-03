@@ -14,6 +14,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    //Config mail là gửi từ tk tuan6a1thcstv@gmail.com và nội dung lấy từ mail body
     public void sendSimpleMessage(MailBody mailBody) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailBody.to());

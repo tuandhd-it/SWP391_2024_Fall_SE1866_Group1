@@ -19,7 +19,7 @@ import java.util.Random;
 @Controller
 @RequestMapping("/verifyEmail")
 
-//Use @SessionAttributes to store creationRequest through many web page
+//Dùng @SessionAttributes để lưu creation request qua các trang liên quan
 @SessionAttributes("creationRequest")
 public class VerifyOTPController {
 
@@ -35,10 +35,9 @@ public class VerifyOTPController {
         this.registerOTPVerifyRepository = registerOTPVerifyRepository;
     }
 
-    // send mail for email verification
-
+    //Xác thực email
     @PostMapping("/verify")
-    public String forgotPassword(@RequestParam("email") String email, @RequestParam("roleValue") String role, Model model, @ModelAttribute ReceptionistCreationRequest request) {
+    public String verifyEmail(@RequestParam("email") String email, @RequestParam("roleValue") String role, Model model, @ModelAttribute ReceptionistCreationRequest request) {
         String existed = receptionistService.checkExistedEmployee(request.getEmail(), request.getPhone());
         if (existed != null) {
             model.addAttribute("existed", existed);
@@ -50,12 +49,14 @@ public class VerifyOTPController {
 
         int otp = otpGenerator();
 
+        //Tạo 1 OTP mới với email và thời gian hết hạn là 70 giây
         RegisterOTPVerify rv = RegisterOTPVerify.builder()
                 .otp(otp)
                 .expirationTime(new Date(System.currentTimeMillis() + 70 * 1000))
                 .email(email)
                 .build();
 
+        //Tạo 1 tin nhắn mail để gửi tới email user
         MailBody mailBody = MailBody.builder()
                 .to(email)
                 .text("This is  the OTP for your request : " + otp)
@@ -71,10 +72,12 @@ public class VerifyOTPController {
         return "enterVerifyOTP";
     }
 
+    //Xác thực OTP
     @PostMapping("/verifyOTP")
     public String verifyOTP(@RequestParam("otp") Integer otp, @RequestParam("email") String email, @RequestParam("roleValue") String role, @ModelAttribute("creationRequest") ReceptionistCreationRequest request, Model model) {
         Employee employee = receptionistService.findByEmail(email);
 
+        //Kiểm tra xem OTP có đúng không
         RegisterOTPVerify checkRightOTP = registerOTPVerifyRepository.findByOtp(otp);
         if (checkRightOTP == null) {
             model.addAttribute("otpMsg", "Wrong OTP");
@@ -86,6 +89,8 @@ public class VerifyOTPController {
         }
 
         RegisterOTPVerify rv = new RegisterOTPVerify();
+
+        //Kiểm tra xem OTP có đúng là của email đó không
         try {
             rv = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP is not for this email"));
         } catch (RuntimeException e) {
@@ -93,13 +98,14 @@ public class VerifyOTPController {
             return "login";
         }
 
-
+        //Kiểm tra xem OTP đã hết hạn chưa
         if (rv.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("otpMsg", "The OTP has expired");
             registerOTPVerifyRepository.deleteById(rv.getRvid());
             return "login";
         }
 
+        //Mặc định là tài khoản đã được active
         request.setActive(true);
         request.setSalary(0);
         Role choosenRole = receptionistService.findByRoleName(role);
@@ -115,6 +121,7 @@ public class VerifyOTPController {
     }
 
 
+    //Tạo random OTP có 6 chữ số
     private Integer otpGenerator() {
         Random random = new Random();
         return random.nextInt(100000, 999999);

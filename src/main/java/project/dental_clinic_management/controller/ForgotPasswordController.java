@@ -34,22 +34,27 @@ public class ForgotPasswordController {
 
     public final ForgotPasswordRepository forgotPasswordRepository;
 
+    //Chuyển đến trang nhập email
     @GetMapping("/enterEmail")
     public String enterEmail() {
         return "enterEmail";
     }
 
+    //Xác thực OTP
     @PostMapping("/verifyOTP")
     public String verifyOTP(@RequestParam("otp") Integer otp, @RequestParam("email") String email, Model model) {
         Employee employee = employeeRepository.findByEmail(email);
         ForgotPassword checkRightOTP = forgotPasswordRepository.findByOtp(otp);
         model.addAttribute("email", email);
+
+        //Kiểm tra xem OTP có đúng không
         if(checkRightOTP == null) {
             model.addAttribute("msg", "Wrong OTP");
             model.addAttribute("otp", otp);
             return "enterForgotOTP";
         }
 
+        //Kiểm tra xem OTP đã hết hạn chưa
         ForgotPassword fp = forgotPasswordRepository.findByEmployeeAndOtp(employee, otp);
         if(fp.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("msg", "The OTP has expired");
@@ -61,6 +66,7 @@ public class ForgotPasswordController {
         return "newPassword";
     }
 
+    //Xác nhận xem email đã được đăng ký trong hệ thống chưa
     @PostMapping("/verify")
     public String forgotPassword(@RequestParam("email") String email, Model model) {
         Employee employee = employeeRepository.findByEmail(email);
@@ -72,12 +78,14 @@ public class ForgotPasswordController {
 
         int otp = otpGenerator();
 
+        //Tạo mã OTP cho quên mật khẩu với thời hạn là 70 giây
         ForgotPassword fp = ForgotPassword.builder()
                 .otp(otp)
                 .expirationTime(new Date(System.currentTimeMillis() + 70 * 1000))
                 .employee(employee)
                 .build();
 
+        //Tạo 1 tin nhắn mail để gửi tới email user
         MailBody mailBody = MailBody.builder()
                 .to(email)
                 .text("This is  the OTP for your Forgot Password Request : " + otp)
@@ -92,6 +100,7 @@ public class ForgotPasswordController {
         return "enterForgotOTP";
     }
 
+    //Đổi mật khẩu
     @PostMapping("/changePassword")
     public String changePass(@RequestParam("password") String newPassword, @RequestParam("email") String email, Model model) {
         String passwordEncode = new BCryptPasswordEncoder().encode(newPassword);
@@ -101,6 +110,7 @@ public class ForgotPasswordController {
         return "login";
     }
 
+    //Tạo random OTP có 6 chữ số
     private Integer otpGenerator() {
         Random random = new Random();
         return random.nextInt(100000, 999999);

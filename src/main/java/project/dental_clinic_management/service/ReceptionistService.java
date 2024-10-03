@@ -55,26 +55,32 @@ public class ReceptionistService {
         employeeRepository.save(employee);
     }
 
+    //Find Role by role_id
     public Role findRoleById(int id) {
         return roleRepository.findById(id);
     }
 
+    //Find Role by roleName
     public Role findByRoleName(String roleName) {
         return roleRepository.findByRoleName(roleName);
     }
 
+    //Find all branch
     public List<Branch> findAllBranches() {
         return branchRepository.findAll();
     }
 
+    //Find Employee has specific email
     public Employee findByEmail(String email) {
         return employeeRepository.findByEmail(email);
     }
 
+    //Find Employee has specific phone number
     public Employee findByPhone(String phone) {
         return employeeRepository.findByPhone(phone);
     }
 
+    //Check whether entered email, phone is existed
     public String checkExistedEmployee(String email, String phone) {
         Employee existedEmail = findByEmail(email);
         Employee existedPhone = findByPhone(phone);
