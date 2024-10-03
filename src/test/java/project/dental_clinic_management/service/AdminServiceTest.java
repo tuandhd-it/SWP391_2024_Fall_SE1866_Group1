@@ -18,7 +18,7 @@ import java.util.List;
 
 @Slf4j
 @SpringBootTest
-public class AdminServiceTest {
+class AdminServiceTest {
 
     @Autowired
     private AdminService adminService;

@@ -74,9 +74,8 @@ public class AdminController {
      * @return a url <code>java.lang.String</code>
      */
     @PostMapping("/editBranch")
-    public String editBranch(@ModelAttribute ClinicBranchUpdateRequest branchRequest, RedirectAttributes redirectAttributes) {
+    public String editBranch(@ModelAttribute ClinicBranchUpdateRequest branchRequest) {
         adminService.updateBranch(branchRequest.getId(), branchRequest); // Update branch
-        redirectAttributes.addFlashAttribute("message",""); //Send message if neccesary
         return "redirect:/admin/manageBranchs";
     }
 
