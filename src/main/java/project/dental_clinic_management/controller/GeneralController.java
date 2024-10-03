@@ -63,7 +63,7 @@ public class GeneralController {
     @RequestMapping("/homePage")
     public String homePage(Model model,  @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            // Người dùng đã đăng nhập
+
             model.addAttribute("loginSuccess", userDetails.getUsername());
             Employee employee = receptionistService.findByUsername(userDetails.getUsername());
             model.addAttribute("employee", employee);
@@ -74,7 +74,7 @@ public class GeneralController {
 
     @GetMapping("/changePass")
     public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        // You can also add employee information here if needed
+
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         model.addAttribute("employee", employee);
@@ -88,37 +88,37 @@ public class GeneralController {
                              @AuthenticationPrincipal UserDetails userDetails,
                              Model model) {
     try {
-        // Lấy username từ đối tượng UserDetails đã xác thực
+
         String username = userDetails.getUsername();
 
-        // Lấy thông tin Employee từ username
+
         Employee employee = receptionistService.findByUsername(username);
 
-        // Kiểm tra nếu mật khẩu hiện tại không khớp
+
         if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
             model.addAttribute("error", "Hãy nhập đúng mật khẩu cũ");
             return "changePass"; // Quay lại trang đổi mật khẩu nếu sai
         }
 
-        // Kiểm tra mật khẩu mới và mật khẩu xác nhận có trùng khớp không
+
         if (!newPassword.equals(confirmNewPassword)) {
             model.addAttribute("error", "Mật khẩu không trùng khớp");
             return "changePass";
         }
 
-        // Cập nhật mật khẩu mới (sau khi mã hóa)
+
         employee.setPassword(passwordEncoder.encode(newPassword));
         customUserDetailService.saveEmployee(employee);
 
-        // Thông báo thành công
+
         redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
     } catch (Exception e) {
-        // Bắt và xử lý ngoại lệ
+
         model.addAttribute("error", "An error occurred: " + e.getMessage());
         return "changePass";
     }
 
-    return "redirect:/profile"; // Chuyển hướng về trang profile sau khi đổi mật khẩu thành công
+    return "redirect:/profile";
 }
 
     @GetMapping("/profile")
@@ -129,44 +129,44 @@ public class GeneralController {
         if (messageChange != null && !messageChange.isEmpty()) {
             model.addAttribute("messageChange", messageChange);
         }
-        model.addAttribute("editMode", false); // Initial load without edit mode
+        model.addAttribute("editMode", false);
         return "profile";
     }
 
-    @PostMapping("/profile/update")
-    public String updateProfile(@Valid @ModelAttribute("employee") Employee employee,
-                                BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes,
-                                @AuthenticationPrincipal UserDetails userDetails,
-                                Model model) {
+        @PostMapping("/profile/update")
+        public String updateProfile(@Valid @ModelAttribute("employee") Employee employee,
+                                    BindingResult bindingResult,
+                                    RedirectAttributes redirectAttributes,
+                                    @AuthenticationPrincipal UserDetails userDetails,
+                                    Model model) {
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("editMode", true); // Keep in edit mode if there are errors
-            return "profile"; // Return the profile page with validation errors
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("editMode", true);
+                return "profile";
+            }
+
+
+            String username = userDetails.getUsername();
+            Employee existingEmployee = customUserDetailService.findByUsername(username);
+
+            if (existingEmployee != null) {
+
+                existingEmployee.setFirst_name(employee.getFirst_name());
+                existingEmployee.setLast_name(employee.getLast_name());
+                existingEmployee.setEmail(employee.getEmail());
+                existingEmployee.setPhone(employee.getPhone());
+                existingEmployee.setDob(employee.getDob());
+                existingEmployee.setGender(employee.getGender());
+                existingEmployee.setAddress(employee.getAddress());
+
+
+                customUserDetailService.saveEmployee(existingEmployee);
+
+                redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
+            }
+
+            return "redirect:/profile";
         }
-
-        // Get the logged-in user's current employee details
-        String username = userDetails.getUsername();
-        Employee existingEmployee = customUserDetailService.findByUsername(username);
-
-        if (existingEmployee != null) {
-            // Update existing employee details
-            existingEmployee.setFirst_name(employee.getFirst_name());
-            existingEmployee.setLast_name(employee.getLast_name());
-            existingEmployee.setEmail(employee.getEmail());
-            existingEmployee.setPhone(employee.getPhone());
-            existingEmployee.setDob(employee.getDob());
-            existingEmployee.setGender(employee.getGender());
-            existingEmployee.setAddress(employee.getAddress());
-
-            // Save the updated employee
-            customUserDetailService.saveEmployee(existingEmployee);
-
-            redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
-        }
-
-        return "redirect:/profile"; // Redirect to avoid resubmission
-    }
 
 
 }
