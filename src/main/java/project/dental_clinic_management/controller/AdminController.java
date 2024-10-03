@@ -16,35 +16,67 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ *  Copyright(C) 2005, Group 1 - SE1864
+ *  Dental Clinic Management
+ *
+ *  Record of change
+ *  Date        Version     Author              Description
+ *  2024-09-20  1.0         Nguyen Viet Lam     Admin controller
+ */
 @Controller
 @RequestMapping("/admin")
+
+/**
+ * The class contain method to navigate to show information
+ * Staff table in database. In the update or insert method, all data will be normalized (trim space) before update/insert into database
+ * The methods will navigate to a error page if it have error
+ *
+ * @author: Nguyen Viet Lam
+ */
 public class AdminController {
 
     @Autowired
     private AdminService adminService;
 
+    /**
+     * Create a branch and add it in database and redirect to specified page
+     * @param branchRequest
+     * @return a url <code>java.lang.String</code>
+     */
     @PostMapping("/branchCreate")
     public String createBranch(@ModelAttribute ClinicBranchCreationRequest branchRequest) {
-        adminService.createBranch(branchRequest);
+        adminService.createBranch(branchRequest); //Create branch
         return "redirect:/admin/manageBranchs";
     }
 
+    /**
+     * Get a list of branchs and send models to specified page
+     * @param model, it is <code>org.springframework.ui.Model</code>
+     * @return a url <code>java.lang.String</code>
+     */
     @GetMapping("/manageBranchs")
     public String getAllBranches(Model model) {
         //Get list Branch
         List<Branch> list = adminService.getAllBranches();
-        model.addAttribute("branches", list);
-        ClinicBranchUpdateRequest updateRequest = new ClinicBranchUpdateRequest();
-        model.addAttribute("updateBranch", updateRequest);
-        ClinicBranchCreationRequest creationRequest = new ClinicBranchCreationRequest();
-        model.addAttribute("createBranch", creationRequest);
+        model.addAttribute("branches", list);//Add in model
+        ClinicBranchUpdateRequest updateRequest = new ClinicBranchUpdateRequest(); // Create a object to update branch
+        model.addAttribute("updateBranch", updateRequest); //Add in model
+        ClinicBranchCreationRequest creationRequest = new ClinicBranchCreationRequest();// Create a object to create branch
+        model.addAttribute("createBranch", creationRequest); //Add in model
         return "/manageBranch";
     }
 
+    /**
+     * Edit the specified branch and navigate to
+     * @param branchRequest
+     * @param redirectAttributes
+     * @return a url <code>java.lang.String</code>
+     */
     @PostMapping("/editBranch")
     public String editBranch(@ModelAttribute ClinicBranchUpdateRequest branchRequest, RedirectAttributes redirectAttributes) {
-        adminService.updateBranch(branchRequest.getId(), branchRequest);
-        redirectAttributes.addFlashAttribute("message","");
+        adminService.updateBranch(branchRequest.getId(), branchRequest); // Update branch
+        redirectAttributes.addFlashAttribute("message",""); //Send message if neccesary
         return "redirect:/admin/manageBranchs";
     }
 

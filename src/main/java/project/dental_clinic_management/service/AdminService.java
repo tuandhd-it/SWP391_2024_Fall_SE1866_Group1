@@ -87,9 +87,15 @@ public class AdminService {
         employee.setPassword(encodedPassword);
         employeeRepository.save(employee);
     }
-    //Add Branch to database
+
+    /**
+     * Add a branch to database
+     * @param request a object
+     * @return a ClinicBranchCreationRequest
+     */
     public Branch createBranch(ClinicBranchCreationRequest request) {
-        Branch newBranch = new Branch();
+
+        Branch newBranch = new Branch(); // create new branch and set information
         newBranch.setBranch_address(request.getBranch_address());
         newBranch.setBranch_description(request.getBranch_description());
         newBranch.setBranch_img(request.getBranch_img());
@@ -97,32 +103,46 @@ public class AdminService {
         newBranch.setBranchName(request.getBranchName());
         newBranch.setActive(true);
 
-        return  branchRepository.save(newBranch);
+        return  branchRepository.save(newBranch); //save in database
     }
 
-    //Get Branch
+    /**
+     * Get all branch
+     * @return a list <code>java.util.List</code>
+     */
     public List<Branch> getAllBranches() {
-        return branchRepository.findAll();
+        return branchRepository.findAll(); //Return list of branch
     }
 
-    //Get Branch by Id
+    /**
+     * Get a branch by Id
+     * @param id
+     * @return branch, a branch have id
+     */
     public Branch getBranchById(int id) {
-        return branchRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Branch ID"));
+        return branchRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Branch ID")); //return id or exception
     }
 
-    //Update Branch
+    /**
+     * Update branch in database
+     * @param id
+     * @param updateBranchRequest
+     * @return updated branch have id
+     */
     public Branch updateBranch(int id, ClinicBranchUpdateRequest updateBranchRequest) {
-        Branch branch = getBranchById(id);
+        Branch branch = getBranchById(id);//Find the branch to modify
 
-        if (branch == null) {
+        if (branch == null) { //If null throw run time exception
             throw new RuntimeException("Branch with id " + id + " not found.");
         }
+
+        //Set information need to modify
         branch.setBranch_address(updateBranchRequest.getBranch_address());
         branch.setBranch_description(updateBranchRequest.getBranch_description());
         branch.setBranch_img(updateBranchRequest.getBranch_img());
         branch.setBranch_phone(updateBranchRequest.getBranch_phone());
         branch.setBranchName(updateBranchRequest.getBranchName());
-        return branchRepository.save(branch);
+        return branchRepository.save(branch); // Return updated branch
     }
 
     //Delete Branch

@@ -90,8 +90,6 @@ public class AdminServiceTest {
         updateRequest.setEmail("nguyena@example.com");
         updateRequest.setPhone("0987654321");
         updateRequest.setAddress("Hà Nội");
-        updateRequest.setGender("Male");
-        updateRequest.setDob(LocalDate.of(2004, 5, 10));
         updateRequest.setSalary(4500);
 
         // Cập nhật nhân viên
@@ -103,8 +101,6 @@ public class AdminServiceTest {
         assertEquals("nguyena@example.com", updatedEmployee.getEmail());
         assertEquals("0987654321", updatedEmployee.getPhone());
         assertEquals("Hà Nội", updatedEmployee.getAddress());
-        assertEquals("Male", updatedEmployee.getGender());
-        assertEquals(LocalDate.of(2004, 5, 10), updatedEmployee.getDob());
         assertEquals(4500, updatedEmployee.getSalary());
     }
 
@@ -117,8 +113,6 @@ public class AdminServiceTest {
         updateRequest.setEmail("null");
         updateRequest.setPhone("0123456789");
         updateRequest.setAddress("null");
-        updateRequest.setGender("Male");
-        updateRequest.setDob(LocalDate.of(2000, 1, 1));
         updateRequest.setSalary(0);
 
         // Kiểm tra ngoại lệ khi cập nhật nhân viên không tồn tại

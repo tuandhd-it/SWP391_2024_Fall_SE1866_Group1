@@ -103,7 +103,7 @@
                         <input type="text" class="form-control" id="branchPhone" th:field="*{branch_phone}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchImage" class="form-label">Điện Thoại</label>
+                        <label for="branchImage" class="form-label">Hình ảnh</label>
                         <input type="text" class="form-control" id="branchImage" th:field="*{branch_img}">
                     </div>
                     <div class="modal-footer">
@@ -188,6 +188,66 @@
             });
         });
 
+        // Validation function for the edit form
+        editForm.addEventListener('submit', function (e) {
+            if (!validateForm(editForm)) {
+                e.preventDefault();
+            }
+        });
+
+        // Validation function for the create form
+        createForm.addEventListener('submit', function (e) {
+            if (!validateForm(createForm)) {
+                e.preventDefault();
+            }
+        });
+
+        function trimFormFields(form) {
+            var inputs = form.querySelectorAll('input[type="text"], input[type="url"], input[type="number"]');
+            inputs.forEach(input => {
+                input.value = input.value.trim();
+            });
+        }
+
+        function validateForm(form) {
+            var name = form.querySelector('input[name="branchName"], input[name="branchCreateName"]');
+            var description = form.querySelector('input[name="branch_description"], input[name="branchCreateDescription"]');
+            var address = form.querySelector('input[name="branch_address"], input[name="branchCreateAddress"]');
+            var phone = form.querySelector('input[name="branch_phone"], input[name="branchCreatePhone"]');
+            var img = form.querySelector('input[name="branch_img"], input[name="branchCreateImg"]');
+
+            if (!name.value.trim()) {
+                alert("Vui lòng nhập tên cơ sở.");
+                name.focus();
+                return false;
+            }
+
+            if (!description.value.trim()) {
+                alert("Vui lòng nhập mô tả.");
+                description.focus();
+                return false;
+            }
+
+            if (!address.value.trim()) {
+                alert("Vui lòng nhập địa chỉ.");
+                address.focus();
+                return false;
+            }
+
+            if (!phone.value.trim() || !/^[0-9]{10,11}$/.test(phone.value)) {
+                alert("Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số).");
+                phone.focus();
+                return false;
+            }
+
+            // if (!img.value.trim() || !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(img.value)) {
+            //     alert("Vui lòng nhập URL hình ảnh hợp lệ.");
+            //     img.focus();
+            //     return false;
+            // }
+
+            return true;
+        }
     });
 </script>
 </body>
