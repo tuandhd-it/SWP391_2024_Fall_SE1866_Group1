@@ -65,10 +65,12 @@ public class AdminService {
         employee.setEmail(employeeUpdateRequest.getEmail());
         employee.setPhone(employeeUpdateRequest.getPhone());
         employee.setAddress(employeeUpdateRequest.getAddress());
-//        employee.setGender(employeeUpdateRequest.getGender());
-//        employee.setDob(employeeUpdateRequest.getDob());
+        employee.setGender(employeeUpdateRequest.getGender());
+        employee.setDob(employeeUpdateRequest.getDob());
         employee.setSalary(employeeUpdateRequest.getSalary());
         employee.setRole(employeeUpdateRequest.getRole());
+        employee.setImg(employeeUpdateRequest.getImg());
+        employee.set_active(employeeUpdateRequest.isActive());
 
         return employeeRepository.save(employee);
     }

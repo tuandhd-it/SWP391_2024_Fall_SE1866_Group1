@@ -12,15 +12,14 @@
 <body>
 <div class="d-flex">
     <aside th:replace="~{dashboardNav :: sidebar}"></aside>
-    <div class="main">
+    <div class="main" style="height: 130%">
         <nav th:replace="~{dashboardHeader :: header}"></nav>
         <form id="employee-form" th:action="@{/admin/updateEmployee}" method="post" th:object="${editEmployees}">
             <div class="employee-details mt-4">
                 <div class="employee-image">
                     <img th:src="${employee.getImg()}" alt="Employees Image">
                     <label class="form-check-label hidden input" for="imgURL"><b><i>Link Ảnh</i></b></label>
-                    <input th:field="*{img}" id="imgURL" type="url" class="form-control hidden input"
-                           th:value="${employee.getImg()}">
+                    <input th:field="*{img}" id="imgURL" type="url" class="form-control hidden input">
                 </div>
                 <div class="employee-info">
                     <h2 th:text="'Mã NV '+${employee.getEmp_id()}"></h2>
@@ -30,16 +29,14 @@
                             <th>Họ</th>
                             <td>
                                 <span class="text" th:text="${employee.getFirst_name()}"></span>
-                                <input th:field="*{first_name}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getFirst_name()}">
+                                <input th:field="*{first_name}" type="text" class="form-control hidden input">
                             </td>
                         </tr>
                         <tr>
                             <th>Tên</th>
                             <td>
                                 <span class="text" th:text="${employee.getLast_name()}"></span>
-                                <input th:field="*{last_name}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getLast_name()}">
+                                <input th:field="*{last_name}" type="text" class="form-control hidden input">
                             </td>
                         </tr>
                         <tr>
@@ -80,47 +77,35 @@
                             <th>Email</th>
                             <td>
                                 <span class="text" th:text="${employee.getEmail()}"></span>
-                                <input th:field="*{email}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getEmail()}">
+                                <input th:field="*{email}" type="text" class="form-control hidden input">
                             </td>
                         </tr>
                         <tr>
                             <th>Số điện thoại</th>
                             <td>
                                 <span class="text" th:text="${employee.getPhone()}"></span>
-                                <input th:field="*{phone}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getPhone()}">
+                                <input th:field="*{phone}" type="text" class="form-control hidden input">
                             </td>
                         </tr>
                         <tr>
                             <th>Địa chỉ</th>
                             <td>
                                 <span class="text" th:text="${employee.getAddress()}"></span>
-                                <input th:field="*{address}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getAddress()}">
+                                <input th:field="*{address}" type="text" class="form-control hidden input">
                             </td>
                         </tr>
                         <tr>
                             <th>Lương</th>
                             <td>
                                 <span class="text" th:text="${employee.getSalary()}"></span>
-                                <input th:field="*{salary}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getSalary()}">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>Số điện thoại</th>
-                            <td>
-                                <span class="text" th:text="${employee.getPhone()}"></span>
-                                <input th:field="*{phone}" type="text" class="form-control hidden input"
-                                       th:value="${employee.getPhone()}">
+                                <input th:field="*{salary}" type="text" class="form-control hidden input">
                             </td>
                         </tr>
                         <tr>
                             <th>Chi nhánh:</th>
                             <td>
                                 <span class="text"
-                                      th:text="${employee.getBranch().getBranchName()} + ' ' + ${employee.getBranch().getBranch_address()}"></span>
+                                      th:text="${employee.getBranch().getBranchName()}"></span>
                                 <div class="input-group hidden input">
                                     <select th:field="*{branch_id}" class="form-select">
                                         <option th:value="${employee.getBranch().getBran_id()}"
@@ -145,7 +130,7 @@
                             <button class="btn btn-dark edit-btn mt-4" style="width: 80px;"><i
                                     style="font-size: 20px" class="fa-solid fa-pen-to-square"></i></button>
                             <!-- Edit button -->
-                            <button class="btn btn-success save-btn mt-4 hidden input" style="width: 80px;"><i
+                            <button type="submit" class="btn btn-success save-btn mt-4 hidden input" style="width: 80px;"><i
                                     class="fa-regular fa-floppy-disk"></i></button> <!-- Save button -->
                             <button class="btn btn-dark cancel-btn mt-4 hidden input" style="width: 80px;">Hủy
                             </button> <!-- Cancel button -->
@@ -172,9 +157,6 @@
         document.querySelector('.edit-btn').classList.add('hidden');
         document.querySelector('.save-btn').classList.remove('hidden');
         document.querySelector('.cancel-btn').classList.remove('hidden');
-        document.getElementById('employee-form').addEventListener('submit', function (event) {
-            event.preventDefault();
-        });
     });
 
     document.querySelector('.cancel-btn').addEventListener('click', function () {

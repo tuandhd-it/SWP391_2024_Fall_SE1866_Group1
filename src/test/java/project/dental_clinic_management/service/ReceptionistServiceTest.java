@@ -122,7 +122,7 @@ public class ReceptionistServiceTest {
 
 
     @Test
-    public void testCheckExistedEmployee_EmailExists() {
+    public void     testCheckExistedEmployee_EmailExists() {
         // Giả sử có một nhân viên với email đã tồn tại trong cơ sở dữ liệu
         String existingEmail = "tuan6a1thcstv@gmail.com";
         String phone = "123456789"; // Số điện thoại có thể tồn tại hoặc không

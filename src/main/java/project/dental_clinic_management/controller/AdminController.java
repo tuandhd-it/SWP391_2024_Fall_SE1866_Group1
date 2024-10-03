@@ -95,14 +95,30 @@ public class AdminController {
 
     @GetMapping("employeesDetails/{id}")
     public String showEmployeeDetails(@PathVariable("id") Integer empId, Model model) {
-        Employee employee = adminService.getEmployeeById(empId);
         List<Branch> listBranch = adminService.getAllBranches();
         List<Role> listRole = adminService.getAllRole();
-        EmployeeUpdateRequest editEmployees =  new EmployeeUpdateRequest();
+
+        //Get Employee to fill data to EmployeeRequest
+        Employee employee = adminService.getEmployeeById(empId);
+        EmployeeUpdateRequest employeeUpdateRequest = new EmployeeUpdateRequest();
+        employeeUpdateRequest.setEmp_id(empId);
+        employeeUpdateRequest.setFirst_name(employee.getFirst_name());
+        employeeUpdateRequest.setLast_name(employee.getLast_name());
+        employeeUpdateRequest.setEmail(employee.getEmail());
+        employeeUpdateRequest.setPhone(employee.getPhone());
+        employeeUpdateRequest.setDob(employee.getDob());
+        employeeUpdateRequest.setGender(employee.getGender());
+        employeeUpdateRequest.setAddress(employee.getAddress());
+        employeeUpdateRequest.setImg(employee.getImg());
+        employeeUpdateRequest.setActive(employee.is_active());
+        employeeUpdateRequest.setSalary(employee.getSalary());
+        employeeUpdateRequest.setBranch_id(employee.getBranch().getBran_id());
+        employeeUpdateRequest.setDescription(employee.getDescription());
+        employeeUpdateRequest.setRole(employee.getRole());
         model.addAttribute("employee", employee);
         model.addAttribute("listBranches", listBranch);
         model.addAttribute("listRoles", listRole);
-        model.addAttribute("editEmployees", editEmployees);
+        model.addAttribute("editEmployees", employeeUpdateRequest);
         return "detailsEmp";
     }
 

@@ -4,27 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dental Clinic</title>
+    <!-- Link to the external CSS file -->
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+<!-- Header section - replaces content from headerLandingPage fragment -->
 <div th:replace="~{headerLandingPage :: header}"></div>
-
+<!-- Hero section - Main banner with call-to-action -->
 <section class="hero">
     <div class="hero-content">
+        <!-- Banner image -->
         <img th:src="@{/img/banner.png}" alt="Dental Clinic Banner" class="hero-banner">
+        <!-- Conditional button for registration if login is not successful -->
         <div th:if="${loginSuccess == null}">
             <a th:href="@{/register}">
                 <button class="cta-button">Đăng ký ngay</button>
             </a>
         </div>
+        <!-- Uncommented part that was probably meant to be deleted -->
         <!-- <a href="#" class="cta-button">Đăng ký ngay</a>&ndash;&gt;-->
     </div>
-    -->
-</section>
 
+</section>
+<!-- Features section - Highlighting key features of the Dental Clinic system -->
 <section class="features">
     <h2>Những tính năng nổi bật của Dental Clinic</h2>
     <div class="feature-list">
+        <!-- Feature 1: Quản lý bệnh án điện tử -->
         <div class="feature-item">
 
             <img th:src="@{/img/image1.png}" alt="Quản lý bệnh án điện tử">
@@ -32,12 +38,14 @@
             <p>Hỗ trợ sổ bệnh án được số hóa chi tiết đầy đủ, dữ liệu được sắp xếp và hiển thị thông minh: Thông tin
                 hành chính, Chuẩn đoán lâm sàng, Hình ảnh, Kế hoạch và tiến trình điều trị.</p>
         </div>
+        <!-- Feature 2: Quản lý khách hàng -->
         <div class="feature-item">
             <img th:src="@{/img/image2.png}" alt="Quản lý khách hàng">
             <h3>Quản lý khách hàng</h3>
             <p>Phân loại thông tin khách hàng chính xác và bộ lọc thông minh: Nhóm, Nguồn khách hàng, Nghề nghiệp, Tiểu
                 sử bệnh lý...Giúp phòng khám nâng cao dịch vụ.</p>
         </div>
+        <!-- Feature 3: Quản lý lịch hẹn -->
         <div class="feature-item">
             <img th:src="@{/img/image3.png}" alt="Quản lý lịch hẹn">
             <h3>Quản lý lịch hẹn</h3>
