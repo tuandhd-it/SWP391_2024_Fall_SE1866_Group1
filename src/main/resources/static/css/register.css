@@ -88,3 +88,95 @@ body {
     text-decoration: #3CADAF; /* Underline on hover */
     border: none;
 }
+
+/* enterEmail CSS */
+body {
+    background-color: #f8f9fa; /* Light background color */
+}
+.container {
+    max-width: 400px; /* Limit the width of the form */
+    margin-top: 100px; /* Center vertically */
+    padding: 20px; /* Padding inside the container */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: white; /* White background for the form */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    font-family: "Arial";
+    height: 350px;
+}
+h1 {
+    font-size: 20px; /* Heading size */
+    margin-bottom: 10px; /* Space below the heading */
+    font-weight: bold;
+}
+h2{
+    font-size: 16px; /* Heading size */
+    margin-bottom: 20px; /* Space below the heading */
+    font-style: italic;
+    color: gray;
+}
+h3{
+    font-size: 16px; /* Heading size */
+    margin-bottom: 20px; /* Space below the heading */
+    font-style: italic;
+}
+input[type="email"], input[type="submit"] {
+    width: 100%; /* Full width inputs */
+    margin-bottom: 10px; /* Space between inputs */
+}
+
+/* enterForgotOTP CSS */
+body {
+    background-color: #f8f9fa; /* Light background color */
+}
+.container {
+    max-width: 400px; /* Limit the width of the form */
+    margin-top: 100px; /* Center vertically */
+    padding: 20px; /* Padding inside the container */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: white; /* White background for the form */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    height: 350px;
+    font-family: "Arial";
+}
+h1 {
+    font-size: 20px; /* Heading size */
+    margin-bottom: 10px; /* Space below the heading */
+    font-weight: bold;
+
+}
+input[type="number"], input[type="submit"] {
+    width: 100%; /* Full width inputs */
+    margin-bottom: 10px; /* Space between inputs */
+}
+h3{
+    width: 100%; /* Full width inputs */
+    margin-bottom: 20px; /* Space between inputs */
+    font-size: 16px;
+    font-style: italic;
+}
+
+/* enterVerifyOTP CSS */
+body {
+    background-color: #f8f9fa; /* Light background color */
+}
+.container {
+    max-width: 400px; /* Limit the width of the form */
+    margin-top: 100px; /* Center vertically */
+    padding: 20px; /* Padding inside the container */
+    border: 1px solid #ced4da; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: white; /* White background for the form */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
+    height: 300px;
+
+}
+h1 {
+    font-size: 24px; /* Heading size */
+    margin-bottom: 20px; /* Space below the heading */
+}
+input[type="number"], input[type="submit"] {
+    width: 100%; /* Full width inputs */
+    margin-bottom: 10px; /* Space between inputs */
+}

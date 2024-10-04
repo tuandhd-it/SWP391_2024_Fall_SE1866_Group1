@@ -20,9 +20,9 @@
 </style>
 
 <div class="d-flex">
-    <aside th:replace="~{dashboardNav :: sidebar}"></aside>
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
     <div class="main">
-        <nav th:replace="~{dashboardHeader :: header}"></nav>
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 profile">
@@ -69,7 +69,7 @@
                                             </button>
 
                                             <!-- Xóa tài khoản -->
-                                            <a th:action="@{/#}">
+                                            <a th:action="@{/static}">
                                                 <i class="fa-solid fa-trash" style="color: red" title="Xóa"></i>
                                             </a>
                                         </span>

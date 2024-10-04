@@ -36,7 +36,7 @@ public class GeneralController {
 
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "/auth/login";
     }
 
     @GetMapping("/register")
@@ -47,7 +47,7 @@ public class GeneralController {
         registerRoles.add(receptionistService.findRoleById(4));
         registerRoles.add(receptionistService.findRoleById(5));
         model.addAttribute("roles", registerRoles);
-        return "register";
+        return "/auth/register";
     }
 
     @PostMapping("/nextRegister")
@@ -57,7 +57,7 @@ public class GeneralController {
         model.addAttribute("branches", branches);
         ReceptionistCreationRequest receptionistCreationRequest = new ReceptionistCreationRequest();
         model.addAttribute("request", receptionistCreationRequest);
-        return "nextRegister";
+        return "/auth/nextRegister";
     }
 
     @RequestMapping("/homePage")
@@ -74,12 +74,12 @@ public class GeneralController {
 
     @GetMapping("/changePass")
     public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         model.addAttribute("employee", employee);
-        return "changePass";
+        return "/user/changePass";
     }
+
     @PostMapping("/changePass")
     public String changePass(@RequestParam String currentPassword,
                              @RequestParam String newPassword,
@@ -88,37 +88,28 @@ public class GeneralController {
                              @AuthenticationPrincipal UserDetails userDetails,
                              Model model) {
     try {
-
         String username = userDetails.getUsername();
-
-
         Employee employee = receptionistService.findByUsername(username);
-
-
         if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
             model.addAttribute("error", "Hãy nhập đúng mật khẩu cũ");
-            return "changePass"; // Quay lại trang đổi mật khẩu nếu sai
+            return "/user/changePass"; // Quay lại trang đổi mật khẩu nếu sai
         }
 
 
         if (!newPassword.equals(confirmNewPassword)) {
             model.addAttribute("error", "Mật khẩu không trùng khớp");
-            return "changePass";
+            return "/user/changePass";
         }
-
 
         employee.setPassword(passwordEncoder.encode(newPassword));
         customUserDetailService.saveEmployee(employee);
 
-
         redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
     } catch (Exception e) {
-
         model.addAttribute("error", "An error occurred: " + e.getMessage());
-        return "changePass";
+        return "/user/changePass";
     }
-
-    return "redirect:/profile";
+    return "/user/profile";
 }
 
     @GetMapping("/profile")
@@ -130,7 +121,7 @@ public class GeneralController {
             model.addAttribute("messageChange", messageChange);
         }
         model.addAttribute("editMode", false);
-        return "profile";
+        return "/user/profile";
     }
 
         @PostMapping("/profile/update")
@@ -142,7 +133,7 @@ public class GeneralController {
 
             if (bindingResult.hasErrors()) {
                 model.addAttribute("editMode", true);
-                return "profile";
+                return "/user/profile";
             }
 
 
@@ -150,7 +141,6 @@ public class GeneralController {
             Employee existingEmployee = customUserDetailService.findByUsername(username);
 
             if (existingEmployee != null) {
-
                 existingEmployee.setFirst_name(employee.getFirst_name());
                 existingEmployee.setLast_name(employee.getLast_name());
                 existingEmployee.setEmail(employee.getEmail());
@@ -158,14 +148,11 @@ public class GeneralController {
                 existingEmployee.setDob(employee.getDob());
                 existingEmployee.setGender(employee.getGender());
                 existingEmployee.setAddress(employee.getAddress());
-
-
                 customUserDetailService.saveEmployee(existingEmployee);
-
                 redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
             }
 
-            return "redirect:/profile";
+            return "/user/profile";
         }
 
 

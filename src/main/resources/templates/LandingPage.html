@@ -9,7 +9,7 @@
 </head>
 <body>
 <!-- Header section - replaces content from headerLandingPage fragment -->
-<div th:replace="~{headerLandingPage :: header}"></div>
+<div th:replace="~{/layout/headerLandingPage :: header}"></div>
 <!-- Hero section - Main banner with call-to-action -->
 <section class="hero">
     <div class="hero-content">
@@ -17,7 +17,7 @@
         <img th:src="@{/img/banner.png}" alt="Dental Clinic Banner" class="hero-banner">
         <!-- Conditional button for registration if login is not successful -->
         <div th:if="${loginSuccess == null}">
-            <a th:href="@{/register}">
+            <a th:href="@{/auth/register}">
                 <button class="cta-button">Đăng ký ngay</button>
             </a>
         </div>

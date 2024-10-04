@@ -8,30 +8,17 @@
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" href="/css/manage-branch.css">
 
-    <style>
-        .icon-button:hover i {
-            color: cyan; /* Màu khi hover */
-        }
-        .btn-cyan {
-            background-color: #00bcd4; /* Màu cyan */
-            color: white; /* Màu chữ */
-        }
-        .btn-cyan:hover {
-            background-color: #0097a7; /* Màu khi hover */
-            color: white; /* Màu chữ khi hover */
-        }
-
-    </style>
 </head>
 
 <body>
-<div class="d-flex">
-    <aside th:replace="~{dashboardNav :: sidebar}"></aside>
+<div class="wrapper d-flex align-items-stretch">
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
     <div class="main">
-        <nav th:replace="~{dashboardHeader :: header}"></nav>
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         
-        <div class="card mb-3 w-100 h-100">
+        <div class="card mb-3">
             <h2 class="mt-5" style="text-align: center"><b>Quản Lý Cơ Sở</b></h2>
             <div class="row g-0 my-3" style="margin-left: 18%" th:each="branch : ${branches}">
                 <div class="col-md-4 mt-3">

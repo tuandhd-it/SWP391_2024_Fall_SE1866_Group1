@@ -1,0 +1,11 @@
+.icon-button:hover i {
+    color: cyan; /* Màu khi hover */
+}
+.btn-cyan {
+    background-color: #00bcd4; /* Màu cyan */
+    color: white; /* Màu chữ */
+}
+.btn-cyan:hover {
+    background-color: #0097a7; /* Màu khi hover */
+    color: white; /* Màu chữ khi hover */
+}

@@ -64,7 +64,7 @@ public class AdminController {
         model.addAttribute("updateBranch", updateRequest); //Add in model
         ClinicBranchCreationRequest creationRequest = new ClinicBranchCreationRequest();// Create a object to create branch
         model.addAttribute("createBranch", creationRequest); //Add in model
-        return "/manageBranch";
+        return "/branch/manageBranch";
     }
 
     /**
@@ -83,14 +83,14 @@ public class AdminController {
     public String getAllEmployees(Model model) {
         List<Employee> list = adminService.getAllEmployees();
         model.addAttribute("employees", list);
-        return "manageAcc";
+        return "/employee/manageAcc";
     }
 
     @GetMapping("/manageEmp")
     public String getAllEmployeesInfo(Model model) {
         List<Employee> list = adminService.getAllEmployees();
         model.addAttribute("employees", list);
-        return "manageEmp";
+        return "/employee/manageEmp";
     }
 
     @GetMapping("employeesDetails/{id}")
@@ -119,7 +119,7 @@ public class AdminController {
         model.addAttribute("listBranches", listBranch);
         model.addAttribute("listRoles", listRole);
         model.addAttribute("editEmployees", employeeUpdateRequest);
-        return "detailsEmp";
+        return "/employee/detailsEmp";
     }
 
 
@@ -135,7 +135,7 @@ public class AdminController {
     public String updateEmployee(@ModelAttribute EmployeeUpdateRequest employeeRequest, RedirectAttributes redirectAttributes) {
         adminService.updateEmployee(employeeRequest.getEmp_id(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Employee updated successfully!");
-        return "/manageEmp";
+        return "employee/manageEmp";
     }
 
 

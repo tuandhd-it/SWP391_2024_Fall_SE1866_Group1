@@ -37,7 +37,7 @@ public class ForgotPasswordController {
     //Chuyển đến trang nhập email
     @GetMapping("/enterEmail")
     public String enterEmail() {
-        return "enterEmail";
+        return "/auth/enterEmail";
     }
 
     //Xác thực OTP
@@ -51,7 +51,7 @@ public class ForgotPasswordController {
         if(checkRightOTP == null) {
             model.addAttribute("msg", "Wrong OTP");
             model.addAttribute("otp", otp);
-            return "enterForgotOTP";
+            return "/auth/enterForgotOTP";
         }
 
         //Kiểm tra xem OTP đã hết hạn chưa
@@ -59,11 +59,11 @@ public class ForgotPasswordController {
         if(fp.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("msg", "The OTP has expired");
             forgotPasswordRepository.deleteById(fp.getFpid());
-            return "enterEmail";
+            return "/auth/enterEmail";
         }
         model.addAttribute("msg", "OTP verified");
         forgotPasswordRepository.deleteById(fp.getFpid());
-        return "newPassword";
+        return "/auth/newPassword";
     }
 
     //Xác nhận xem email đã được đăng ký trong hệ thống chưa
@@ -73,7 +73,7 @@ public class ForgotPasswordController {
 
         if(employee == null) {
             model.addAttribute("emailError", "This email does not exist");
-            return "enterEmail";
+            return "/auth/enterEmail";
         }
 
         int otp = otpGenerator();
@@ -97,7 +97,7 @@ public class ForgotPasswordController {
         model.addAttribute("email", email);
         model.addAttribute("msg", "OTP has sent to email for verification");
 
-        return "enterForgotOTP";
+        return "/auth/enterForgotOTP";
     }
 
     //Đổi mật khẩu
@@ -107,7 +107,7 @@ public class ForgotPasswordController {
         employeeRepository.updatePassword(email, passwordEncode);
 
         model.addAttribute("msgChangePass", "Password has been changed");
-        return "login";
+        return "/auth/login";
     }
 
     //Tạo random OTP có 6 chữ số

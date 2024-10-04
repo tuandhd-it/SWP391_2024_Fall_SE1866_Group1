@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+    <meta charset="UTF-8">
+    <title>Enter Email</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+<div class="container">
+    <img th:src="@{/img/logo.png}" alt="Dental Clinic Logo" class="img-fluid mb-4"> <!-- Make the logo responsive -->
+    <h1>Quên mật khẩu</h1>
+    <h2>Nhập tài khoản email của bạn</h2>
+    <h3 th:text="${emailError}" style="color: gray"></h3>
+    <form th:action="@{/forgotPassword/verify}" method="post">
+        <input type="email" class="form-control" name="email" placeholder="Email" required>
+        <input type="submit" class="btn btn-primary" name="Submit" value="Gửi">
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

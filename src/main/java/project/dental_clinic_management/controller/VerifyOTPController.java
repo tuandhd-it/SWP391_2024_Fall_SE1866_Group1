@@ -41,7 +41,7 @@ public class VerifyOTPController {
         String existed = receptionistService.checkExistedEmployee(request.getEmail(), request.getPhone());
         if (existed != null) {
             model.addAttribute("existed", existed);
-            return "login";
+            return "/auth/login";
         }
 
         model.addAttribute("creationRequest", request);
@@ -69,7 +69,7 @@ public class VerifyOTPController {
         model.addAttribute("email", email);
         model.addAttribute("msg", "OTP has sent to email for verification");
 
-        return "enterVerifyOTP";
+        return "/auth/enterVerifyOTP";
     }
 
     //Xác thực OTP
@@ -85,7 +85,7 @@ public class VerifyOTPController {
             model.addAttribute("email", email);
             model.addAttribute("roleValue", role);
             model.addAttribute("creationRequest", request);
-            return "enterVerifyOTP";
+            return "/auth/enterVerifyOTP";
         }
 
         RegisterOTPVerify rv = new RegisterOTPVerify();
@@ -95,14 +95,14 @@ public class VerifyOTPController {
             rv = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP is not for this email"));
         } catch (RuntimeException e) {
             model.addAttribute("otpMsg", e.getMessage());
-            return "login";
+            return "/auth/login";
         }
 
         //Kiểm tra xem OTP đã hết hạn chưa
         if (rv.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("otpMsg", "The OTP has expired");
             registerOTPVerifyRepository.deleteById(rv.getRvid());
-            return "login";
+            return "/auth/login";
         }
 
         //Mặc định là tài khoản đã được active
@@ -117,7 +117,7 @@ public class VerifyOTPController {
 
         // Xóa khỏi session sau khi đã sử dụng
         model.asMap().remove("creationRequest");
-        return "login";
+        return "/auth/login";
     }
 
 

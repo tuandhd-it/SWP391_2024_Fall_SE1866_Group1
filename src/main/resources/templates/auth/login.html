@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="d-block flex-column w-100 h-100">
-    <header th:replace="~{headerLandingPage :: header}"></header>
+    <header th:replace="~{/layout/headerLandingPage :: header}"></header>
     <div class="mx-auto login-container mt-5">
         <h1>Đăng nhập</h1>
         <h3 th:text="${param.error == null ? '' : 'Username or password incorrect'}" style="color: red"></h3>
@@ -44,29 +44,6 @@
     </div>
 </div>
 <script th:src="@{https://kit.fontawesome.com/87d2440b4a.js}" crossorigin="anonymous"></script>
-<script>
-    const passwordInput = document.getElementById('password-input');
-    const passwordIcon = document.getElementById('password-icon');
-
-    passwordInput.addEventListener('input', function () {
-        if (this.value) {
-            passwordIcon.classList.add('hidden'); // Ẩn biểu tượng khi có dữ liệu
-        } else {
-            passwordIcon.classList.remove('hidden'); // Hiện lại biểu tượng khi không có dữ liệu
-        }
-    });
-</script>
-<script>
-    const usernameInput = document.getElementById('username-input');
-    const usernameIcon = document.getElementById('username-icon');
-
-    usernameInput.addEventListener('input', function () {
-        if (this.value) {
-            usernameIcon.classList.add('hidden'); // Ẩn biểu tượng khi có dữ liệu
-        } else {
-            usernameIcon.classList.remove('hidden'); // Hiện lại biểu tượng khi không có dữ liệu
-        }
-    });
-</script>
+<script src="/js/login.js"></script>
 </body>
 </html>
