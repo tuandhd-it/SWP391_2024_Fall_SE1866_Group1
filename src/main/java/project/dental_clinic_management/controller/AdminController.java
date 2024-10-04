@@ -1,5 +1,7 @@
 package project.dental_clinic_management.controller;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.entity.Role;
@@ -35,6 +37,8 @@ import java.util.List;
  * @author: Nguyen Viet Lam
  */
 public class AdminController {
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private AdminService adminService;
@@ -135,8 +139,39 @@ public class AdminController {
     public String updateEmployee(@ModelAttribute EmployeeUpdateRequest employeeRequest, RedirectAttributes redirectAttributes) {
         adminService.updateEmployee(employeeRequest.getEmp_id(), employeeRequest);
         redirectAttributes.addFlashAttribute("message", "Employee updated successfully!");
-        return "employee/manageEmp";
+        return "redirect:/profile";
+    }
+    @GetMapping("/searchEmployees")
+    public String searchEmployees(@RequestParam("keyword") String keyword, Model model) {
+        List<Employee> employees = adminService.searchEmployeesByNameOrPhone(keyword);
+        model.addAttribute("employees", employees);
+        model.addAttribute("keyword", keyword);
+        return "/employee/manageAcc";
+    }
+
+    @GetMapping("/searchAccount")
+    public String searchAccount(@RequestParam("keyword") String keyword, Model model) {
+        // Tìm kiếm nhân viên theo từ khóa
+        List<Employee> employees = adminService.searchEmployeesByNameOrId(keyword);
+        model.addAttribute("employees", employees);
+        model.addAttribute("keyword", keyword); // Để giữ lại từ khóa trong ô tìm kiếm
+        return "/employee/manageEmp"; // Trả về view danh sách nhân viên
     }
 
 
+
+    @GetMapping("/editEmployee/{id}")
+    public String editEmployee(@PathVariable("id") int id, Model model) {
+        Employee employee = adminService.getEmployeeById(id);
+        model.addAttribute("employee", employee);
+        return "editEmployeePassword";
+    }
+
+    // Cập nhật mật khẩu
+    @PostMapping("/updatePassword")
+    public String updatePassword(@RequestParam("emp_id") int empId, @RequestParam("password") String newPassword, RedirectAttributes redirectAttributes) {
+        adminService.updatePassword(empId, newPassword);
+        redirectAttributes.addFlashAttribute("message", "Password updated successfully!");
+        return "redirect:/admin/manageAcc";
+    }
 }

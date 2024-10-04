@@ -18,7 +18,12 @@
                 <div class="col-md-12 profile">
                     <h1>Danh sách Nhân viên</h1>
                     <div class="search mb-3">
-                        <input type="text" class="form-control" placeholder="Search">
+                        <form th:action="@{/admin/searchAccount}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm nhân viên" th:value="${keyword}">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </form>
                     </div>
 
                     <div class="table-responsive">

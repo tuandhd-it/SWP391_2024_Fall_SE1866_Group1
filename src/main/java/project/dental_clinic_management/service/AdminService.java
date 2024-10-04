@@ -8,6 +8,7 @@ import project.dental_clinic_management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,12 +26,10 @@ public class AdminService {
     public static void saveEmployee(Employee employee) {
     }
 
-
     //Get all Role
     public List<Role> getAllRole(){
         return roleRepository.findAll();
     }
-
     //Load all employee
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
@@ -75,12 +74,22 @@ public class AdminService {
         return employeeRepository.save(employee);
     }
 
+    //Search account
     public List<Employee> searchEmployeesByNameOrPhone(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
             return employeeRepository.findAll(); // Nếu không có từ khóa, trả về tất cả
         }
         return employeeRepository.findByNameContainingOrPhoneContaining(keyword, keyword);
     }
+
+    public List<Employee> searchEmployeesByNameOrId(String keyword) {
+        if (keyword == null || keyword.isEmpty()) {
+            return employeeRepository.findAll(); // Nếu không có từ khóa, trả về tất cả
+        }
+        return employeeRepository.findByNameContainingOrIdContaining(keyword, keyword, keyword);
+    }
+
+
 
     public void updatePassword(int empId, String newPassword) {
         Employee employee = getEmployeeById(empId);

@@ -19,10 +19,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     void updatePassword(String email, String newPassword);
 
     @Query("SELECT e FROM Employee e WHERE e.first_name LIKE %?1% OR e.last_name LIKE %?1% OR e.phone LIKE %?1%")
-    List<Employee> findByNameContainingOrPhoneContaining(String nameKeyword, String phoneKeyword);
-
+    List<Employee> findByNameContainingOrPhoneContaining( String nameKeyword, String phoneKeyword );
+    @Query("SELECT e FROM Employee e WHERE e.first_name LIKE %?1% OR e.last_name LIKE %?1% OR e.phone LIKE %?1% OR e.emp_id = ?1")
+    List<Employee> findByNameContainingOrIdContaining(String nameKeyword, String phoneKeyword, String IdKeyword );
     @Transactional
     @Modifying
     @Query("update Employee e set e.password = ?2 where e.emp_id = ?1")
     void updatePassword(int empId, String newPassword);
+
 }
