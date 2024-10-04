@@ -59,8 +59,11 @@ public class VerifyOTPController {
         //Tạo 1 tin nhắn mail để gửi tới email user
         MailBody mailBody = MailBody.builder()
                 .to(email)
-                .text("This is  the OTP for your request : " + otp)
-                .subject("OTP for your request")
+                .text("Dear,\n\n" +
+                        "We received a request to verify your account.\nTo proceed, please use the " +
+                        "following One-Time Password (OTP):\n\nOTP Code: " + otp+"\n\nThis code is valid for the next 1 minutes. \n" +
+                        "Please enter the code in the required field to complete your request.\n\nBest regards,\nDCMS Team :)")
+                .subject("Your single-use code for DCMS")
                 .build();
 
         emailService.sendSimpleMessage(mailBody);
@@ -88,20 +91,20 @@ public class VerifyOTPController {
             return "/auth/enterVerifyOTP";
         }
 
-        RegisterOTPVerify rv = new RegisterOTPVerify();
+        RegisterOTPVerify registerVerify = new RegisterOTPVerify();
 
         //Kiểm tra xem OTP có đúng là của email đó không
         try {
-            rv = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP is not for this email"));
+            registerVerify = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP is not for this email"));
         } catch (RuntimeException e) {
             model.addAttribute("otpMsg", e.getMessage());
             return "/auth/login";
         }
 
         //Kiểm tra xem OTP đã hết hạn chưa
-        if (rv.getExpirationTime().before(Date.from(Instant.now()))) {
+        if (registerVerify.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("otpMsg", "The OTP has expired");
-            registerOTPVerifyRepository.deleteById(rv.getRvid());
+            registerOTPVerifyRepository.deleteById(registerVerify.getRvid());
             return "/auth/login";
         }
 
@@ -113,7 +116,7 @@ public class VerifyOTPController {
         receptionistService.createReceptionist(request);
         model.addAttribute("message", "Registered successfully");
         model.addAttribute("otpMsg", "OTP verified");
-        registerOTPVerifyRepository.deleteById(rv.getRvid());
+        registerOTPVerifyRepository.deleteById(registerVerify.getRvid());
 
         // Xóa khỏi session sau khi đã sử dụng
         model.asMap().remove("creationRequest");

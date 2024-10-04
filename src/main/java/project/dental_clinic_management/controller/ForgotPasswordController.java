@@ -88,8 +88,12 @@ public class ForgotPasswordController {
         //Tạo 1 tin nhắn mail để gửi tới email user
         MailBody mailBody = MailBody.builder()
                 .to(email)
-                .text("This is  the OTP for your Forgot Password Request : " + otp)
-                .subject("OTP for your request")
+                .text("Dear,\n\n" +
+                        "We received a request to " +
+                        " your account.\nTo proceed, please use the " +
+                        "following One-Time Password (OTP):\n\nOTP Code: " + otp+"\n\nThis code is valid for the next 1 minutes. \n" +
+                        "Please enter the code in the required field to complete your request.\n\nBest regards,\nDCMS Team :)")
+                .subject("Your single-use code for DCMS")
                 .build();
 
         emailService.sendSimpleMessage(mailBody);
