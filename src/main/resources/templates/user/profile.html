@@ -26,7 +26,7 @@
                 <div class="row">
                     <!-- Profile picture -->
                     <div class="col-md-4 text-center">
-                        <img th:src="@{/img/avt.jpg}" alt="User Icon" class="user-icon img-fluid rounded-circle mb-3"
+                        <img th:src="${employee.getImg()}" alt="User Icon" class="user-icon img-fluid rounded-circle mb-3"
                              style="max-width: 200px;">
                     </div>
                     <!-- Success message display if present -->
