@@ -32,13 +32,13 @@ public class GeneralController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
+    //Tra ve trang login
     @GetMapping("/login")
     public String login() {
         return "/auth/login";
     }
 
+    //Lay du kieu cac role co the dang ky cho trang register
     @GetMapping("/register")
     public String register(Model model) {
         // Retreat role that can register
@@ -50,6 +50,7 @@ public class GeneralController {
         return "/auth/register";
     }
 
+    //Lay du lieu cac branch cho trang nhap thong tin de dang ky
     @PostMapping("/nextRegister")
     public String nextRegister(Model model, @RequestParam("role") String role) {
         model.addAttribute("roleValue", role);
@@ -60,6 +61,7 @@ public class GeneralController {
         return "/auth/nextRegister";
     }
 
+    //Check xem nguoi truy cap vao home page da dang nhap chua
     @RequestMapping("/homePage")
     public String homePage(Model model,  @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
