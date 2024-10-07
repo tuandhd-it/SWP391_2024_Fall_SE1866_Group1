@@ -74,7 +74,6 @@ public class AdminController {
     /**
      * Edit the specified branch and navigate to
      * @param branchRequest
-     * @param redirectAttributes
      * @return a url <code>java.lang.String</code>
      */
     @PostMapping("/editBranch")
