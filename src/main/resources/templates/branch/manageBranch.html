@@ -74,23 +74,23 @@
                         <input type="text" class="form-control" id="branchId" th:field="*{id}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchName" class="form-label">Tên Cơ Sở</label>
+                        <label for="branchName" class="form-label">Tên Cơ Sở *</label>
                         <input type="text" class="form-control" id="branchName" th:field="*{branchName}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchDescription" class="form-label">Mô Tả</label>
+                        <label for="branchDescription" class="form-label">Mô Tả *</label>
                         <input class="form-control" id="branchDescription" th:field="*{branch_description}" type="text">
                     </div>
                     <div class="mb-3">
-                        <label for="branchAddress" class="form-label">Địa Chỉ</label>
+                        <label for="branchAddress" class="form-label">Địa Chỉ *</label>
                         <input type="text" class="form-control" id="branchAddress" th:field="*{branch_address}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchPhone" class="form-label">Điện Thoại</label>
+                        <label for="branchPhone" class="form-label">Điện Thoại *</label>
                         <input type="text" class="form-control" id="branchPhone" th:field="*{branch_phone}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchImage" class="form-label">Hình ảnh</label>
+                        <label for="branchImage" class="form-label">Hình ảnh *</label>
                         <input type="text" class="form-control" id="branchImage" th:field="*{branch_img}">
                         <img id="branchImg" src="" alt="Preview" class="img-fluid mt-2" style="max-height: 200px;">
                     </div>
@@ -110,32 +110,32 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Tạo Mới Cơ Sở</h5>
+                    <h5 class="modal-title" id="createModalLabel">Tạo Mới Cơ Sở *</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="branchCreateName" class="form-label">Tên Cơ Sở</label>
+                        <label for="branchCreateName" class="form-label">Tên Cơ Sở *</label>
                         <input type="text" class="form-control" id="branchCreateName" name="branchCreateName"
                                th:field="*{branchName}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreateDescription" class="form-label">Mô Tả</label>
+                        <label for="branchCreateDescription" class="form-label">Mô Tả *</label>
                         <input class="form-control" id="branchCreateDescription" name="branchCreateDescription"
                                type="text" th:field="*{branch_description}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreateAddress" class="form-label">Địa Chỉ</label>
+                        <label for="branchCreateAddress" class="form-label">Địa Chỉ *</label>
                         <input type="text" class="form-control" id="branchCreateAddress" name="branchCreateAddress"
                                th:field="*{branch_address}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreatePhone" class="form-label">Điện Thoại</label>
+                        <label for="branchCreatePhone" class="form-label">Điện Thoại *</label>
                         <input type="number" class="form-control" id="branchCreatePhone" name="branchCreatePhone"
                                th:field="*{branch_phone}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreateImg" class="form-label">Hình Ảnh</label>
+                        <label for="branchCreateImg" class="form-label">Hình Ảnh *</label>
                         <input type="url" class="form-control" id="branchCreateImg" name="branchCreateImg"
                                th:field="*{branch_img}" required>
                         <img id="branchCreateImage" src="" alt="Preview" class="img-fluid mt-2"
