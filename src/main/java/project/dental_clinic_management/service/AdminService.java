@@ -107,11 +107,11 @@ public class AdminService {
     public Branch createBranch(ClinicBranchCreationRequest request) {
 
         Branch newBranch = new Branch(); // create new branch and set information
-        newBranch.setBranch_address(request.getBranch_address());
-        newBranch.setBranch_description(request.getBranch_description());
-        newBranch.setBranch_img(request.getBranch_img());
-        newBranch.setBranch_phone(request.getBranch_phone());
-        newBranch.setBranchName(request.getBranchName());
+        newBranch.setBranch_address(request.getBranch_address().trim());
+        newBranch.setBranch_description(request.getBranch_description().trim());
+        newBranch.setBranch_img(request.getBranch_img().trim());
+        newBranch.setBranch_phone(request.getBranch_phone().trim());
+        newBranch.setBranchName(request.getBranchName().trim());
         newBranch.setActive(true);
 
         return  branchRepository.save(newBranch); //save in database
@@ -148,11 +148,11 @@ public class AdminService {
         }
 
         //Set information need to modify
-        branch.setBranch_address(updateBranchRequest.getBranch_address());
-        branch.setBranch_description(updateBranchRequest.getBranch_description());
-        branch.setBranch_img(updateBranchRequest.getBranch_img());
-        branch.setBranch_phone(updateBranchRequest.getBranch_phone());
-        branch.setBranchName(updateBranchRequest.getBranchName());
+        branch.setBranch_address(updateBranchRequest.getBranch_address().trim());
+        branch.setBranch_description(updateBranchRequest.getBranch_description().trim());
+        branch.setBranch_img(updateBranchRequest.getBranch_img().trim());
+        branch.setBranch_phone(updateBranchRequest.getBranch_phone().trim());
+        branch.setBranchName(updateBranchRequest.getBranchName().trim());
         return branchRepository.save(branch); // Return updated branch
     }
 
