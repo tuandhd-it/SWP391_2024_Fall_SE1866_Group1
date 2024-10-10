@@ -180,6 +180,7 @@
                 document.getElementById('branchAddress').value = branchAddress;
                 document.getElementById('branchPhone').value = branchPhone;
                 document.getElementById('branchImage').value = branchImg;
+                document.getElementById('branchImg').src = branchImg;
             });
         });
 
@@ -236,11 +237,6 @@
             }
 
 
-            // if (!img.value.trim() || !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(img.value)) {
-            //     alert("Vui lòng nhập URL hình ảnh hợp lệ.");
-            //     img.focus();
-            //     return false;
-            // }
 
             return true;
         }
