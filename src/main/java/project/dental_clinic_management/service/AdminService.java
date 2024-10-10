@@ -77,20 +77,20 @@ public class AdminService {
     //Search account
     public List<Employee> searchEmployeesByNameOrPhone(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
-            return employeeRepository.findAll(); // Nếu không có từ khóa, trả về tất cả
+            return employeeRepository.findAll(); // If don't enter keyword, return all list
         }
-        return employeeRepository.findByNameContainingOrPhoneContaining(keyword, keyword);
+        return employeeRepository.findByNameContainingOrPhoneContaining(keyword);
     }
-
-    public List<Employee> searchEmployeesByNameOrId(String keyword) {
+    //Search employee
+    public List<Employee> searchAccountByNameOrId(String keyword) {
         if (keyword == null || keyword.isEmpty()) {
-            return employeeRepository.findAll(); // Nếu không có từ khóa, trả về tất cả
+            return employeeRepository.findAll(); // If don't enter keyword, return all list
         }
-        return employeeRepository.findByNameContainingOrIdContaining(keyword, keyword, keyword);
+        return employeeRepository.findByNameContainingOrIdContaining(keyword);
     }
 
 
-
+//Edit account
     public void updatePassword(int empId, String newPassword) {
         Employee employee = getEmployeeById(empId);
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
