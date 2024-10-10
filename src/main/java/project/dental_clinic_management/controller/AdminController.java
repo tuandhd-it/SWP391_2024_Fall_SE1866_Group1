@@ -140,37 +140,54 @@ public class AdminController {
         redirectAttributes.addFlashAttribute("message", "Employee updated successfully!");
         return "redirect:/profile";
     }
-    @GetMapping("/searchEmployees")
+
+    // Mapping for searching employees
+    @GetMapping("/searchAccount")
     public String searchEmployees(@RequestParam("keyword") String keyword, Model model) {
+        // Call the service to search
         List<Employee> employees = adminService.searchEmployeesByNameOrPhone(keyword);
+        // Add the list of employees to the model for the view
         model.addAttribute("employees", employees);
+        // Add the keyword to the model to keep the search term in the view's input field
         model.addAttribute("keyword", keyword);
+        // Return the view for managing employee accounts
         return "/employee/manageAcc";
     }
 
-    @GetMapping("/searchAccount")
+    // Mapping for searching employee accounts
+    @GetMapping("/searchEmployees")
     public String searchAccount(@RequestParam("keyword") String keyword, Model model) {
-        // Tìm kiếm nhân viên theo từ khóa
-        List<Employee> employees = adminService.searchEmployeesByNameOrId(keyword);
+        // Call the service to search
+        List<Employee> employees = adminService.searchAccountByNameOrId(keyword);
+        // Add the list of employees to the model for the view
         model.addAttribute("employees", employees);
-        model.addAttribute("keyword", keyword); // Để giữ lại từ khóa trong ô tìm kiếm
-        return "/employee/manageEmp"; // Trả về view danh sách nhân viên
+        // Add the keyword to the model to keep the search term in the view's input field
+        model.addAttribute("keyword", keyword); // Retain the keyword in the search box
+        // Return the view for displaying the list of employees
+        return "/employee/manageEmp";
     }
 
 
 
+    // Mapping for editing employee's password
     @GetMapping("/editEmployee/{id}")
     public String editEmployee(@PathVariable("id") int id, Model model) {
+        // Retrieve employee by id using admin service
         Employee employee = adminService.getEmployeeById(id);
+        // Add the retrieved employee object to the model
         model.addAttribute("employee", employee);
+        // Return the view for editing employee password
         return "editEmployeePassword";
     }
 
-    // Cập nhật mật khẩu
+    // Mapping for updating employee's password
     @PostMapping("/updatePassword")
     public String updatePassword(@RequestParam("emp_id") int empId, @RequestParam("password") String newPassword, RedirectAttributes redirectAttributes) {
+        // Update the employee's password using admin service
         adminService.updatePassword(empId, newPassword);
+        // Add a flash attribute with a success message to be shown after redirect
         redirectAttributes.addFlashAttribute("message", "Password updated successfully!");
+        // Redirect to the manage accounts page after password update
         return "redirect:/admin/manageAcc";
     }
 }

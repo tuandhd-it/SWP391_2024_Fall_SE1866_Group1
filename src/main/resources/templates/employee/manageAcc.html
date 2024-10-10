@@ -34,9 +34,9 @@
                     </div>
 
                     <!-- Form tìm kiếm -->
-                    <form th:action="@{/admin/searchEmployees}" method="get" class="mb-3">
+                    <form th:action="@{/admin/searchAccount}" method="get" class="mb-3">
                         <div class="input-group">
-                            <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm tài khoản theo tên" th:value="${keyword}">
+                            <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm tài khoản" th:value="${keyword}">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
                     </form>
