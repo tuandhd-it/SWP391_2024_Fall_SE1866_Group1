@@ -17,7 +17,7 @@
     <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
     <div class="main">
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-        
+
         <div class="card mb-3">
             <h2 class="mt-5" style="text-align: center"><b>Quản Lý Cơ Sở</b></h2>
             <div class="row g-0 my-3" style="margin-left: 18%" th:each="branch : ${branches}">
@@ -74,29 +74,30 @@
                         <input type="text" class="form-control" id="branchId" th:field="*{id}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchName" class="form-label">Tên Cơ Sở</label>
+                        <label for="branchName" class="form-label">Tên Cơ Sở *</label>
                         <input type="text" class="form-control" id="branchName" th:field="*{branchName}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchDescription" class="form-label">Mô Tả</label>
+                        <label for="branchDescription" class="form-label">Mô Tả *</label>
                         <input class="form-control" id="branchDescription" th:field="*{branch_description}" type="text">
                     </div>
                     <div class="mb-3">
-                        <label for="branchAddress" class="form-label">Địa Chỉ</label>
+                        <label for="branchAddress" class="form-label">Địa Chỉ *</label>
                         <input type="text" class="form-control" id="branchAddress" th:field="*{branch_address}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchPhone" class="form-label">Điện Thoại</label>
+                        <label for="branchPhone" class="form-label">Điện Thoại *</label>
                         <input type="text" class="form-control" id="branchPhone" th:field="*{branch_phone}">
                     </div>
                     <div class="mb-3">
-                        <label for="branchImage" class="form-label">Hình ảnh</label>
+                        <label for="branchImage" class="form-label">Hình ảnh *</label>
                         <input type="text" class="form-control" id="branchImage" th:field="*{branch_img}">
+                        <img id="branchImg" src="" alt="Preview" class="img-fluid mt-2" style="max-height: 200px;">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
                 </div>
             </div>
         </div>
@@ -109,34 +110,41 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="createModalLabel">Tạo Mới Cơ Sở</h5>
+                    <h5 class="modal-title" id="createModalLabel">Tạo Mới Cơ Sở *</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label for="branchCreateName" class="form-label">Tên Cơ Sở</label>
-                        <input type="text" class="form-control" id="branchCreateName" name="branchCreateName" th:field="*{branchName}" required>
+                        <label for="branchCreateName" class="form-label">Tên Cơ Sở *</label>
+                        <input type="text" class="form-control" id="branchCreateName" name="branchCreateName"
+                               th:field="*{branchName}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreateDescription" class="form-label">Mô Tả</label>
-                        <input class="form-control" id="branchCreateDescription" name="branchCreateDescription" type="text" th:field="*{branch_description}" required>
+                        <label for="branchCreateDescription" class="form-label">Mô Tả *</label>
+                        <input class="form-control" id="branchCreateDescription" name="branchCreateDescription"
+                               type="text" th:field="*{branch_description}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreateAddress" class="form-label">Địa Chỉ</label>
-                        <input type="text" class="form-control" id="branchCreateAddress" name="branchCreateAddress" th:field="*{branch_address}" required>
+                        <label for="branchCreateAddress" class="form-label">Địa Chỉ *</label>
+                        <input type="text" class="form-control" id="branchCreateAddress" name="branchCreateAddress"
+                               th:field="*{branch_address}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreatePhone" class="form-label">Điện Thoại</label>
-                        <input type="number" class="form-control" id="branchCreatePhone" name="branchCreatePhone" th:field="*{branch_phone}" required>
+                        <label for="branchCreatePhone" class="form-label">Điện Thoại *</label>
+                        <input type="number" class="form-control" id="branchCreatePhone" name="branchCreatePhone"
+                               th:field="*{branch_phone}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="branchCreateImg" class="form-label">Hình Ảnh</label>
-                        <input type="url" class="form-control" id="branchCreateImg" name="branchCreateImg" th:field="*{branch_img}" required>
+                        <label for="branchCreateImg" class="form-label">Hình Ảnh *</label>
+                        <input type="url" class="form-control" id="branchCreateImg" name="branchCreateImg"
+                               th:field="*{branch_img}" required>
+                        <img id="branchCreateImage" src="" alt="Preview" class="img-fluid mt-2"
+                             style="max-height: 200px;">
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                        <button type="submit" class="btn btn-primary">Tạo mới</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Tạo mới</button>
                 </div>
             </div>
         </div>
@@ -172,6 +180,7 @@
                 document.getElementById('branchAddress').value = branchAddress;
                 document.getElementById('branchPhone').value = branchPhone;
                 document.getElementById('branchImage').value = branchImg;
+                document.getElementById('branchImg').src = branchImg;
             });
         });
 
@@ -227,14 +236,33 @@
                 return false;
             }
 
-            // if (!img.value.trim() || !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(img.value)) {
-            //     alert("Vui lòng nhập URL hình ảnh hợp lệ.");
-            //     img.focus();
-            //     return false;
-            // }
+
 
             return true;
         }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var branchImage = document.getElementById('branchImage');
+            var branchImg = document.getElementById('branchImg');
+
+            // Khi người dùng nhập URL vào input
+            branchImage.addEventListener('input', function () {
+                var imgUrl = branchImage.value.trim();
+                branchImg.src = imgUrl;
+            });
+
+            // Tương tự cho phần Create Modal
+            var branchCreateImageInput = document.getElementById('branchCreateImage');
+            var branchCreatePreview = document.createElement('img');
+            branchCreatePreview.className = 'img-fluid mt-2';
+            branchCreatePreview.style.maxHeight = '200px';
+            branchCreateImageInput.parentNode.appendChild(branchCreatePreview);
+
+            branchCreateImageInput.addEventListener('input', function () {
+                var imgUrl = branchCreateImageInput.value.trim();
+                branchCreatePreview.src = imgUrl;
+            });
+        });
     });
 </script>
 </body>
