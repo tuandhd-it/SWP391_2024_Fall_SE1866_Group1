@@ -1,5 +1,7 @@
 package project.dental_clinic_management.controller;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
@@ -190,4 +192,13 @@ public class AdminController {
         // Redirect to the manage accounts page after password update
         return "redirect:/admin/manageAcc";
     }
+
+    //Hiển thị tài khoản được đăng ký cần xét duyệt
+    @GetMapping("/manageRegisterAccount")
+    public String manageRegisterAccount(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        List<Employee> list = adminService.getAllEmployees();
+        model.addAttribute("employees", list);
+        return "/employee/manageRegisterAccount";
+    }
+
 }
