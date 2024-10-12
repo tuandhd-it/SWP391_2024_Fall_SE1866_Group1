@@ -39,19 +39,25 @@
                     </li>
                 </ul>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
                 <a th:href="@{/admin/manageAcc}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý tài khoản</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
                 <a th:href="@{/admin/manageEmp}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý nhân viên</span>
                 </a>
             </li>
-            <li class="sidebar-item">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Manager'')')}">
+                <a th:href="@{/admin/manageRegisterAccount}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý đăng ký tài khoản</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
                 <a th:href="@{/admin/manageBranchs}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý cơ sở</span>
