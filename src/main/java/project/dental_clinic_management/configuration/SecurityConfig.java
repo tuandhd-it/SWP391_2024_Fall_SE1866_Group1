@@ -35,6 +35,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/admin/**").hasAuthority("Admin")
+                        .requestMatchers("/admin/manageRegisterAccount").hasAnyAuthority("Admin", "Manager")
                         .requestMatchers("/manager/**").hasAuthority("Manager")
                         .requestMatchers("/doctor/**").hasAnyAuthority("Doctor", "Nurse")
                         .requestMatchers("/receptionist/**").hasAuthority("Receptionist")
