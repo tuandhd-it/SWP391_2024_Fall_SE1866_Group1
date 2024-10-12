@@ -108,8 +108,8 @@ public class VerifyOTPController {
             return "/auth/login";
         }
 
-        //Mặc định là tài khoản đã được active
-        request.setActive(true);
+        //Mặc định là tài khoản cần được xét duyệt để đăng nhập vào hệ thống
+        request.setActive(false);
         request.setSalary(0);
         Role choosenRole = receptionistService.findByRoleName(role);
         request.setRole(choosenRole);
