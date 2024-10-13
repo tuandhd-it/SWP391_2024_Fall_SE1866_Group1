@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -33,8 +34,6 @@ public class Employee {
     @JoinColumn(name = "role_id")
     private Role role;
 
-
-
     @ManyToOne
     @JoinColumn(name = "bran_id")
     private Branch branch;
@@ -45,6 +44,24 @@ public class Employee {
     @OneToOne
 //    @JoinColumn(name = "managedBranchId", referencedColumnName = "bran_id", insertable = false, updatable = false)
     private Employee branchManaged;
+
+    @OneToMany (mappedBy = "employee")
+    private List<TimeTracking> timeTrackings;
+
+    @OneToMany (mappedBy = "employee")
+    private List<RegisterExamination> registerExaminations;
+
+    @OneToMany (mappedBy = "employee")
+    private List<Record> records;
+
+    @OneToMany (mappedBy = "employee")
+    private List<EquipmentImportBill> equipmentImportBills;
+
+    @OneToMany (mappedBy = "employee")
+    private List<Invoice> invoices;
+
+    @OneToMany (mappedBy = "employee")
+    private List<Schedule> schedules;
 
     public Employee() {
     }
