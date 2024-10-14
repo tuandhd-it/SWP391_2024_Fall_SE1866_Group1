@@ -1,5 +1,7 @@
 package project.dental_clinic_management.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -7,6 +9,7 @@ import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.entity.Role;
+import project.dental_clinic_management.entity.Service;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
 import project.dental_clinic_management.dto.request.ClinicBranchUpdateRequest;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dental_clinic_management.service.ServiceService;
 
 import java.util.List;
 
@@ -45,6 +49,8 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
+    @Autowired
+    private ServiceService serviceService;
     /**
      * Create a branch and add it in database and redirect to specified page
      * @param branchRequest
@@ -97,6 +103,7 @@ public class AdminController {
         model.addAttribute("employees", list);
         return "/employee/manageEmp";
     }
+
 
     @GetMapping("employeesDetails/{id}")
     public String showEmployeeDetails(@PathVariable("id") Integer empId, Model model) {
@@ -192,7 +199,6 @@ public class AdminController {
         // Redirect to the manage accounts page after password update
         return "redirect:/admin/manageAcc";
     }
-
     //Hiển thị tài khoản được đăng ký cần xét duyệt
     @GetMapping("/manageRegisterAccount")
     public String manageRegisterAccount(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -200,5 +206,23 @@ public class AdminController {
         model.addAttribute("employees", list);
         return "/employee/manageRegisterAccount";
     }
+    @GetMapping("/manageService")
+    public String serviceList(Model model,@RequestParam(value = "page", defaultValue = "1")int page,
+     @RequestParam(value = "search", required = false,defaultValue = "") String search,
+     @RequestParam(value = "sort", required = false ,defaultValue = "idAsc") String sort,
+     @RequestParam(value = "searchType", defaultValue = "name",required = false) String type)
+    {
+        page = page-1;
+        Page<Service> listPage = serviceService.getAllByPage(page,sort,search,type);
+
+        model.addAttribute("listService", listPage.getContent());
+        model.addAttribute("totalPages", listPage.getTotalPages());
+        model.addAttribute("currentPage", page+1);
+        model.addAttribute("search", search);
+        model.addAttribute("sort", sort);
+        model.addAttribute("searchType", type);
+        return "/service/manageService";
+    }
+
 
 }
