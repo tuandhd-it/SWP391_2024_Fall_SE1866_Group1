@@ -3,6 +3,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Medicine;
 import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class AdminService {
 
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private MedicineRepository medicineRepository;
 
     public static void saveEmployee(Employee employee) {
     }
@@ -161,5 +164,8 @@ public class AdminService {
         branchRepository.deleteById(id);
     }
 
+    public List<Medicine> getAllMedicines() {
+        return medicineRepository.findAll();
+    }
 
 }

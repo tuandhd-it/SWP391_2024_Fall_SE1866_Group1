@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Medicine;
 import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
@@ -71,6 +72,17 @@ public class AdminController {
         ClinicBranchCreationRequest creationRequest = new ClinicBranchCreationRequest();// Create a object to create branch
         model.addAttribute("createBranch", creationRequest); //Add in model
         return "/branch/manageBranch";
+    }
+    /**
+     * Get a list of branchs and send models to specified page
+     * @param model, it is <code>org.springframework.ui.Model</code>
+     * @return a url <code>java.lang.String</code>
+     */
+    @GetMapping("/manageMedicine")
+    public String getAllMedicines(Model model) {
+        List<Medicine> list = adminService.getAllMedicines();
+        model.addAttribute("medicines", list);//Add in model
+        return "/medicine/manageMedicine";
     }
 
     /**
