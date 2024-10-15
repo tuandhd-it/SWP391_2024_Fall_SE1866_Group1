@@ -5,7 +5,9 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,7 +19,7 @@ public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long recordId;
-    Date recordDate;
+    LocalDate recordDate;
     String reason;
     String diagnose;
     String note;
@@ -37,7 +39,7 @@ public class Record {
     @OneToOne (mappedBy = "record")
     private Invoice invoice;
 
-    public Record(Date recordDate, String reason, String diagnose, String note) {
+    public Record(LocalDate recordDate, String reason, String diagnose, String note) {
         this.recordDate = recordDate;
         this.reason = reason;
         this.diagnose = diagnose;

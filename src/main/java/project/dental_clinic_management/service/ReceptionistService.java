@@ -1,7 +1,10 @@
 package project.dental_clinic_management.service;
 
+import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
+import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.Branch;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.RegisterExamination;
 import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.repository.*;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,10 +27,14 @@ public class ReceptionistService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private ExamRegistrationRepository examRegistrationRepository;
+
 
     public Employee findByUsername(String username) {
         return employeeRepository.findByEmail(username);
     }
+    public Employee findById(int id) {return employeeRepository.findByEmp_id(id);}
 
     //Create a new receptionist
     public void createReceptionist(ReceptionistCreationRequest request) {
@@ -92,6 +100,58 @@ public class ReceptionistService {
         return null;
     }
 
+    //Tìm tất cả bác sĩ thuộc chi nhánh của receptionist
+    public List<Employee> findAllBranchDoctor(Employee receptionist) {
+        List<Employee> doctors = new ArrayList<>();
+        List<Employee> allEmployees = employeeRepository.findAll();
+        for (Employee employee : allEmployees) {
+            if (employee.getRole().getRoleName().equals("Doctor") && employee.getBranch().equals(receptionist.getBranch())) {
+                doctors.add(employee);
+            }
+        }
+        return doctors;
+    }
 
+    //Tìm tất cả danh sách đăng ký khám thuộc chi nhánh của receptionist
+    public List<ViewExamRegistrationRequest> findAllBranchExam(Employee receptionist) {
+        List<ViewExamRegistrationRequest> exams = new ArrayList<>();
+        List<RegisterExamination> registerExaminations = examRegistrationRepository.findAll();
+        for (RegisterExamination registerExamination : registerExaminations) {
+            if(registerExamination.getBranch().equals(receptionist.getBranch())) {
+                exams.add(ViewExamRegistrationRequest.builder()
+                                .firstName(registerExamination.getFirstName())
+                                .lastName(registerExamination.getLastName())
+                                .branchName(registerExamination.getBranch().getBranchName())
+                                .phone(registerExamination.getPhone())
+                                .examId(registerExamination.getRegId())
+                        .build());
+            }
+        }
+        return exams;
+    }
+
+    //Tìm thông tin khám bệnh qua regId
+    public RegisterExamination findExamRegistrationByRegId(String regId) {
+        return examRegistrationRepository.findByRegId(Long.parseLong(regId));
+    }
+
+    //Lưu examinatioh
+    public void createExamRegistration(ExamRegistrationRequest examRegistrationRequest) {
+        Employee doctor = employeeRepository.findByEmp_id(Integer.parseInt(examRegistrationRequest.getEmployeeId()));
+        Branch branch = branchRepository.findByBranchName(examRegistrationRequest.getBranchName());
+
+        examRegistrationRepository.save(RegisterExamination.builder()
+                        .firstName(examRegistrationRequest.getFirstName())
+                        .lastName(examRegistrationRequest.getLastName())
+                        .email(examRegistrationRequest.getEmail())
+                        .phone(examRegistrationRequest.getPhone())
+                        .reason(examRegistrationRequest.getReason())
+                        .dob(examRegistrationRequest.getDob())
+                        .gender(examRegistrationRequest.getGender())
+                        .examRegisterDate(examRegistrationRequest.getExamRegisterDate())
+                        .employee(doctor)
+                        .branch(branch)
+                .build());
+    }
 
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -18,7 +19,7 @@ public class Invoice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int invoiceId;
     double totalBill;
-    Date invoiceDate;
+    LocalDate invoiceDate;
     String paymentMethod;
 
     @OneToOne
@@ -28,7 +29,7 @@ public class Invoice {
     @JoinColumn (name = "emp_id")
     private Employee employee;
 
-    public Invoice(double totalBill, Date invoiceDate, String paymentMethod) {
+    public Invoice(double totalBill, LocalDate invoiceDate, String paymentMethod) {
         this.totalBill = totalBill;
         this.invoiceDate = invoiceDate;
         this.paymentMethod = paymentMethod;

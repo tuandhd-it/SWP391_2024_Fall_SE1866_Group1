@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -17,7 +17,7 @@ public class EquipmentImportBill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int equipImportId;
-    Date equipImportDate;
+    LocalDate equipImportDate;
     String note;
     double totalPrice;
 
@@ -29,7 +29,7 @@ public class EquipmentImportBill {
     @JoinColumn(name = "bran_id")
     private Branch branch;
 
-    public EquipmentImportBill(Date equipImportDate, String note, double totalPrice) {
+    public EquipmentImportBill(LocalDate equipImportDate, String note, double totalPrice) {
         this.equipImportDate = equipImportDate;
         this.note = note;
         this.totalPrice = totalPrice;

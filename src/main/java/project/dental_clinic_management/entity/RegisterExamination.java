@@ -1,18 +1,17 @@
 package project.dental_clinic_management.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class RegisterExamination {
 
     @Id
@@ -23,9 +22,9 @@ public class RegisterExamination {
     String email;
     String phone;
     String reason;
-    Date dob;
+    LocalDate dob;
     String gender;
-    Date examRegisterDate;
+    LocalDate examRegisterDate;
     String note;
 
     @ManyToOne
@@ -36,7 +35,7 @@ public class RegisterExamination {
     @JoinColumn (name = "bran_id")
     private Branch branch;
 
-    public RegisterExamination(String firstName, String lastName, String email, String phone, String reason, Date dob, String gender, Date examRegisterDate, String note) {
+    public RegisterExamination(String firstName, String lastName, String email, String phone, String reason, LocalDate dob, String gender, LocalDate examRegisterDate, String note) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
