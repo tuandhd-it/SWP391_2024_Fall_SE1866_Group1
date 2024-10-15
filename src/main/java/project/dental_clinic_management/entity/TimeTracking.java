@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 @Entity
@@ -18,15 +20,30 @@ public class TimeTracking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int timeTrackingId;
-    LocalDate checkIn;
-    LocalDate checkOut;
+    LocalDateTime checkIn;
+    LocalDateTime checkOut;
 
     @ManyToOne
     @JoinColumn(name="emp_id")
-    private Employee employee;
+    public Employee employee;
 
-    public TimeTracking(LocalDate checkIn, LocalDate checkOut) {
+    public TimeTracking(LocalDateTime checkIn, LocalDateTime checkOut, Employee employee) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
+        this.employee = employee;
+    }
+    public String getFormattedCheckIn() {
+        if (checkIn != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return checkIn.format(formatter);
+        }
+        return "";
+    }
+    public String getFormattedCheckOut() {
+        if (checkOut != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+            return checkOut.format(formatter);
+        }
+        return "";
     }
 }

@@ -2,15 +2,13 @@ package project.dental_clinic_management.controller;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 import project.dental_clinic_management.dto.request.*;
-import project.dental_clinic_management.entity.Branch;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.Medicine;
-import project.dental_clinic_management.entity.Role;
-import project.dental_clinic_management.entity.Service;
+import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
 import project.dental_clinic_management.dto.request.ClinicBranchUpdateRequest;
@@ -22,8 +20,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.service.ServiceService;
+import project.dental_clinic_management.service.TimeTrackingService;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *  Copyright(C) 2005, Group 1 - SE1864
@@ -52,6 +58,9 @@ public class AdminController {
 
     @Autowired
     private ServiceService serviceService;
+    @Autowired
+    private TimeTrackingService timeTrackingService;
+
     /**
      * Create a branch and add it in database and redirect to specified page
      * @param branchRequest
@@ -236,6 +245,26 @@ public class AdminController {
         model.addAttribute("searchType", type);
         return "/service/manageService";
     }
+    @GetMapping("/detail/{id}")
+    public String serviceList(Model model,@PathVariable("id")int id)
+    {
+        Service service = serviceService.getServiceById(id);
+        model.addAttribute("service", service);
+        return "/service/detailService";
+    }
+    @GetMapping("/tracking")
+    public String viewAttendance(@RequestParam(value = "date", required = false) LocalDate date, Model model) {
+        // Nếu không có ngày được yêu cầu, sử dụng ngày hôm nay
+        if (date == null) {
+            date = LocalDate.now();
+        }
+
+        List<TimeTracking> attendanceList = timeTrackingService.findByDate(date);
+        model.addAttribute("attendances", attendanceList);
+        model.addAttribute("selectedDate", date);
+        return "timeTracking/managerTimeTracking";
+    }
+
 
 
 }

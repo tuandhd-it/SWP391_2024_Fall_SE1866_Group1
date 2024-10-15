@@ -6,10 +6,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import project.dental_clinic_management.entity.Service;
-import project.dental_clinic_management.repository.EmployeeRepository;
 import project.dental_clinic_management.repository.ServiceRepository;
 
-import java.util.List;
+import java.util.Optional;
 
 @org.springframework.stereotype.Service
 public class ServiceService {
@@ -38,4 +37,8 @@ public class ServiceService {
     public long countAll() {
         return serviceRepository.count();
     }
+    public Service saveService(Service service) {
+        return serviceRepository.save(service);
+    }
+    public Service getServiceById(int id) {return  serviceRepository.findById(id).get();}
 }

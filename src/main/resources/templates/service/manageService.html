@@ -9,6 +9,11 @@
   <!-- Option 1: Include in HTML -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
   <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+  <script crossorigin="anonymous"
+          integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -19,9 +24,17 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-12 profile">
-          <h1>
-            Danh sách dịch vụ
-          </h1>
+          <div class="row">
+            <h1 class="col-md">
+              Danh sách dịch vụ
+            </h1>
+            <div class="col-md">
+              <button type="button" style="margin-bottom: 20px" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#serviceModal">
+                Thêm dịch vụ
+              </button>
+            </div>
+
+          </div>
           <form class="input-group row">
             <!-- Sort Type Dropdown -->
             <div class="col-md-2">
@@ -52,10 +65,10 @@
               <thead class="table-dark">
                 <tr>
                   <th style="width: 10%;">ID</th>
-                  <th style="width: 30%;">Tên dịch vụ</th>
+                  <th style="width: 35%;">Tên dịch vụ</th>
                   <th style="width: 20%;">Giá</th>
-                  <th style="width: 15%;">Trạng thái</th>
-                  <th style="width: 25%;">Tùy chỉnh</th>
+                  <th style="width: 20%;">Trạng thái</th>
+                  <th style="width: 15%;">Tùy chỉnh</th>
                 </tr>
               </thead>
               <tbody>
@@ -75,7 +88,10 @@
                 <td>
                   <span class="table-action-icons">
                       <button type="button" class="btn btn-link p-0">
-                        <i class="bi bi-eye"></i>
+                        <a th:href="@{detail/{id}(id=${ser.serviceId})}">
+                          <i class="bi bi-eye"></i>
+                        </a>
+
                       </button >
                       <button type="button" class="btn btn-link p-0">
                         <i class="bi bi-pencil-square"></i>
@@ -110,6 +126,64 @@
     </div>
   </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="serviceModalLabel">Thêm dịch vụ mới</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <form id="serviceForm">
+          <div class="mb-3">
+
+            <div class="form-group">
+              <label for="imageInput" class="form-label">Ảnh minh họa</label>
+              <input type="file" name="img" class="form-control" id="imageInput" onchange="previewImage()">
+              <div id="imagePreviewContainer" style="display: none; text-align: center;">
+                <br>
+                <img id="imagePreview" src="#" alt="Ảnh xem trước" style="max-width: 50%; height: auto;">
+                <div id="serviceImageHelp" class="form-text">Service Image</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="serviceName">Tên dịch vụ:</label>
+            <input type="text" id="serviceName" class="form-control" name="serviceName">
+          </div>
+
+          <div class="form-group">
+            <label for="price">Giá:</label>
+            <input type="number" step="0.01" id="price" class="form-control" name="price" oninput="checkFormValidity()">
+          </div>
+
+          <div class="form-group">
+            <label for="detail" class="form-label">Mô tả:</label>
+            <textarea class="form-control" id="detail" name="detail" rows="3" placeholder="Enter service details" oninput="checkFormValidity()"></textarea>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-2" >Active:</div>
+            <div class="col-sm-10">
+              <input type="checkbox" class="form-check-input" id="isActive" name="isActive" value="1">
+            </div>
+
+
+          </div>
+
+          <div class="modal-footer justify-content-center mt-3">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button type="submit" class="btn btn-primary" id="saveButton" disabled>Lưu thay đổi</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
@@ -230,6 +304,89 @@
     }).catch(error => {
       swal("Please try again later.");
     });
+  }
+  function checkFormValidity() {
+    const serviceName = document.getElementById('serviceName').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const detail = document.getElementById('detail').value.trim();
+    const imageInput = document.getElementById('imageInput').value;
+
+    // Kiểm tra tất cả các trường xem có được nhập đầy đủ không
+    if (serviceName && price && detail && imageInput) {
+      document.getElementById('saveButton').disabled = false; // Enable nút lưu
+    } else {
+      document.getElementById('saveButton').disabled = true; // Disable nút lưu
+    }
+  }
+  document.getElementById('serviceForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const serviceName = document.getElementById('serviceName').value;
+    const price = document.getElementById('price').value;
+    const detail = document.getElementById('detail').value;
+    const checkbox = document.getElementById('isActive');
+    let isActive = 0;
+    if (checkbox.checked) {
+      isActive = checkbox.value;
+    }
+
+    const imgInput = document.getElementById('imageInput');
+    console.log("imgInput:"+imgInput);
+    const imgFile = imgInput.files[0];
+    console.log("imgFile:"+imgFile);
+    // Lấy dữ liệu từ các trường input
+    const formData = new FormData();
+    formData.append('serviceName', serviceName);
+    formData.append('price', price);
+    formData.append('isActive', isActive);
+    formData.append('detail', detail);
+    formData.append('img', imgFile);
+
+    try {
+      const response = await fetch('/service/addService', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        swalWithBootstrapButtons.fire({
+          title: "Thành công!",
+          text: "Thêm dịch vụ thành công",
+          icon: "success"
+        }).then(() => {
+          // Reload the page
+          location.reload();
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          title: "Oops...",
+        })
+      }
+    } catch (error) {
+      // Xử lý lỗi kết nối
+      console.error('Lỗi kết nối:', error);
+    }
+  });
+
+  function previewImage() {
+    var input = document.getElementById("imageInput");
+    var previewContainer = document.getElementById("imagePreviewContainer");
+    var preview = document.getElementById("imagePreview");
+
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        previewContainer.style.display = "block";
+      }
+
+      reader.readAsDataURL(input.files[0]);
+    } else {
+      previewContainer.style.display = "none";
+      preview.src = "#";
+    }
   }
 
 </script>

@@ -30,8 +30,8 @@
                              style="max-width: 200px;">
                     </div>
                     <!-- Success message display if present -->
-                    <div th:if="${message != null && !message.isEmpty()}" class="alert alert-success col-md-12" role="alert">
-                        <span class="label-span" th:text="${message}"></span>
+                    <div th:if="${messageUpdate != null && !message.isEmpty()}" class="alert alert-success col-md-12" role="alert">
+                        <span class="label-span" th:text="${messageUpdate}"></span>
                     </div>
 
                     <div th:if="${messageChange != null && !messageChange.isEmpty()}" class="alert alert-success col-md-12" role="alert">
