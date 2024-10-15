@@ -70,6 +70,12 @@
                     <span>Quản lý thuốc</span>
                 </a>
             </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/manageService}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý dịch vụ</span>
+                </a>
+            </li>
             <li class="sidebar-item">
                 <a href="#" class="sidebar-link">
                     <i class="lni lni-cog"></i>
