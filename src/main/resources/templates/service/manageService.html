@@ -64,13 +64,25 @@
                 <td>
                   <div style="display: flex" th:switch="${ser.isActive}">
 
-                      <button th:case="${true}" type="button" class="btn btn-success" style="padding: 5px; margin: 5px" >ACTIVE</button>
+                      <button th:case="${true}" type="button" class="btn btn-success" style="padding: 5px; margin: 5px" th:value="${ser.serviceId}">Kích hoạt</button>
 
-                      <button th:case="${false}" type="button" class="btn btn-warning" style="padding: 5px;margin: 5px" >INACTIVE</button>
+                      <button th:case="${false}" type="button" class="btn btn-warning" style="padding: 5px;margin: 5px" th:value="${ser.serviceId}">Tạm ngưng</button>
                   </div>
 
                 </td>
-                <td></td>
+                <td>
+<!--                  <span class="table-action-icons">-->
+<!--                                            &lt;!&ndash; Chỉnh sửa tài khoản &ndash;&gt;-->
+<!--                                            <button type="button" class="btn btn-link p-0">-->
+<!--                                                <i class="fa-solid fa-pen" title="Chỉnh sửa"></i>-->
+<!--                                            </button>-->
+
+<!--                    &lt;!&ndash; Xóa tài khoản &ndash;&gt;-->
+<!--                                            <a>-->
+<!--                                                <i class="fa-solid fa-trash" style="color: red" title="Xóa"></i>-->
+<!--                                            </a>-->
+<!--                  </span>-->
+                </td>
 
               </tr>
               </tbody>
@@ -99,6 +111,9 @@
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <script>
   document.getElementById('searchType').addEventListener('change', function() {
     const searchInput = document.getElementById('searchInput');
@@ -108,6 +123,116 @@
       searchInput.placeholder = 'Nhập tên dịch vụ';
     }
   });
+  const banButtons = document.querySelectorAll('.btn-success');
+  const inactiveButtons = document.querySelectorAll('.btn-warning');
+
+  const swalWithBootstrapButtons = Swal.mixin({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger"
+    },
+    buttonsStyling: false
+  });
+  banButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      const id = this.getAttribute('value');
+
+      swalWithBootstrapButtons.fire({
+        title: "Bạn có muốn tạm ngưng dịch vụ không ?",
+        text: "Tạm ngưng dịch vụ với ID: " + id + "!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Đồng ý!",
+        cancelButtonText: "Hủy!",
+        dangerMode: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          banService(id);
+        } else {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            icon: "error"
+          });
+        }
+      });
+    });
+  });
+
+  inactiveButtons.forEach(function (button) {
+    button.addEventListener('click', function () {
+      const id = this.getAttribute('value');
+
+      swalWithBootstrapButtons.fire({
+        title: "Bạn có muốn kích hoạt ?",
+        text: "Kích hoạt dịch vụ với ID: " + id + "!",
+        icon: "success",
+        showCancelButton: true,
+        confirmButtonText: "  Đồng ý!  ",
+        cancelButtonText: "  Hủy!  ",
+        dangerMode: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          activateService(id);
+        } else {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            icon: "error"
+          });
+        }
+      });
+    });
+  });
+
+  function banService(id) {
+    fetch('/service/ban', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + encodeURIComponent(id)
+    }).then(response => {
+      if (response.ok) {
+        swalWithBootstrapButtons.fire({
+          title: "Thành công!",
+          text: "Tạm ngưng dịch vụ thành công",
+          icon: "success"
+        })
+                .then(() => {
+                  location.reload();
+                });
+      } else {
+        Swal.fire("Please try again later.");
+      }
+    }).catch(error => {
+      swal("Please try again later.");
+    });
+  }
+
+  function activateService(id) {
+    fetch('/service/activate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: 'id=' + encodeURIComponent(id)
+    }).then(response => {
+      if (response.ok) {
+        swalWithBootstrapButtons.fire({
+          title: "Thành công!",
+          text: "Kích hoạt dịch vụ thành công",
+          icon: "success"
+        })
+        .then(() => {
+          location.reload();
+        });
+      } else {
+        Swal.fire("Please try again later.");
+      }
+    }).catch(error => {
+      swal("Please try again later.");
+    });
+  }
+
 </script>
 <script th:src="@{/js/dashboard.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

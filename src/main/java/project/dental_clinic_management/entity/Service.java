@@ -16,9 +16,9 @@ public class Service {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int serviceId;
     String serviceName;
-
+    String img;
     double price;
-    //String detail;
+    String detail;
     boolean isActive;
 
 
@@ -28,12 +28,13 @@ public class Service {
     public Service() {
 
     }
-    public Service(String service_name, double price, Boolean isActive, List<RecordService> recordService) {
-        this.serviceName= service_name;
+
+    public Service(int serviceId, String serviceName, String img, double price, String detail, boolean isActive) {
+        this.serviceId = serviceId;
+        this.serviceName = serviceName;
+        this.img = img;
         this.price = price;
+        this.detail = detail;
         this.isActive = isActive;
-        this.recordService = recordService;
     }
-
-
 }
