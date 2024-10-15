@@ -20,7 +20,7 @@
     <div class="main">
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div class="container-fluid">
-            <div class="row">
+            <div class="row" style="display: block">
                 <div class="col-md-12 profile">
                     <h1>Danh sách tài khoản</h1>
 
@@ -29,24 +29,29 @@
                         <p th:text="${message}"></p>
                     </div>
 
-                    <!-- Form tìm kiếm -->
-                    <form th:action="@{/admin/searchAccount}" method="get" class="mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm tài khoản" th:value="${keyword}">
-                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                        </div>
-                    </form>
+                    <!-- Form tìm kiếm và form sort -->
+                    <div class="d-flex justify-content-around align-items-center mb-3">
+                        <!-- Form tìm kiếm -->
+                        <form th:action="@{/admin/searchAccount}" method="get" class="me-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm tài khoản"
+                                       th:value="${keyword}">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </form>
 
-                    <!-- Form sort -->
-                    <form th:action="@{/admin/sortAccount}" method="get" class="mb-3">
-                        <div class="input-group">
-                            <input type="text" class="form-control" name="sortKey" placeholder="Sắp xếp theo" th:value="${sortKey}">
-                            <button type="submit" class="btn btn-primary">Sắp xếp</button>
-                        </div>
-                    </form>
+                        <!-- Form sort -->
+                        <form th:action="@{/admin/sortAccount}" method="get">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="sortKey" placeholder="Sắp xếp theo"
+                                       th:value="${sortKey}">
+                                <button type="submit" class="btn btn-primary">Sắp xếp</button>
+                            </div>
+                        </form>
+                    </div>
 
                     <!-- Bảng danh sách tài khoản chờ duyệt -->
-                    <div class="table-responsive">
+                    <div class="table-responsive" style="margin-top: 30px">
                         <table class="table table-bordered table-hover">
                             <thead class="thead-light">
                             <tr>
@@ -63,17 +68,23 @@
                             </thead>
                             <tbody>
                             <tr th:each="employee : ${employees}">
-                                <td th:text="${employee.getEmail()}"></td>
-                                <td th:text="${employee.getPhone()}"></td>
-                                <td th:text="${employee.getFirst_name()} + ' ' + ${employee.getLast_name()}"></td>
-                                <td th:text="${employee.getRole().getRoleName()}"></td>
-                                <td th:text="${employee.getAddress()}"></td>
-                                <td th:text="${employee.getDob()}"></td>
-                                <td th:src="${employee.getImg() == null ? 'Chưa tải ảnh lên' : employee.getImg()}"></td>
-                                <td th:text="${employee.getBranch().getBranchName()}"></td>
-                                <td class="checkbox_column">
-                                    <input id="checkbox_active" type="checkbox" th:checked="${employee.is_active()} ? 'checked' : null">
-                                </td>
+                                <div th:if="${!employee.is_active()}">
+                                    <td th:text="${employee.getEmail()}"></td>
+                                    <td th:text="${employee.getPhone()}"></td>
+                                    <td th:text="${employee.getFirst_name()} + ' ' + ${employee.getLast_name()}"></td>
+                                    <td th:text="${employee.getRole().getRoleName()}"></td>
+                                    <td th:text="${employee.getAddress()}"></td>
+                                    <td th:text="${employee.getDob()}"></td>
+                                    <td>
+                                        <img th:src="${employee.getImg() == null ? 'Chưa tải ảnh lên' : employee.getImg()}"
+                                             alt="Ảnh nhân viên" class="img-fluid" style="max-width: 100px;">
+                                    </td>
+                                    <td th:text="${employee.getBranch().getBranchName()}"></td>
+                                    <td class="checkbox_column">
+                                        <input id="checkbox_active" type="checkbox"
+                                               th:checked="${employee.is_active()}"/>
+                                    </td>
+                                </div>
                             </tr>
                             </tbody>
                         </table>
