@@ -1,0 +1,58 @@
+body {
+    overflow: hidden; /* Ẩn thanh cuộn của trang */
+}
+
+.main-content {
+    padding: 20px;
+    height: 100vh; /* Chiều cao của nội dung chính bằng chiều cao màn hình */
+}
+
+.registration-form {
+    max-height: calc(100vh - 100px); /* Giới hạn chiều cao của form bằng chiều cao của màn hình trừ đi phần đỉnh */
+    overflow-y: auto; /* Nếu form quá dài, chỉ form sẽ cuộn */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin-top: 30px;
+    background: white;
+}
+
+.registration-form h2 {
+    text-align: center;
+    color: #00BCD4;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+.registration-form h4 {
+    font-weight: bold;
+}
+/* Style cho các thẻ input và textarea */
+input[type="text"], input[type="email"], input[type="date"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Hover effect cho input và textarea */
+input[type="text"]:hover, input[type="email"]:hover, input[type="date"]:hover, select:hover, textarea:hover {
+    border-color: #00796b; /* Thay đổi màu border khi hover */
+}
+
+/* Focus effect khi người dùng click vào */
+input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #00796b; /* Màu khi được focus */
+    box-shadow: 0 0 5px rgba(0, 121, 107, 0.5); /* Tạo hiệu ứng shadow khi focus */
+}
+
+td.view_column {
+    text-align: center;
+    vertical-align: middle;
+}
+#viewDetails {
+    margin: 0 auto;
+    display: block;
+}
