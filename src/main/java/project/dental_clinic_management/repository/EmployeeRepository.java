@@ -12,6 +12,8 @@ import java.util.List;
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     public Employee findByEmail(String email);
     public Employee findByPhone(String phone);
+    @Query("SELECT e FROM Employee e WHERE e.emp_id = ?1")
+    public Employee findByEmp_id(int emp_id);
 
     @Transactional
     @Modifying
@@ -29,5 +31,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Modifying
     @Query("update Employee e set e.password = ?2 where e.emp_id = ?1")
     void updatePassword(int empId, String newPassword);
+
+
 
 }
