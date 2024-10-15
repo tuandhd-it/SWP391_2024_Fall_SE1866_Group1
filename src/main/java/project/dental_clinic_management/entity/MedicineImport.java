@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.util.ArrayList;
-import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -32,14 +32,14 @@ public class MedicineImport {
     private Branch branch;
 
     @Temporal(TemporalType.TIMESTAMP)
-    LocalDate date;
+    Date date;
 
     String quantity;
     double price;
     String note;
     double totalPrice;
 
-    public MedicineImport(Medicine medicine, Employee employee, Branch branch, LocalDate date, String quantity, double price, String note, double totalPrice) {
+    public MedicineImport(Medicine medicine, Employee employee, Branch branch, Date date, String quantity, double price, String note, double totalPrice) {
         this.medicine = medicine;
         this.employee = employee;
         this.branch = branch;
