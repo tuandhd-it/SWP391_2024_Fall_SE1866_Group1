@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phiếu Đăng Ký Khám</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/examRegistration.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+<body>
+
+<div class="d-flex">
+    <!-- Sidebar sẽ được thay thế từ file khác -->
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
+
+    <!-- Main Content -->
+    <div class="main-content" style="margin: 0; background-color: transparent; padding: 10px">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
+        </div>
+
+        <!-- Phiếu Đăng Ký Khám -->
+        <div class="registration-form shadow">
+            <h2>Phiếu Đăng Ký Khám</h2>
+
+            <!-- Form Thông Tin Bệnh Nhân -->
+            <form th:action="@{/recep/examRegistrationSubmit}" method="post" th:object="${request}">
+                <div class="mb-3">
+                    <h4>Thông tin bệnh nhân</h4>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">Họ*</label>
+                        <input type="text" class="form-control" id="firstName" name="firstName" placeholder="Họ" th:field="*{firstName}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Tên*</label>
+                        <input type="text" class="form-control" id="lastName" name="lastName" placeholder="Tên" th:field="*{lastName}" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email (nếu có)</label>
+                        <input type="email" class="form-control" id="email" placeholder="Email" th:field="*{email}" name="email">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Số điện thoại*</label>
+                        <input type="text" class="form-control" id="phone" placeholder="Số điện thoại" th:field="*{phone}" name="phone" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="dob" class="form-label">Ngày sinh*</label>
+                        <input type="date" class="form-control" id="dob" th:field="*{dob}" name="dob" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="gender" class="form-label">Giới tính*</label>
+                        <select class="form-select" id="gender" aria-label="Giới tính" th:field="*{gender}" required>
+                            <option value="" selected>Chọn giới tính</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                </div>
+
+                <hr class="my-4" style="color: #00BCD4; height: 4px">
+
+                <!-- Form Thông Tin Đăng Ký Khám -->
+                <div class="mb-3">
+                    <h4>Thông tin đăng ký khám bệnh</h4>
+                </div>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label for="reason" class="form-label">Mô tả nguyên nhân khám</label>
+                        <textarea class="form-control" id="reason" placeholder="Mô tả nguyên nhân khám" th:field="*{reason}" name="reason" rows="3"></textarea>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="date" class="form-label">Ngày đăng ký khám*</label>
+                        <input type="date" class="form-control" id="date" th:field="*{examRegisterDate}" name="date" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="doctor" class="form-label">Bác sĩ khám*</label>
+                        <select class="form-select" id="doctor" aria-label="Bác sĩ khám" th:field="*{employeeId}" required>
+                            <option value="" selected>Chọn bác sĩ</option>
+                            <option th:each="doctor : ${doctors}" th:text="${doctor.getFirst_name() + ' ' + doctor.getLast_name()}" th:value="${doctor.getEmp_id()}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="clinic" class="form-label">Cơ sở khám*</label>
+                        <select class="form-select" id="clinic" aria-label="Cơ sở khám" th:field="*{branchName}" required>
+                            <option value="" selected>Chọn chi nhánh</option>
+                            <option th:each="branch : ${branches}" th:text="${branch.getBranchName()}" th:value="${branch.getBranchName()}"></option>
+                        </select>
+                    </div>
+                    <div class="col-12">
+                        <label for="notes" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="notes" name="notes" th:field="*{note}" rows="2"></textarea>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button class="btn btn-primary btn-lg" type="submit">Đăng ký khám</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/dashboard.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

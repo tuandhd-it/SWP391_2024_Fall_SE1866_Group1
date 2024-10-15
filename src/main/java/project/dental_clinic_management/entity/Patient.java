@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -21,7 +21,7 @@ public class Patient {
     String firstName;
     String lastName;
     String gender;
-    Date dob;
+    LocalDate dob;
     String address;
     String phone;
     String email;
@@ -33,7 +33,7 @@ public class Patient {
     @OneToMany (mappedBy = "patient")
     private List<PatientWaitingRoom> patientWaitingRooms;
 
-    public Patient(String firstName, String lastName, String gender, Date dob, String address, String phone, String email, String medicalHistory) {
+    public Patient(String firstName, String lastName, String gender, LocalDate dob, String address, String phone, String email, String medicalHistory) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

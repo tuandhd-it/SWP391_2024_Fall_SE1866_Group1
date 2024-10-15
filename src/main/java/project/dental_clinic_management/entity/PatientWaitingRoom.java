@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,7 +18,7 @@ public class PatientWaitingRoom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int waitingRoomID;
-    Date waitingDate;
+    LocalDate waitingDate;
     String status;
     String note;
     boolean isBooked;
@@ -27,7 +28,7 @@ public class PatientWaitingRoom {
     @JoinColumn (name = "patient_id")
     private Patient patient;
 
-    public PatientWaitingRoom(Date waitingDate, String status, String note, boolean isBooked, boolean isUrgency) {
+    public PatientWaitingRoom(LocalDate waitingDate, String status, String note, boolean isBooked, boolean isUrgency) {
         this.waitingDate = waitingDate;
         this.status = status;
         this.note = note;

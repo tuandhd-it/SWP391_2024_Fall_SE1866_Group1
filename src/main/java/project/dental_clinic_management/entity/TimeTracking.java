@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -17,14 +18,14 @@ public class TimeTracking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int timeTrackingId;
-    Date checkIn;
-    Date checkOut;
+    LocalDate checkIn;
+    LocalDate checkOut;
 
     @ManyToOne
     @JoinColumn(name="emp_id")
     private Employee employee;
 
-    public TimeTracking(Date checkIn, Date checkOut) {
+    public TimeTracking(LocalDate checkIn, LocalDate checkOut) {
         this.checkIn = checkIn;
         this.checkOut = checkOut;
     }
