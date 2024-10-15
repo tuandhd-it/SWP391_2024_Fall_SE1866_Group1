@@ -36,9 +36,10 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         .requestMatchers("/admin/manageRegisterAccount").hasAnyAuthority("Admin", "Manager")
+                        .requestMatchers("/recep/viewRegistration").hasAnyAuthority("Receptionist", "Doctor")
                         .requestMatchers("/manager/**").hasAuthority("Manager")
                         .requestMatchers("/doctor/**").hasAnyAuthority("Doctor", "Nurse")
-                        .requestMatchers("/receptionist/**").hasAuthority("Receptionist")
+                        .requestMatchers("/recep/**").hasAuthority("Receptionist")
                         .requestMatchers("changePass").permitAll()
                         .anyRequest().authenticated()
                 ).formLogin(login -> login
