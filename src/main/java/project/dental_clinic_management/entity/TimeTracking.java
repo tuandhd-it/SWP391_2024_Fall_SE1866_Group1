@@ -39,6 +39,13 @@ public class TimeTracking {
         }
         return "";
     }
+    public String getDayFormattedCheckIn() {
+        if (checkIn != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return checkIn.format(formatter);
+        }
+        return "";
+    }
     public String getFormattedCheckOut() {
         if (checkOut != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");

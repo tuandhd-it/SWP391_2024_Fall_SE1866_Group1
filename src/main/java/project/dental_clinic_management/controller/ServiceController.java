@@ -1,5 +1,7 @@
 package project.dental_clinic_management.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,11 +47,26 @@ public class ServiceController {
         serviceRepository.save(service);
         return ResponseEntity.ok("Service activated successfully");
     }
+    @PostMapping("/updateService")
+    public ResponseEntity<String> updateService(@ModelAttribute Service service,@RequestParam("isActive") boolean isActive) {
+        // Call your service or repository to update the service
+        try {
+            service.setActive(isActive);
+            serviceService.update( service.getServiceId(), service);
+            return ResponseEntity.ok("Service updated successfully");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating service: " + ex.getMessage());
+        }
+    }
+    @Value("${upload.dir}")
+    private String uploadDir;
     @PostMapping("/addService")
     public ResponseEntity<String> addService(@RequestParam("serviceName") String serviceName,
                                              @RequestParam("price") double price,
                                              @RequestParam("detail") String detail,
                                              @RequestParam("isActive") boolean isActive,
+                                             @RequestParam("material") String material,
+                                             @RequestParam("guarantee") String guarantee,
                                              @RequestParam("img") MultipartFile imgFile,
                                              Model model) {
         // Handle the image upload
@@ -85,6 +102,8 @@ public class ServiceController {
         service.setDetail(detail);
         service.setImg(linkImg);
         service.setActive(isActive);
+        service.setMaterial(material);
+        service.setGuarantee(guarantee);
         serviceService.saveService(service);
 
         return ResponseEntity.ok("Service add successfully");

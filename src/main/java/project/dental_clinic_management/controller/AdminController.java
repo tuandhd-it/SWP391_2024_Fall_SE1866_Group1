@@ -264,6 +264,12 @@ public class AdminController {
         model.addAttribute("selectedDate", date);
         return "timeTracking/managerTimeTracking";
     }
+    @GetMapping("/updateService/{id}")
+    public String updateServiceGet(@PathVariable("id")int id, Model model) {
+        Service service = serviceService.getServiceById(id);
+        model.addAttribute("service", service);
+        return "service/editService"; // Redirect back to the service list
+    }
 
 
 

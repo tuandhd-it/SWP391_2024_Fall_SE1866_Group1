@@ -13,14 +13,14 @@
 
 <div class="d-flex">
     <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
-    <div class="main">
+    <div class="main" style="overflow-y: auto; height: calc(100vh - 60px);">
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12 profile">
                     <h1>Chi Tiết Dịch Vụ</h1>
 
-                    <div class="card" style="width: 20rem;">
+                    <div class="card" style="width: 25rem;">
                         <img class="card-img-top" th:src="@{/img/{img}(img=${service.img})}" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${service.serviceName}"></h5>
@@ -29,6 +29,8 @@
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">ID : <span th:text="${service.serviceId}"></span></li>
                             <li class="list-group-item">Giá : <span th:text="${service.price}"></span></li>
+                            <li class="list-group-item">Chất liệu : <span th:text="${service.material}"></span></li>
+                            <li class="list-group-item">Bảo hành : <span th:text="${service.guarantee}"></span></li>
                             <li class="list-group-item">
                                 <span class="col-md">Trạng thái :</span>
                                 <span th:switch="${service.isActive}" class="col-md">
@@ -40,8 +42,8 @@
                             </li>
                         </ul>
                         <div class="card-body text-center">
-                            <a href="#" class="card-link">Edit</a>
-                            <a href="/admin/manageService" class="card-link">Quay về</a>
+                            <a th:href="@{/admin/updateService/{id}(id=${service.serviceId})}" class="card-link">Edit</a>
+                            <a th:href="@{/admin/manageService(searchType='id', search=${service.serviceId})}" class="card-link">Quay về</a>
                         </div>
                     </div>
                 </div>
