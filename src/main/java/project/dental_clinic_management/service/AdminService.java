@@ -23,6 +23,7 @@ public class AdminService {
 
     @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     private MedicineRepository medicineRepository;
 
@@ -162,6 +163,35 @@ public class AdminService {
     //Delete Branch
     public void deleteBranch(int id) {
         branchRepository.deleteById(id);
+    }
+
+    //Tìm tất cả tài khoản chưa hoạt động
+    public List<Employee> findAllInactiveAccount() {
+        List<Employee> inactiveAccountList = new ArrayList<>();
+        List<Employee> allAccount = employeeRepository.findAll();
+        for (Employee employee : allAccount) {
+            if(!employee.is_active()) {
+                inactiveAccountList.add(employee);
+            }
+        }
+        return inactiveAccountList;
+    }
+
+    //Seacrh các tài khoản chưa được phê duyệt
+    public List<Employee> searchInactiveAccount(String keyword) {
+        return employeeRepository.searchInactiveEmployee(keyword);
+    }
+
+    //Accept tài khoản
+    public void acceptAccount(List<Integer> empIdList) {
+        for (Integer empId : empIdList) {
+            Employee employee = getEmployeeById(empId);
+            if (employee == null) {
+                throw new RuntimeException("Employee with id " + empId + " not found.");
+            }
+            employee.set_active(true);
+            employeeRepository.save(employee);
+        }
     }
 
     public List<Medicine> getAllMedicines() {

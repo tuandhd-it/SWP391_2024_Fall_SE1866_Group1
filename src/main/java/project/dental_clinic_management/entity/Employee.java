@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Entity
@@ -79,5 +80,15 @@ public class Employee {
         this.salary = salary;
     }
 
+    // Method format LocalDate thành format dd/mm/yyyy
+    public static String formatLocalDate(LocalDate date) {
+        if (date == null) {
+            return ""; // trả về "" nếu date null
+        }
+        // Tạo chuỗi bằng pattern
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        return date.format(formatter);
+    }
 
 }

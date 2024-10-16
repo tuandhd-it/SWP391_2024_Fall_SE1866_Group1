@@ -9,6 +9,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.entity.Branch;
+import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.dto.request.ClinicBranchCreationRequest;
 import project.dental_clinic_management.dto.request.ClinicBranchUpdateRequest;
@@ -198,7 +201,6 @@ public class AdminController {
     }
 
 
-
     // Mapping for editing employee's password
     @GetMapping("/editEmployee/{id}")
     public String editEmployee(@PathVariable("id") int id, Model model) {
@@ -224,8 +226,31 @@ public class AdminController {
     //Hiển thị tài khoản được đăng ký cần xét duyệt
     @GetMapping("/manageRegisterAccount")
     public String manageRegisterAccount(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        List<Employee> list = adminService.getAllEmployees();
+        List<Employee> list = adminService.findAllInactiveAccount();
         model.addAttribute("employees", list);
+        return "/employee/manageRegisterAccount";
+    }
+
+    //Hiển thị danh sách các tài khoản chưa được cấp phép sử dụng hệ thống
+    @GetMapping("/searchInactiveAccount")
+    public String searchInactiveAccount(@RequestParam("keyword") String keyword, Model model) {
+
+        List<Employee> employees = adminService.searchInactiveAccount(keyword);
+
+        model.addAttribute("employees", employees);
+
+        model.addAttribute("keyword", keyword);
+
+        return "/employee/manageRegisterAccount";
+    }
+
+    //Phê duyệt tài khoản
+    @PostMapping("/acceptAccount")
+    public String acceptAccount(@RequestParam List<Integer> emp_id, Model model) {
+        adminService.acceptAccount(emp_id);
+        List<Employee> list = adminService.findAllInactiveAccount();
+        model.addAttribute("employees", list);
+        model.addAttribute("acceptMsg", "Accounts accepted!");
         return "/employee/manageRegisterAccount";
     }
     @GetMapping("/manageService")
