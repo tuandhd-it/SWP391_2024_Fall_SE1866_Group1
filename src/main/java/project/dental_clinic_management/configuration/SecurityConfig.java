@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/recep/viewRegistration").hasAnyAuthority("Receptionist", "Doctor")
                         .requestMatchers("/manager/**").hasAuthority("Manager")
                         .requestMatchers("/doctor/**").hasAnyAuthority("Doctor", "Nurse")
+                        .requestMatchers("/tracking/**").hasAnyAuthority("Doctor", "Nurse","Receptionist")
                         .requestMatchers("/recep/**").hasAuthority("Receptionist")
                         .requestMatchers("changePass").permitAll()
                         .anyRequest().authenticated()

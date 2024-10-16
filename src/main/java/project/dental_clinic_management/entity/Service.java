@@ -3,7 +3,9 @@ package project.dental_clinic_management.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.core.io.FileSystemResource;
 
+import java.io.File;
 import java.util.List;
 
 @Data
@@ -20,7 +22,8 @@ public class Service {
     double price;
     String detail;
     boolean isActive;
-
+    String guarantee;
+    String material;
 
     @OneToMany(mappedBy = "service")
     private List<RecordService> recordService;
@@ -29,12 +32,20 @@ public class Service {
 
     }
 
-    public Service(int serviceId, String serviceName, String img, double price, String detail, boolean isActive) {
+    public Service(int serviceId, String serviceName, String detail, String img, double price, boolean isActive, String material, String guarantee) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
+        this.detail = detail;
         this.img = img;
         this.price = price;
-        this.detail = detail;
         this.isActive = isActive;
+        this.material = material;
+        this.guarantee = guarantee;
+    }
+
+    public FileSystemResource getImgSrc() {
+        String uploadDir = "/home/username/uploads";
+        File file = new File(uploadDir, img);
+        return new FileSystemResource(file);
     }
 }

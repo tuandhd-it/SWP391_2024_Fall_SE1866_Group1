@@ -84,6 +84,12 @@
             <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
                 <a th:href="@{/admin/tracking}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
+                    <span>Quản lý chấm công</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Doctor'')')}">
+                <a th:href="@{/tracking/attendance}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
                     <span>Chấm công</span>
                 </a>
             </li>

@@ -1,6 +1,7 @@
 
 package project.dental_clinic_management.controller;
 
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.service.CustomUserDetailService;
@@ -15,8 +16,20 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,10 +88,13 @@ public class GeneralController {
 
 
     @GetMapping("/changePass")
-    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails,@ModelAttribute("error") String messageChange) {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         model.addAttribute("employee", employee);
+        if (messageChange != null && !messageChange.isEmpty()) {
+            model.addAttribute("error", messageChange);
+        }
         return "/user/changePass";
     }
 
@@ -93,14 +109,12 @@ public class GeneralController {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
-            model.addAttribute("error", "Hãy nhập đúng mật khẩu cũ");
-            return "/user/changePass"; // Quay lại trang đổi mật khẩu nếu sai
+            redirectAttributes.addFlashAttribute("error", "Hãy nhập đúng mật khẩu cũ");
+            return "redirect:/changePass"; // Quay lại trang đổi mật khẩu nếu sai
         }
-
-
         if (!newPassword.equals(confirmNewPassword)) {
-            model.addAttribute("error", "Mật khẩu không trùng khớp");
-            return "/user/changePass";
+            redirectAttributes.addFlashAttribute("error", "Mật khẩu không trùng khớp");
+            return "redirect:/changePass";
         }
 
         employee.setPassword(passwordEncoder.encode(newPassword));
@@ -109,9 +123,9 @@ public class GeneralController {
         redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
     } catch (Exception e) {
         model.addAttribute("error", "An error occurred: " + e.getMessage());
-        return "/user/changePass";
+        return "redirect:/changePass";
     }
-    return "/user/profile";
+    return "redirect:/profile";
 }
 
     @GetMapping("/profile")
@@ -156,6 +170,23 @@ public class GeneralController {
 
             return "/user/profile";
         }
+    @GetMapping("/images/{filename:.+}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filename) {
+        try {
+            Path filePath = Paths.get("uploads").resolve(filename);
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                        .body(resource);
+            } else {
+                throw new RuntimeException("Could not read the file!");
+            }
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Error: " + e.getMessage());
+        }
+    }
 
 
 }

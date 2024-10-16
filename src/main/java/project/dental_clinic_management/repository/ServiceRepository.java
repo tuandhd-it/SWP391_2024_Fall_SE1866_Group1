@@ -4,8 +4,10 @@ package project.dental_clinic_management.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.transaction.annotation.Transactional;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +29,9 @@ public interface ServiceRepository extends JpaRepository<Service, Integer> {
     Page<Service> findServicesByServiceId(int id, Pageable pageable);
 
     //List<Service> findAll(Pageable pageable);
+    List<Service> findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(String name,String material);
+
+    @Modifying
+    @Query("UPDATE Service s SET s.img = :img WHERE s.serviceId = :oldServiceId")
+    void updateImg(int oldServiceId, String img);
 }
