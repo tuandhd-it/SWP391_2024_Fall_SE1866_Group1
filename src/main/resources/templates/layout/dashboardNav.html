@@ -63,7 +63,12 @@
                     <span>Quản lý cơ sở</span>
                 </a>
             </li>
-
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/managePatient}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý Bệnh Nhân</span>
+                </a>
+            </li>
             <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
                 <a th:href="@{/admin/manageMedicine}" class="sidebar-link">
                     <i class="lni lni-popup"></i>

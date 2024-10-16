@@ -52,10 +52,8 @@ import java.util.UUID;
 public class AdminController {
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private AdminService adminService;
-
     @Autowired
     private ServiceService serviceService;
     @Autowired
@@ -125,6 +123,19 @@ public class AdminController {
         return "/employee/manageEmp";
     }
 
+    @GetMapping("/managePatient")
+    public String getAllPatient(Model model) {
+        List<Patient> list = adminService.getAllPatient();
+        model.addAttribute("patients", list);
+        model.addAttribute("newPatient", new PatientCreationRequest());
+        return "/patient/managePatient";
+    }
+
+    @PostMapping("/patientCreate")
+    public String createPatient(@ModelAttribute PatientCreationRequest patientRequest) {
+        adminService.createPatient(patientRequest); //Create branch
+        return "redirect:/admin/managePatient";
+    }
 
     @GetMapping("employeesDetails/{id}")
     public String showEmployeeDetails(@PathVariable("id") Integer empId, Model model) {

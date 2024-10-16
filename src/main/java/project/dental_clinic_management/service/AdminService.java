@@ -1,10 +1,7 @@
 package project.dental_clinic_management.service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
-import project.dental_clinic_management.entity.Branch;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.Medicine;
-import project.dental_clinic_management.entity.Role;
+import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,14 +14,14 @@ public class AdminService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
-
     @Autowired
     private BranchRepository branchRepository;
-
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private MedicineRepository medicineRepository;
+    @Autowired
+    private PatientRepository patientRepository;
 
     public static void saveEmployee(Employee employee) {
     }
@@ -73,7 +70,6 @@ public class AdminService {
         employee.setRole(employeeUpdateRequest.getRole());
         employee.setImg(employeeUpdateRequest.getImg());
         employee.set_active(employeeUpdateRequest.isActive());
-
         return employeeRepository.save(employee);
     }
 
@@ -168,4 +164,21 @@ public class AdminService {
         return medicineRepository.findAll();
     }
 
+    //Get All Patient
+    public List<Patient> getAllPatient(){
+        return patientRepository.findAll();
+    }
+
+    //Create new Patient
+    public Patient createPatient(PatientCreationRequest request) {
+        Patient newPatient = new Patient();
+        newPatient.setFirstName(request.getFirstName());
+        newPatient.setLastName(request.getLastName());
+        newPatient.setEmail(request.getEmail());
+        newPatient.setPhone(request.getPhone());
+        newPatient.setAddress(request.getAddress());
+        newPatient.setGender(request.getGender());
+        newPatient.setDob(request.getDob());
+        return  patientRepository.save(newPatient); //save in database
+    }
 }

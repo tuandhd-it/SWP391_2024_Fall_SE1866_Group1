@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
+</head>
+<body>
+<div class="d-flex">
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
+    <div class="main">
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 profile">
+                    <h1>Danh sách Bệnh Nhân</h1>
+                    <button class="btn btn-primary" style="height: 50px; font-size: large"
+                            data-bs-toggle="modal" data-bs-target="#createModal">
+                        <b>Thêm bệnh nhân</b></button>
+                    <div class="table-responsive">
+                        <table class="table table-striped" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th>Họ Tên</th>
+                                <th>Ngày sinh</th>
+                                <th>Số điện thoại</th>
+                                <th>Giới tính</th>
+                                <th>Địa chỉ</th>
+                                <th>Email</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="patient : ${patients}">
+                                <td th:text="${patient.getFirstName() + ' ' + patient.getLastName()}"></td>
+                                <td th:text="${patient.getDob()}"></td>
+                                <td th:text="${patient.getPhone()}"></td>
+                                <td th:text="${patient.getGender()}"></td>
+                                <td th:text="${patient.getAddress()}"></td>
+                                <td th:text="${patient.getEmail()}"></td>
+                                <td>Edit</td>
+                                <td>Delete</td>
+                                <td>View</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Create Modal-->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <form id="createForm" th:action="@{/admin/patientCreate}" method="post" th:object="${newPatient}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalLabel">Tạo Mới Bệnh Nhân</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">Họ *</label>
+                        <input type="text" class="form-control" id="firstName"
+                               th:field="*{firstName}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Tên *</label>
+                        <input type="text" class="form-control" id="lastName"
+                               th:field="*{lastName}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Giới tính *</label>
+                        <select class="form-select" id="gender" aria-label="Giới tính" th:field="*{gender}" required>
+                            <option value="" selected>Chọn giới tính</option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Ngày Sinh *</label>
+                        <input type="date" class="form-control" id="dob"
+                               th:field="*{dob}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email *</label>
+                        <input class="form-control" id="email"
+                               type="text" th:field="*{email}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Điện Thoại *</label>
+                        <input type="number" class="form-control" id="phone"
+                               th:field="*{phone}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Địa Chỉ *</label>
+                        <input type="text" class="form-control" id="address"
+                               th:field="*{address}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicalHistory" class="form-label">Tiền sử Sức Khỏe *</label>
+                        <input type="text" class="form-control" id="medicalHistory"
+                               th:field="*{medicalHistory}">
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Tạo mới</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script th:src="@{/js/dashboard.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+</body>
+</html>

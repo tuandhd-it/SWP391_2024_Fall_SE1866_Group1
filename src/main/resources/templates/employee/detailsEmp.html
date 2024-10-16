@@ -130,7 +130,7 @@
                             <button class="btn btn-dark edit-btn mt-4" style="width: 80px;"><i
                                     style="font-size: 20px" class="fa-solid fa-pen-to-square"></i></button>
                             <!-- Edit button -->
-                            <button type="submit" class="btn btn-success save-btn mt-4 hidden input" style="width: 80px;"><i
+                            <button class="btn btn-success save-btn mt-4 hidden input" style="width: 80px;"><i
                                     class="fa-regular fa-floppy-disk"></i></button> <!-- Save button -->
                             <button class="btn btn-dark cancel-btn mt-4 hidden input" style="width: 80px;">Hủy
                             </button> <!-- Cancel button -->
@@ -147,39 +147,60 @@
     </div>
 </div>
 <script>
+    let preventSubmit = true;
+
+    document.getElementById('employee-form').addEventListener('submit', function (event) {
+        if (preventSubmit) {
+            event.preventDefault();
+        }
+    });
+
     document.querySelector('.edit-btn').addEventListener('click', function () {
+        // Toggle visibility between text and input fields
         document.querySelectorAll('.text').forEach(function (element) {
             element.classList.toggle('hidden');
         });
         document.querySelectorAll('.input').forEach(function (element) {
             element.classList.toggle('hidden');
         });
+
+        // Toggle button visibility
         document.querySelector('.edit-btn').classList.add('hidden');
         document.querySelector('.save-btn').classList.remove('hidden');
         document.querySelector('.cancel-btn').classList.remove('hidden');
+
+        // prevent submit form in edit mode
+        preventSubmit = true;
+    });
+
+    document.querySelector('.save-btn').addEventListener('click', function () {
+        // off flag to and submit form
+        preventSubmit = false;
+        document.getElementById('employee-form').submit();
     });
 
     document.querySelector('.cancel-btn').addEventListener('click', function () {
+        // Toggle visibility back to original state
         document.querySelectorAll('.text').forEach(function (element) {
             element.classList.toggle('hidden');
         });
         document.querySelectorAll('.input').forEach(function (element) {
             element.classList.toggle('hidden');
         });
+
+        // Toggle button visibility back to original state
         document.querySelector('.edit-btn').classList.remove('hidden');
         document.querySelector('.save-btn').classList.add('hidden');
         document.querySelector('.cancel-btn').classList.add('hidden');
 
-        document.getElementById('employee-form').removeEventListener('submit', function (event) {
-            event.preventDefault();
-        });
+        // Prevent submit after cancel
+        preventSubmit = true;
     });
 </script>
-<script th:src="@{/js/dashboard.js}"></script>
+
 <script crossorigin="anonymous"
         integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://kit.fontawesome.com/d39499d76a.js" crossorigin="anonymous"></script>
-
 </body>
 </html>
