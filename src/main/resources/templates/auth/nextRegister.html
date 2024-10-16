@@ -15,14 +15,14 @@
         <form th:action="@{/verifyEmail/verify}" method="post" th:object="${request}" id="validationForm">
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="text" placeholder="Họ" class="form-control" aria-label="Họ" th:field="*{first_name}" required>
+                    <input type="text" placeholder="Họ" class="form-control" id="firstName" aria-label="Họ" th:field="*{first_name}" required>
                     <span class="input-group-text"><img th:src="@{/img/icon1.png}" alt="Edit" class="bxs-edit"
                                                         style="width: 20px;"></span>
                 </div>
             </div>
             <div class="mb-3">
                 <div class="input-group">
-                    <input type="text" placeholder="Tên" class="form-control" aria-label="Tên" th:field="*{last_name}" required>
+                    <input type="text" placeholder="Tên" class="form-control" id="lastName" aria-label="Tên" th:field="*{last_name}" required>
                     <span class="input-group-text"><img th:src="@{/img/icon1.png}" alt="Edit" class="bxs-edit"
                                                         style="width: 20px;"></span>
                 </div>

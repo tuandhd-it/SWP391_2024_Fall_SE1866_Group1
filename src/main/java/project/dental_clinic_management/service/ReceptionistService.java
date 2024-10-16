@@ -105,7 +105,7 @@ public class ReceptionistService {
         List<Employee> doctors = new ArrayList<>();
         List<Employee> allEmployees = employeeRepository.findAll();
         for (Employee employee : allEmployees) {
-            if (employee.getRole().getRoleName().equals("Doctor") && employee.getBranch().equals(receptionist.getBranch())) {
+            if (employee.getRole().getRoleName().equals("Doctor") && employee.getBranch().equals(receptionist.getBranch()) && employee.is_active()) {
                 doctors.add(employee);
             }
         }
@@ -151,7 +151,32 @@ public class ReceptionistService {
                         .examRegisterDate(examRegistrationRequest.getExamRegisterDate())
                         .employee(doctor)
                         .branch(branch)
+                        .note(examRegistrationRequest.getNote())
                 .build());
+    }
+
+    //Search list examination registration
+    public List<ViewExamRegistrationRequest> searchAllExamRegistration(String keyword) {
+        List<RegisterExamination> list = examRegistrationRepository.searchRegisterExamination(keyword);
+        List<ViewExamRegistrationRequest> viewRequestList = new ArrayList<>();
+
+        for(RegisterExamination registerExamination : list) {
+            viewRequestList.add(ViewExamRegistrationRequest.builder()
+                    .examId(registerExamination.getRegId())
+                    .firstName(registerExamination.getFirstName())
+                    .lastName(registerExamination.getLastName())
+                    .email(registerExamination.getEmail())
+                    .phone(registerExamination.getPhone())
+                    .reason(registerExamination.getReason())
+                    .dob(registerExamination.getDob())
+                    .gender(registerExamination.getGender())
+                    .examRegisterDate(registerExamination.getExamRegisterDate())
+                    .doctorName(registerExamination.getEmployee().getFirst_name() + " " + registerExamination.getEmployee().getLast_name())
+                    .branchName(registerExamination.getBranch().getBranchName())
+                    .note(registerExamination.getNote())
+                    .build());
+        }
+        return viewRequestList;
     }
 
 }
