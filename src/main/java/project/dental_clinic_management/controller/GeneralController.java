@@ -115,12 +115,12 @@ public class GeneralController {
 }
 
     @GetMapping("/profile")
-    public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails,@ModelAttribute("messageUpdate") String messageUpdate) {
+    public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails,@ModelAttribute("messageChange") String messageChange) {
         String username = userDetails.getUsername();
         Employee employee = customUserDetailService.findByUsername(username);
         model.addAttribute("employee", employee);
-        if (messageUpdate != null && !messageUpdate.isEmpty()) {
-            model.addAttribute("messageUpdate", messageUpdate);
+        if (messageChange != null && !messageChange.isEmpty()) {
+            model.addAttribute("messageChange", messageChange);
         }
         model.addAttribute("editMode", false);
         return "/user/profile";
