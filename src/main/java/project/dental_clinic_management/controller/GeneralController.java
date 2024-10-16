@@ -168,7 +168,7 @@ public class GeneralController {
                 redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
             }
 
-            return "/user/profile";
+            return "profile";
         }
     @GetMapping("/images/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {

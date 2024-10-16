@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phiếu Đăng Ký Khám</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.1/bootstrap-table.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.1/bootstrap-table.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/examRegistration.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
 </head>
@@ -30,7 +32,7 @@
             <h2>Phiếu Đăng Ký Khám</h2>
 
             <!-- Form Thông Tin Bệnh Nhân -->
-            <form th:action="@{/recep/examRegistrationSubmit}" method="post" th:object="${request}">
+            <form th:action="@{/recep/examRegistrationSubmit}" method="post" th:object="${request}" >
                 <div class="mb-3">
                     <h4>Thông tin bệnh nhân</h4>
                 </div>
@@ -90,14 +92,11 @@
                     </div>
                     <div class="col-md-4">
                         <label for="clinic" class="form-label">Cơ sở khám*</label>
-                        <select class="form-select" id="clinic" aria-label="Cơ sở khám" th:field="*{branchName}" required>
-                            <option value="" selected>Chọn chi nhánh</option>
-                            <option th:each="branch : ${branches}" th:text="${branch.getBranchName()}" th:value="${branch.getBranchName()}"></option>
-                        </select>
+                        <input type="text" class="form-control" id="clinic" placeholder="Cơ sở khám" th:field="*{branchName}" name="clinic" readonly>
                     </div>
                     <div class="col-12">
-                        <label for="notes" class="form-label">Ghi chú</label>
-                        <textarea class="form-control" id="notes" name="notes" th:field="*{note}" rows="2"></textarea>
+                        <label for="note" class="form-label">Ghi chú</label>
+                        <textarea class="form-control" id="note" placeholder="Ghi chú" name="note" th:field="*{note}" rows="2"></textarea>
                     </div>
                 </div>
 
@@ -109,6 +108,7 @@
     </div>
 </div>
 <script th:src="@{/js/dashboard.js}"></script>
+<script th:src="@{/js/validateExamRegistration.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

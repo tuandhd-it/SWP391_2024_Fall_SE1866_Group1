@@ -56,3 +56,10 @@ td.view_column {
     margin: 0 auto;
     display: block;
 }
+
+#infoHeader h5 {
+    color: #00BCD4;
+    text-align: center;
+    flex-grow: 1;
+}
+

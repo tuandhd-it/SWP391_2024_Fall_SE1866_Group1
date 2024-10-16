@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Medicine {
     @Id
-            @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int regNumber;
     String medicineName;
     String quantity;

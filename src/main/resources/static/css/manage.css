@@ -24,15 +24,6 @@
     color: #00BCD4;
 }
 
-td.checkbox_column {
-    text-align: center;
-    vertical-align: middle;
-}
-#checkbox_active {
-    margin: 0 auto;
-    display: block;
-}
-
 .pagination .page-item.active .page-link {
     background-color: #00BCD4;
     color: white;
