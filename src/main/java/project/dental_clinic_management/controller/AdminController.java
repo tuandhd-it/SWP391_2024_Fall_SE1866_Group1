@@ -1,12 +1,9 @@
 package project.dental_clinic_management.controller;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.entity.Branch;
@@ -25,14 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.service.ServiceService;
 import project.dental_clinic_management.service.TimeTrackingService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.UUID;
 
 /**
  *  Copyright(C) 2005, Group 1 - SE1864
@@ -64,15 +55,91 @@ public class AdminController {
     @Autowired
     private TimeTrackingService timeTrackingService;
 
+
+
+    /**
+     * Get data and bring it to page
+     * @param waitingRoomId
+     * @param page
+     * @param model
+     * @return path to page
+     */
+    @GetMapping("/patientList/{id}/patients")
+    public String patientList(@PathVariable("id") int waitingRoomId,
+                              @RequestParam(value = "page", defaultValue = "1") int page,
+                              Model model) {
+        // Fetch the list of patients for the given waiting room ID and page index
+        Page<PatientWaitingRoom> patientWaitingRequests = adminService.getAllPatientWaitingRequestsInRoom(page, waitingRoomId);
+
+        // Add the list of patients and other necessary data to the model
+        model.addAttribute("listPatient", patientWaitingRequests.getContent());
+        model.addAttribute("waitingRoomId", waitingRoomId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", patientWaitingRequests.getTotalPages());
+        model.addAttribute("hasPrevious", patientWaitingRequests.hasPrevious()); // Check if there is a previous page
+        model.addAttribute("hasNext", patientWaitingRequests.hasNext()); // Check if there is a next page
+
+        // Return the view name that will display the patient list
+        return "/branch/listPatientsWaiting"; // Ensure this path corresponds to your directory structure
+    }
+
+    /**
+     * Change capacity in database
+     * @param roomID
+     * @param capacity
+     * @return path to page
+     */
+    @PostMapping("/updateCapacity")
+    public String updateCapacity(@RequestParam("roomID") String roomID,
+            @RequestParam("capacity") String capacity) {
+
+        try {
+            if(roomID != null && capacity != null) {
+                int roomId = Integer.parseInt(roomID.trim());
+                int capacityInt = Integer.parseInt(capacity.trim());
+                adminService.updateWaitingRoom(roomId, capacityInt);
+            }
+        } catch (Exception e) {
+            return "redirect:/admin/listWaitingRoom";
+        }
+        // Cập nhật số lượng bệnh nhân tối đa cho phòng chờ
+
+
+        // Chuyển hướng về trang danh sách phòng chờ (hoặc ở lại trang hiện tại)
+        return "redirect:/admin/listWaitingRoom";
+    }
+
     /**
      * Create a branch and add it in database and redirect to specified page
      * @param branchRequest
      * @return a url <code>java.lang.String</code>
      */
-    @PostMapping("/branchCreate")
+    @PostMapping("/createBranch")
     public String createBranch(@ModelAttribute ClinicBranchCreationRequest branchRequest) {
-        adminService.createBranch(branchRequest); //Create branch
+        Branch branch = adminService.createBranch(branchRequest); //Create branch
+        WaitingRoom newWaitingRoom = new WaitingRoom();
+        newWaitingRoom.setBranch(branch);
+        newWaitingRoom.setCapacity(10);
+        newWaitingRoom.setAvailable(true);
+        adminService.createWaitingRoom(newWaitingRoom, branch);
         return "redirect:/admin/manageBranchs";
+    }
+
+    /**
+     * Lead to page need
+     * @param page
+     * @param model
+     * @return string url
+     */
+    @GetMapping("/listWaitingRoom")
+    public String listWaitingRoom(@RequestParam(defaultValue = "1") int page, Model model) {
+
+        Page<WaitingRoomRequest> waitingRoomPage = adminService.getAllWaitingRoomRequests(page);
+
+        model.addAttribute("listRoom", waitingRoomPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", waitingRoomPage.getTotalPages());
+        return "/branch/listWaitingRoom";
     }
 
     /**
@@ -199,6 +266,7 @@ public class AdminController {
         // Return the view for displaying the list of employees
         return "/employee/manageEmp";
     }
+
 
 
     // Mapping for editing employee's password

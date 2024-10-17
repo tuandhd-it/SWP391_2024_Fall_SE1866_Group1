@@ -1,10 +1,11 @@
 package project.dental_clinic_management.service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
-import project.dental_clinic_management.entity.Branch;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.Medicine;
-import project.dental_clinic_management.entity.Role;
+import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,12 @@ import java.util.List;
 
 @Service
 public class AdminService {
+
+    @Autowired
+    private WaitingRoomRepository waitingRoomRepository;
+
+    @Autowired
+    private PatientWaitingRoomRepository patientWaitingRoomRepository;
 
     @Autowired
     private EmployeeRepository employeeRepository;
@@ -27,7 +34,104 @@ public class AdminService {
     @Autowired
     private MedicineRepository medicineRepository;
 
-    public static void saveEmployee(Employee employee) {
+
+
+    /**
+     * Get waiting room list
+     * @return waiting room list
+     */
+    public List<WaitingRoom> getAllWaitingRooms() {
+        return waitingRoomRepository.findAll(); //return  waiting room list
+    }
+
+    /**
+     * Count patient in a waiting room
+     * @param waitingRoomId
+     * @return number of patients in waiting room
+     */
+    public int countPatient(WaitingRoom waitingRoomId) {
+        return patientWaitingRoomRepository.countByWaitingRoomId(waitingRoomId);
+    }
+
+    /**
+     * Change capacity
+     * @param id
+     * @param capacity
+     * @return waiting room changed
+     */
+    public WaitingRoom updateWaitingRoom(int id, int capacity) {
+        WaitingRoom waitingRoom = findWaitingRoomById(id);
+        waitingRoom.setCapacity(capacity);
+        return waitingRoomRepository.save(waitingRoom);
+    }
+
+    /**
+     * Get a waiting room by id
+     * @param waitingRoomId
+     * @return WaitingRoom
+     */
+    public WaitingRoom findWaitingRoomById(int waitingRoomId) {
+        return waitingRoomRepository.findWaitingRoomByWaitingRoomID(waitingRoomId);
+    }
+
+
+    /**
+     * Change capacity of waiting room
+     * @param waitingRoomID
+     * @param newCapacity
+     * @return
+     */
+    public WaitingRoom editCapacityOfWaitingRoom(int waitingRoomID, int newCapacity) {
+        WaitingRoom waitingRoom = findWaitingRoomById(waitingRoomID);
+        waitingRoom.setCapacity(newCapacity);
+        return waitingRoomRepository.save(waitingRoom);
+    }
+
+    /**
+     * Get page waiting room
+     * @param index
+     * @return a page list
+     */
+    public Page<WaitingRoomRequest> getAllWaitingRoomRequests(int index){
+        Pageable pageable = PageRequest.of(index - 1,2);
+        Page<WaitingRoom> waitingRoomsPage = waitingRoomRepository.findAll(pageable); // Lấy danh sách phòng chờ theo trang
+        List<WaitingRoomRequest> waitingRoomRequests = new ArrayList<>(); // Tạo danh sách WaitingRoomRequest
+
+        for (WaitingRoom waitingRoom : waitingRoomsPage) {
+            WaitingRoomRequest request = new WaitingRoomRequest();
+            request.setWaitingRoomID(waitingRoom.getWaitingRoomID());
+            request.setAvailable(countPatient(waitingRoom) < waitingRoom.getCapacity());
+            request.setNumberPatient(countPatient(waitingRoom));
+            request.setBranch(waitingRoom.getBranch());
+            request.setCapacity(waitingRoom.getCapacity());
+            waitingRoomRequests.add(request);
+        }
+
+        return new PageImpl<>(waitingRoomRequests, pageable, waitingRoomsPage.getTotalElements());
+    }
+
+    /**
+     * Get all patient waiting in room
+     * @param index
+     * @param waitingRoomId
+     * @return list patient
+     */
+    public Page<PatientWaitingRoom> getAllPatientWaitingRequestsInRoom(int index, int waitingRoomId){
+        Pageable pageable = PageRequest.of(index - 1,3);
+        // Find the waiting room by ID
+
+        // Fetch all waiting requests for the waiting room
+        List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomId(waitingRoomId);
+
+        // Use PageImpl to convert list to page
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), waitingRequests.size());
+
+        if (start > end) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        return new PageImpl<>(waitingRequests.subList(start, end), pageable, waitingRequests.size());
     }
 
     //Get all Role
@@ -121,6 +225,15 @@ public class AdminService {
         return  branchRepository.save(newBranch); //save in database
     }
 
+    public WaitingRoom createWaitingRoom(WaitingRoom waitingRoom, Branch newBranch){
+        WaitingRoom newWaitingRoom = new WaitingRoom();
+        newWaitingRoom.setBranch(newBranch);
+        newWaitingRoom.setCapacity(10);
+        newWaitingRoom.setAvailable(true);
+
+        return waitingRoomRepository.save(newWaitingRoom);
+    }
+
     /**
      * Get all branch
      * @return a list <code>java.util.List</code>
@@ -197,5 +310,4 @@ public class AdminService {
     public List<Medicine> getAllMedicines() {
         return medicineRepository.findAll();
     }
-
 }
