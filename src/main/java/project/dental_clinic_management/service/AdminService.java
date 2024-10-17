@@ -211,4 +211,27 @@ public class AdminService {
         newPatient.setDob(request.getDob());
         return  patientRepository.save(newPatient); //save in database
     }
+
+    //Get Patient By ID
+    public Patient getPatient(int id){
+        return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Patient ID"));
+    }
+
+    //Update Patient
+    public Patient updatePatient(int id, PatientUpdateRequest updateRequest) {
+        Patient patient = getPatient(id);
+
+        if (patient == null) { //If null throw run time exception
+            throw new RuntimeException("Patient with id " + id + " not found.");
+        }
+        //Set information need to modify
+        patient.setFirstName(updateRequest.getFirstName().trim());
+        patient.setLastName(updateRequest.getLastName().trim());
+        patient.setEmail(updateRequest.getEmail().trim());
+        patient.setPhone(updateRequest.getPhone().trim());
+        patient.setAddress(updateRequest.getAddress().trim());
+        patient.setGender(updateRequest.getGender().trim());
+        patient.setDob(updateRequest.getDob());
+        return patientRepository.save(patient);
+    }
 }

@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Danh sách Bệnh Nhân</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -18,7 +19,7 @@
             <div class="row">
                 <div class="col-md-12 profile">
                     <h1>Danh sách Bệnh Nhân</h1>
-                    <button class="btn btn-primary" style="height: 50px; font-size: large"
+                    <button class="btn btn-primary m-4" style="height: 50px; font-size: large"
                             data-bs-toggle="modal" data-bs-target="#createModal">
                         <b>Thêm bệnh nhân</b></button>
                     <div class="table-responsive">
@@ -32,8 +33,6 @@
                                 <th>Địa chỉ</th>
                                 <th>Email</th>
                                 <th></th>
-                                <th></th>
-                                <th></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -44,9 +43,31 @@
                                 <td th:text="${patient.getGender()}"></td>
                                 <td th:text="${patient.getAddress()}"></td>
                                 <td th:text="${patient.getEmail()}"></td>
-                                <td>Edit</td>
-                                <td>Delete</td>
-                                <td>View</td>
+                                <td style="width:12%;font-size: 18px"> <button type="button" style="border: none"
+                                             data-bs-toggle="modal" data-bs-target="#editModal"
+                                             th:data-id="${patient.getPatientId()}"
+                                             th:data-name="${patient.getFirstName()}"
+                                             th:data-description="${patient.getLastName()}"
+                                             th:data-address="${patient.getAddress()}"
+                                             th:data-phone="${patient.getPhone()}"
+                                             th:data-email="${patient.getEmail()}"
+                                             th:data-gender="${patient.getGender()}"
+                                             th:data-dob="${patient.getDob()}"
+                                             th:data-medicalHistory="${patient.getMedicalHistory()}">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+
+<!--                                    Delete Patient Button-->
+                                    <i class="fa-solid fa-trash"></i>
+
+<!--                                    View Patient Records-->
+                                    <span class="table-action-icons">
+                                         <a style="color: black" th:href="@{/admin/manageRecord/{id}(id=${patient.getPatientId()})}">
+                                             <i class="fa-regular fa-eye"></i>
+                                         </a>
+                                    </span>
+                                </td>
+
                             </tr>
                             </tbody>
                         </table>
@@ -55,6 +76,70 @@
             </div>
         </div>
     </div>
+</div>
+
+
+<!--Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <form id="editForm" th:action="@{/admin/editPatient}" th:object="${editPatient}" method="post">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel"><b>Sửa Thông tin Bệnh Nhân</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+<!--                    <div class="m-2" style="text-align: center">-->
+<!--                        <b><i>Bệnh Nhân <p id="spanPatientId"></p></i></b>-->
+<!--                    </div>-->
+                    <div class="mb-3" hidden>
+                        <label for="editPatientId" class="form-label">Mã bệnh nhân</label>
+                        <input type="number" class="form-control" id="editPatientId" th:field="*{patientId}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">Họ Bệnh Nhân</label>
+                        <input type="text" class="form-control" id="editFirstName" th:field="*{firstName}" placeholder="Tên Họ bệnh nhân">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Tên Bệnh Nhân</label>
+                        <input type="text" class="form-control" id="editLastName" th:field="*{lastName}" placeholder="Tên bệnh nhân">
+                    </div>
+                    <div class="mb-3">
+                        <label for="gender" class="form-label">Giới tính *</label>
+                        <select class="form-select" id="editGender" aria-label="Giới tính" th:field="*{gender}" required>
+                            <option value="Nam" th:selected="${editGender == 'Nam'}">Nam</option>
+                            <option value="Nữ" th:selected="${editGender == 'Nữ'}">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="dob" class="form-label">Ngày Sinh *</label>
+                        <input type="date" class="form-control" id="editDob"
+                               th:field="*{dob}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Địa Chỉ</label>
+                        <input type="text" class="form-control" id="editAddress" th:field="*{address}" placeholder="Địa chỉ">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Điện Thoại</label>
+                        <input type="number" class="form-control" id="editPhone" th:field="*{phone}" placeholder="Số điện thoại liên hệ">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="text" class="form-control" id="editEmail" th:field="*{email}" placeholder="Email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editMedicalHistory" class="form-label">Tiền sử Sức Khỏe</label>
+                        <input type="text" class="form-control" id="editMedicalHistory" th:field="*{medicalHistory}" placeholder="Tiền sử Sức Khỏe">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
 
 <!--Create Modal-->
@@ -80,8 +165,7 @@
                     <div class="mb-3">
                         <label for="gender" class="form-label">Giới tính *</label>
                         <select class="form-select" id="gender" aria-label="Giới tính" th:field="*{gender}" required>
-                            <option value="" selected>Chọn giới tính</option>
-                            <option value="Nam">Nam</option>
+                            <option value="Nam" selected>Nam</option>
                             <option value="Nữ">Nữ</option>
                         </select>
                     </div>
@@ -124,5 +208,89 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var editButtons = document.querySelectorAll('[data-bs-toggle="modal"]');
+        var editForm = document.getElementById('editForm');
+
+        editButtons.forEach(button => {
+            button.addEventListener('click', function () {
+
+                // Lấy thông tin từ các thuộc tính data- của button
+                var patientId = this.getAttribute('data-id');
+                var firstName = this.getAttribute('data-name');
+                var lastName = this.getAttribute('data-description');
+                var address = this.getAttribute('data-address');
+                var phone = this.getAttribute('data-phone');
+                var email = this.getAttribute('data-email');
+                var gender = this.getAttribute('data-gender');
+                var dob = this.getAttribute('data-dob');
+                var medicalHistory = this.getAttribute('data-medicalHistory');
+
+                // Điền vào các trường trong modal
+                document.getElementById('editPatientId').value = patientId;
+                // document.getElementById('spanPatientId').value = patientId;
+                document.getElementById('editFirstName').value = firstName;
+                document.getElementById('editLastName').value = lastName;
+                document.getElementById('editAddress').value = address;
+                document.getElementById('editPhone').value = phone;
+                document.getElementById('editEmail').value = email;
+                document.getElementById('editGender').value = gender;
+                document.getElementById('editDob').value = dob;
+                document.getElementById('editMedicalHistory').value = medicalHistory;
+            });
+        });
+
+        // Validation for the edit form
+        editForm.addEventListener('submit', function (e) {
+            if (!validateForm(editForm)) {
+                e.preventDefault();
+            }
+        });
+
+        function validateForm(form) {
+            var firstName = form.querySelector('input[name="firstName"]');
+            var lastName = form.querySelector('input[name="lastName"]');
+            var address = form.querySelector('input[name="address"]');
+            var phone = form.querySelector('input[name="phone"]');
+            var email = form.querySelector('input[name="email"]');
+            var medicalHistory = form.querySelector('input[name="medicalHistory"]');
+
+            if (!firstName.value.trim()) {
+                alert("Vui lòng nhập tên.");
+                firstName.focus();
+                return false;
+            }
+
+            if (!lastName.value.trim()) {
+                alert("Vui lòng nhập họ.");
+                lastName.focus();
+                return false;
+            }
+
+            if (!address.value.trim()) {
+                alert("Vui lòng nhập địa chỉ.");
+                address.focus();
+                return false;
+            }
+
+            if (!phone.value.trim() || !/^[0-9]{10,11}$/.test(phone.value)) {
+                alert("Vui lòng nhập số điện thoại hợp lệ (10-11 chữ số).");
+                phone.focus();
+                return false;
+            }
+
+            if (!email.value.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                alert("Vui lòng nhập email hợp lệ.");
+                email.focus();
+                return false;
+            }
+
+            return true;
+        }
+    });
+</script>
+
 </body>
 </html>

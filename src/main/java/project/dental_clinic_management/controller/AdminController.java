@@ -130,6 +130,7 @@ public class AdminController {
     public String getAllPatient(Model model) {
         List<Patient> list = adminService.getAllPatient();
         model.addAttribute("patients", list);
+        model.addAttribute("editPatient",new PatientUpdateRequest());
         model.addAttribute("newPatient", new PatientCreationRequest());
         return "/patient/managePatient";
     }
@@ -139,6 +140,13 @@ public class AdminController {
         adminService.createPatient(patientRequest); //Create branch
         return "redirect:/admin/managePatient";
     }
+
+    @PostMapping("/editPatient")
+    public String editPatient(@ModelAttribute PatientUpdateRequest patientRequest) {
+        adminService.updatePatient(patientRequest.getPatientId(), patientRequest); // Update branch
+        return "redirect:/admin/managePatient";
+    }
+
 
     @GetMapping("employeesDetails/{id}")
     public String showEmployeeDetails(@PathVariable("id") Integer empId, Model model) {

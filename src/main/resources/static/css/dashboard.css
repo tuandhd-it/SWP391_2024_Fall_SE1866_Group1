@@ -36,6 +36,7 @@ a {
     margin-left: -264px;
 }
 
+
 .toggler-btn {
     background-color: transparent;
     cursor: pointer;
@@ -50,7 +51,6 @@ a {
 
 .navbar {
     padding: 1.15rem 1.5rem;
-    border-bottom: 2px dashed #b3a8a8;
 }
 
 .sidebar-nav {
