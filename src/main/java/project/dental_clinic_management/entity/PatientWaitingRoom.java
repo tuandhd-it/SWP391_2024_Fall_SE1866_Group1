@@ -17,7 +17,7 @@ public class PatientWaitingRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int waitingRoomID;
+    int id;
     LocalDate waitingDate;
     String status;
     String note;
@@ -25,8 +25,12 @@ public class PatientWaitingRoom {
     boolean isUrgency;
 
     @ManyToOne
-    @JoinColumn (name = "patient_id")
-    private Patient patient;
+    @JoinColumn (name = "waitingRoomId")
+    WaitingRoom waitingRoomId;
+
+    @ManyToOne
+    @JoinColumn (name = "patientId")
+    Patient patient;
 
     public PatientWaitingRoom(LocalDate waitingDate, String status, String note, boolean isBooked, boolean isUrgency) {
         this.waitingDate = waitingDate;
