@@ -15,3 +15,6 @@ INSERT INTO `dental_clinic_management`.`employee`
 (`address`, `dob`, `email`, `first_name`, `gender`,`is_active`, `last_name`, `password`, `phone`, `salary`, `bran_id`, `role_id`, `img`, `description`)
 VALUES
 ('Ha Noi', '2004-12-09', 'tuan6a1thcstv@gmail.com', 'Đỗ', 'Nam', 1, 'Tuấn', '$2a$10$ou0A97XvoK6mzsi32vSwi.MurUhVug6VS7qBsmwlNAFTnEqQFaCO6', '0123456789', 4000,  1, 1, '/imgAmin', 'FirstAdmin');
+
+INSERT INTO waiting_room (waiting_roomid, is_available, capacity, branch_id)
+VALUES (1, true, 10, 1);
