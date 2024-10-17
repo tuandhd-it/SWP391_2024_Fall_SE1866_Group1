@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng chờ</title>
+    <!-- Bootstrap 4.5.2 CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" href="/css/manage-branch.css">
+</head>
+<body>
+
+<div class="wrapper d-flex align-items-stretch">
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
+    <div class="main">
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
+
+
+        <div class="container mt-5">
+            <div>
+                <h1 class="text-begin mb-4 mt-5"></h1>
+            </div>
+            <div>
+                <h1 class="text-begin mb-4 mt-5"></h1>
+            </div>
+            <div>
+                <h1 class="text-begin mb-4 mt-5"></h1>
+            </div>
+            <div>
+                <h1 class="text-begin mb-4 mt-5"></h1>
+            </div>
+            <div>
+                <h1 class="text-begin mb-4 mt-5"></h1>
+            </div>
+            <div>
+                <h1 class="text-begin mb-4 mt-5"></h1>
+            </div>
+            <div>
+                <h1 class="text-begin">Danh sách phòng chờ</h1>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <select class="form-control mb-4">
+                            <option value="d">Default</option>
+                            <option value="a">Sort A</option>
+                            <option value="b">Sort B</option>
+                            <option value="c">Sort C</option>
+                        </select>
+                    </div>
+                    <div class="col-md-12">
+                        <input type="text" class="form-control mb-2" placeholder="Tìm kiếm phòng chờ...">
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <div class="col-12" th:each="room : ${listRoom}">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            Phòng chờ ID: <span th:text="${room.getWaitingRoomID()}"></span>
+                            <!-- Hiển thị ID của phòng chờ -->
+                        </div>
+                        <form th:action="@{/admin/updateCapacity}" method="post">
+                            <input type="hidden" name="roomID" th:value="${room.getWaitingRoomID()}">
+                            <div class="card-body">
+                                <h3 class="card-title">
+                                    Tên cơ sở: <span th:text="${room.getBranch().getBranchName()}"></span>
+                                    <!-- Hiển thị số bệnh nhân -->
+                                </h3>
+                                <h5 class="card-title">
+                                    Số bệnh nhân: <span th:text="${room.getNumberPatient()}"></span>
+                                    <!-- Hiển thị số bệnh nhân -->
+                                </h5>
+                                <h5 class="card-title">
+                                    Số bệnh nhân tối đa:
+                                    <input name="capacity" type="number" class="form-control" th:value="${room.getCapacity()}"
+                                           id="capacity-${room.getWaitingRoomID()}" readonly required>
+                                    <!-- Hiển thị số bệnh nhân tối đa -->
+                                </h5>
+                                <p class="card-text">
+                                    Tình trạng phòng chờ: <span
+                                        th:text="${room.isAvailable() ? 'có sẵn' : 'đã đầy'}"></span>
+                                    <!-- Hiển thị tình trạng phòng -->
+                                </p>
+
+                                <!-- Thêm 2 button dưới đây -->
+                                <div class="d-flex justify-content-end mt-3">
+                                    <!-- Button Xem Danh Sách Bệnh Nhân -->
+                                    <a th:href="@{/admin/patientList/{id}/patients(id=${room.getWaitingRoomID()})}"
+                                       class="btn btn-info me-2">
+                                        Xem Danh Sách Bệnh Nhân
+                                    </a>
+
+                                    <button type="button" class="btn btn-warning" onclick="editCapacity('${room.getWaitingRoomID()}')" id="edit-btn-${room.getWaitingRoomID()}">
+                                        Chỉnh Sửa Số Lượng Bệnh Nhân Tối Đa
+                                    </button>
+                                    <!-- Nút Lưu (sẽ hiện khi người dùng chỉnh sửa) -->
+                                    <button type="submit" class="btn btn-success d-none" id="save-btn-${room.getWaitingRoomID()}" onclick="validateAndSubmitForm('${room.getWaitingRoomID()}')">
+                                        Lưu
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phân trang -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${currentPage - 1}}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${i}}" th:text="${i}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${currentPage + 1}}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function editCapacity(roomID) {
+        const inputField = document.getElementById(`capacity-${roomID}`);
+        const editButton = document.getElementById(`edit-btn-${roomID}`);
+        const saveButton = document.getElementById(`save-btn-${roomID}`);
+
+        if (inputField.readOnly) {
+            // Cho phép chỉnh sửa
+            inputField.readOnly = false;
+            editButton.classList.add("d-none"); // Ẩn nút "Chỉnh Sửa"
+            saveButton.classList.remove("d-none"); // Hiện nút "Lưu"
+        }
+    }
+
+    function validateAndSubmitForm(roomID) {
+        const inputField = document.getElementById(`capacity-${roomID}`);
+        const capacity = inputField.value.trim();
+        const errorMsg = document.getElementById(`error-msg-${roomID}`);
+
+        // Kiểm tra nếu giá trị trống hoặc nhỏ hơn 0
+        if (capacity === '' || parseInt(capacity) <= 0) {
+            errorMsg.textContent = "Vui lòng nhập số lượng lớn hơn 0."; // Thông báo lỗi
+            errorMsg.classList.remove("d-none"); // Hiện thông báo lỗi
+            return false; // Ngăn không cho gửi form
+        }
+
+        errorMsg.classList.add("d-none"); // Ẩn thông báo lỗi nếu không có vấn đề
+        document.getElementById(`form-capacity-${roomID}`).submit(); // Gửi form nếu hợp lệ
+    }
+</script>
+<!-- Bootstrap 4.5.2 JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>
