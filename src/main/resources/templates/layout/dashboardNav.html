@@ -66,6 +66,12 @@
                 <span>Lịch làm việc</span>
             </a>
         </li>
+        <li class="sidebar-item" th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Manager'')')}">
+            <a th:href="@{/admin/manageRegisterAccount}" class="sidebar-link">
+                <i class="lni lni-popup"></i>
+                <span>Quản lý đăng ký tài khoản</span>
+            </a>
+        </li>
         <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
             <a th:href="@{/admin/manageBranchs}" class="sidebar-link">
                 <i class="lni lni-popup"></i>

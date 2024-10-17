@@ -106,7 +106,7 @@
 
 <!--Create Modal-->
 <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <form id="createForm" th:action="@{/admin/branchCreate}" method="post" th:object="${createBranch}">
+    <form id="createForm" th:action="@{/admin/createBranch}" th:object="${createBranch}" method="post">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -116,28 +116,23 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="branchCreateName" class="form-label">Tên Cơ Sở *</label>
-                        <input type="text" class="form-control" id="branchCreateName" name="branchCreateName"
-                               th:field="*{branchName}" required>
+                        <input type="text" class="form-control" id="branchCreateName" th:field="*{branchName}" required>
                     </div>
                     <div class="mb-3">
                         <label for="branchCreateDescription" class="form-label">Mô Tả *</label>
-                        <input class="form-control" id="branchCreateDescription" name="branchCreateDescription"
-                               type="text" th:field="*{branch_description}" required>
+                        <input class="form-control" id="branchCreateDescription" type="text" th:field="*{branch_description}" required>
                     </div>
                     <div class="mb-3">
                         <label for="branchCreateAddress" class="form-label">Địa Chỉ *</label>
-                        <input type="text" class="form-control" id="branchCreateAddress" name="branchCreateAddress"
-                               th:field="*{branch_address}" required>
+                        <input type="text" class="form-control" id="branchCreateAddress" th:field="*{branch_address}" required>
                     </div>
                     <div class="mb-3">
                         <label for="branchCreatePhone" class="form-label">Điện Thoại *</label>
-                        <input type="number" class="form-control" id="branchCreatePhone" name="branchCreatePhone"
-                               th:field="*{branch_phone}" required>
+                        <input type="number" class="form-control" id="branchCreatePhone" th:field="*{branch_phone}" required>
                     </div>
                     <div class="mb-3">
                         <label for="branchCreateImg" class="form-label">Hình Ảnh *</label>
-                        <input type="url" class="form-control" id="branchCreateImg" name="branchCreateImg"
-                               th:field="*{branch_img}" required>
+                        <input type="url" class="form-control" id="branchCreateImg" th:field="*{branch_img}" required>
                         <img id="branchCreateImage" src="" alt="Preview" class="img-fluid mt-2"
                              style="max-height: 200px;">
                     </div>
@@ -210,7 +205,6 @@
             var description = form.querySelector('input[name="branch_description"], input[name="branchCreateDescription"]');
             var address = form.querySelector('input[name="branch_address"], input[name="branchCreateAddress"]');
             var phone = form.querySelector('input[name="branch_phone"], input[name="branchCreatePhone"]');
-            var img = form.querySelector('input[name="branch_img"], input[name="branchCreateImg"]');
 
             if (!name.value.trim()) {
                 alert("Vui lòng nhập tên cơ sở.");
@@ -235,8 +229,6 @@
                 phone.focus();
                 return false;
             }
-
-
 
             return true;
         }
