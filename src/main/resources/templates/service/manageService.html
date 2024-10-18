@@ -75,7 +75,8 @@
               <tr th:each="ser : ${listService}">
                 <td th:text="${ser.serviceId}"></td>
                 <td th:text="${ser.serviceName}"></td>
-                <td th:text="${ser.price}"></td>
+
+                <td th:text="${#numbers.formatCurrency(ser.price)}"></td>
                 <td>
                   <div style="display: flex" th:switch="${ser.isActive}">
 
@@ -331,7 +332,7 @@
   }
   document.getElementById('serviceForm').addEventListener('submit', async (event) => {
     event.preventDefault();
-    const serviceName = document.getElementById('serviceName').value.trim();
+
     const price = document.getElementById('price').value.trim();
     const detail = document.getElementById('detail').value.trim();
     const material = document.getElementById('material').value.trim();
