@@ -28,7 +28,7 @@ public interface ServiceRepository extends JpaRepository<Service, Integer> {
 
     Page<Service> findServicesByServiceId(int id, Pageable pageable);
 
-    //List<Service> findAll(Pageable pageable);
+    @Query("SELECT s FROM Service s WHERE LOWER(s.serviceName) = LOWER(:name) AND LOWER(s.material) = LOWER(:material)")
     List<Service> findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(String name,String material);
 
     @Modifying

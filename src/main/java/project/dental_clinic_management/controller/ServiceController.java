@@ -50,7 +50,11 @@ public class ServiceController {
     }
     @PostMapping("/updateService")
     public ResponseEntity<String> updateService(@ModelAttribute Service service,@RequestParam("isActive") boolean isActive) {
-        // Call your service or repository to update the service
+        List<Service> exitsServiceName = serviceRepository.findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(service.getServiceName(),service.getMaterial());
+        // Handle the image upload
+        if(!exitsServiceName.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Service already exists");
+        }
         try {
             service.setActive(isActive);
             serviceService.update( service.getServiceId(), service);

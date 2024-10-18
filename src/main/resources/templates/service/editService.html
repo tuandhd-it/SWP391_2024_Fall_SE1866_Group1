@@ -169,7 +169,41 @@
     const guarantee = document.getElementById('guarantee').value;
     const isActive = document.getElementById('isActive').value;
     console.log("isActive: "+isActive);
+    if (serviceName.length < 1 || serviceName.length > 200) {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi",
+        text: "Tên dịch vụ phải từ 1 đến 200 ký tự!"
+      });
+      return;
+    }
 
+    if (price.length < 1 || price.length > 200) {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi",
+        text: "Giá dịch vụ phải từ 1 đến 200 ký tự!"
+      });
+      return;
+    }
+
+    if (detail.length < 1 || detail.length > 1000) {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi",
+        text: "Mô tả dịch vụ phải từ 1 đến 1000 ký tự!"
+      });
+      return;
+    }
+
+    if (material.length < 2 || material.length > 200) {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi",
+        text: "Chất liệu phải từ 2 đến 200 ký tự!"
+      });
+      return;
+    }
     // Lấy dữ liệu từ các trường input
     const formData = new FormData();
     formData.append('serviceId', serviceId);
@@ -198,7 +232,7 @@
       } else {
         Swal.fire({
           icon: "error",
-          title: "Oops...",
+          title: "Dịch vụ này đã tồn tại! Vui lòng kiểm tra tên và chất liệu",
         })
       }
     } catch (error) {
@@ -213,7 +247,14 @@
     console.log("imgInput:"+imgInput);
     const imgFile = imgInput.files[0];
     console.log("imgFile:"+imgFile);
-
+    if (!imgFile) {
+      Swal.fire({
+        icon: "error",
+        title: "Lỗi",
+        text: "Vui lòng tải lên ảnh!"
+      });
+      return;
+    }
     // Lấy dữ liệu từ các trường input
     const formData = new FormData();
     formData.append('serviceId', serviceId);
