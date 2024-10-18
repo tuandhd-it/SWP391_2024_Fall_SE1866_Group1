@@ -65,4 +65,13 @@ public class ServiceService {
             throw new EntityNotFoundException("Service not found with ID: " + oldServiceId);
         }
     }
+    public void updateImg(int oldServiceId, String img) {
+        Optional<Service> optionalService = serviceRepository.findById(oldServiceId);
+        if (optionalService.isPresent()) {
+            Service existingService = optionalService.get();
+            existingService.setImg(img);
+            serviceRepository.save(existingService);
+        }
+
+    }
 }

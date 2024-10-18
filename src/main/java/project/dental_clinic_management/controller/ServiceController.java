@@ -115,5 +115,43 @@ public class ServiceController {
         return ResponseEntity.ok("Service add successfully");
 
     }
+    @PostMapping("/updateImg")
+    public ResponseEntity<String> updateImg(@RequestParam("serviceId") int serviceId,
+                                             @RequestParam("img") MultipartFile imgFile,
+                                             Model model) {
+
+        String linkImg="";
+        String uploadDir = System.getProperty("user.dir") + "/uploads/";
+        Path uploadPath = Paths.get(uploadDir);
+        if (!imgFile.isEmpty()) {
+            try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                String originalFilename = imgFile.getOriginalFilename();
+                String fileExtension = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                }
+
+                // Tạo tên tệp mới với UUID
+                String newFileName = UUID.randomUUID().toString() + fileExtension;
+
+                // Lưu tệp với tên mới
+                imgFile.transferTo(uploadPath.resolve(newFileName).toFile());
+                linkImg = newFileName;
+            } catch (IOException e) {
+                e.printStackTrace();
+                model.addAttribute("message", "Failed to upload image.");
+                return ResponseEntity.ofNullable("");
+            }
+        }
+
+        serviceService.updateImg( serviceId,linkImg);
+
+        return ResponseEntity.ok("Service add successfully");
+
+    }
 }
 
