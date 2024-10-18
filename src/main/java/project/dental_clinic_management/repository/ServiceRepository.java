@@ -27,4 +27,5 @@ public interface ServiceRepository extends JpaRepository<Service, Integer> {
     Page<Service> findServicesByServiceId(int id, Pageable pageable);
 
     //List<Service> findAll(Pageable pageable);
+    List<Service> findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(String name,String material);
 }

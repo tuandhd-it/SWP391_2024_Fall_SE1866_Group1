@@ -21,7 +21,7 @@
                     <h1>Chi Tiết Dịch Vụ</h1>
 
                     <div class="card" style="width: 25rem;">
-                        <img class="card-img-top" th:src="@{/img/{img}(img=${service.img})}" alt="Card image cap">
+                        <img class="card-img-top" th:src="@{/images/{filename}(filename=${service.img})}" alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title" th:text="${service.serviceName}"></h5>
                             <p class="card-text" th:text="${service.detail}"></p>
@@ -43,7 +43,7 @@
                         </ul>
                         <div class="card-body text-center">
                             <a th:href="@{/admin/updateService/{id}(id=${service.serviceId})}" class="card-link">Edit</a>
-                            <a th:href="@{/admin/manageService(searchType='id', search=${service.serviceId})}" class="card-link">Quay về</a>
+                            <a th:href="@{/admin/manageService}" class="card-link">Quay về</a>
                         </div>
                     </div>
                 </div>

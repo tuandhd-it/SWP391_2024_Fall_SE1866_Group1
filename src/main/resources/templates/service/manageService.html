@@ -331,11 +331,11 @@
   }
   document.getElementById('serviceForm').addEventListener('submit', async (event) => {
     event.preventDefault();
-    const serviceName = document.getElementById('serviceName').value;
-    const price = document.getElementById('price').value;
-    const detail = document.getElementById('detail').value;
-    const material = document.getElementById('material').value;
-    const guarantee = document.getElementById('guarantee').value;
+    const serviceName = document.getElementById('serviceName').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const detail = document.getElementById('detail').value.trim();
+    const material = document.getElementById('material').value.trim();
+    const guarantee = document.getElementById('guarantee').value.trim();
     const checkbox = document.getElementById('isActive');
     let isActive = 0;
     if (checkbox.checked) {
@@ -374,7 +374,7 @@
       } else {
         Swal.fire({
           icon: "error",
-          title: "Oops...",
+          title: "Đã tồn tại dịch vụ này",
         })
       }
     } catch (error) {

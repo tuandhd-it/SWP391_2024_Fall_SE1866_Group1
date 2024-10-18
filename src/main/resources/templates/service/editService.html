@@ -16,7 +16,7 @@
     <!-- left column -->
     <div class="col-md-3">
       <div class="text-center">
-        <img th:src="@{/img/{img}(img=${service.img})}" class="avatar img-circle" alt="avatar" width="100px">
+        <img th:src="@{/images/{filename}(filename=${service.img})}" class="avatar img-circle" alt="avatar" width="100px">
         <h6>Upload a different photo...</h6>
 
         <input type="file" class="form-control" id="img">
@@ -75,7 +75,7 @@
           <div class="col-md-8">
             <input type="submit" class="btn btn-primary" value="Save Changes">
             <span></span>
-            <a th:href="@{/admin/manageService(searchType='id', search=${service.serviceId})}" class="btn btn-secondary">Cancel</a>
+            <a th:href="@{/admin/manageService}" class="btn btn-secondary">Cancel</a>
           </div>
         </div>
       </form>

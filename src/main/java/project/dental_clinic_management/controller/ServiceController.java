@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -69,27 +70,32 @@ public class ServiceController {
                                              @RequestParam("guarantee") String guarantee,
                                              @RequestParam("img") MultipartFile imgFile,
                                              Model model) {
+        List<Service> exitsServiceName = serviceRepository.findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(serviceName,material);
         // Handle the image upload
-        String linkImg="";
-        String folder = "src/main/resources/static/img/";
-        File directory = new File(folder);
-        if (!directory.exists()) {
-            directory.mkdirs();
+        if(!exitsServiceName.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Service already exists");
         }
+        String linkImg="";
+        String uploadDir = System.getProperty("user.dir") + "/uploads/";
+        Path uploadPath = Paths.get(uploadDir);
         if (!imgFile.isEmpty()) {
             try {
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
                 String originalFilename = imgFile.getOriginalFilename();
-                String fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                String fileExtension = "";
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    fileExtension = originalFilename.substring(originalFilename.lastIndexOf("."));
+                }
 
-                // Generate a unique filename using UUID
-                String uniqueFilename = UUID.randomUUID().toString() + fileExtension;
+                // Tạo tên tệp mới với UUID
+                String newFileName = UUID.randomUUID().toString() + fileExtension;
 
-                // Define the complete file path
-                Path path = Paths.get(folder + uniqueFilename);
-
-                // Save the file to the specified directory
-                Files.write(path, imgFile.getBytes());
-                linkImg = uniqueFilename;
+                // Lưu tệp với tên mới
+                imgFile.transferTo(uploadPath.resolve(newFileName).toFile());
+                linkImg = newFileName;
             } catch (IOException e) {
                 e.printStackTrace();
                 model.addAttribute("message", "Failed to upload image.");
