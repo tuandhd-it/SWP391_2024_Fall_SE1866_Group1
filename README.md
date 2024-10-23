@@ -22,3 +22,7 @@ INSERT INTO `dental_clinic_management`.`employee` (`address`, `description`, `do
 
 INSERT INTO waiting_room (waiting_roomid, is_available, capacity, branch_id)
 VALUES (1, true, 10, 1);
+
+//Create data for Medicine table
+INSERT INTO Medicine (reg_number, name, unit, quantity, price, ingredients)
+VALUES (1, 'Paracetamol', 'hộp', '1000', 5000, 'Acetaminophen');
