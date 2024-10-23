@@ -44,7 +44,7 @@ public class Employee {
 
     @OneToOne
 //    @JoinColumn(name = "managedBranchId", referencedColumnName = "bran_id", insertable = false, updatable = false)
-    private Employee branchManaged;
+    private Branch branchManaged;
 
     @OneToMany (mappedBy = "employee")
     private List<TimeTracking> timeTrackings;
