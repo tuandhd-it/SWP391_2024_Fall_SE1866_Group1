@@ -16,5 +16,9 @@ INSERT INTO `dental_clinic_management`.`employee`
 VALUES
 ('Ha Noi', '2004-12-09', 'tuan6a1thcstv@gmail.com', 'Đỗ', 'Nam', 1, 'Tuấn', '$2a$10$ou0A97XvoK6mzsi32vSwi.MurUhVug6VS7qBsmwlNAFTnEqQFaCO6', '0123456789', 4000,  1, 1, '/imgAmin', 'FirstAdmin');
 
+//Create Manager Account
+INSERT INTO `dental_clinic_management`.`employee` (`address`, `description`, `dob`, `email`, `first_name`, `gender`, `is_active`, `last_name`, `password`, `phone`, `salary`, `bran_id`, `branch_managed_bran_id`, `role_id`) VALUES ('Hà Nội', 'Manager', '2004-12-08', 'khoa@gmail.com', 'Lê', 'Nam', 1, 'Khoa', '$2b$12$EIHLAyrnP6CBjR9cjGaZW.6.NKdkZrKjEIVdgHShTPMGfT48Q3Z8m', '0912345651', '5000', 1, 1, 2);
+
+
 INSERT INTO waiting_room (waiting_roomid, is_available, capacity, branch_id)
 VALUES (1, true, 10, 1);
