@@ -1,0 +1,111 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f8ff;
+}
+
+.container-fluid {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.table-schedule {
+    width: 95%; /* Đảm bảo bảng chiếm gần hết chiều ngang */
+    margin: auto;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+th, td {
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+th {
+    background-color: #dbe4f3;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
+.btn-small {
+    margin-bottom: 5px;
+}
+
+/* Header của bảng */
+.table-schedule th {
+    background-color: #00BCD4; /* Màu xanh cyan */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Màu cho các cột */
+.table-schedule tbody td {
+    background-color: #f1f8e9; /* Màu xanh lá nhạt */
+    vertical-align: middle;
+    text-align: center;
+}
+.schedule-section {
+    background-color: #E0F7FA ; /* Màu nền xanh nhạt */
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.align-self-center {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* Nút mặc định */
+.custom-btn {
+    background-color: lightseagreen;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+/* Hiệu ứng Hover */
+.custom-btn:hover {
+    background-color: #20b2aa; /* Màu đậm hơn */
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+    transform: scale(1.05); /* Phóng to nhẹ */
+}
+
+/* Hiệu ứng Focus */
+.custom-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(32, 178, 170, 0.5); /* Vòng focus */
+}
+
+/* Hiệu ứng Active (nhấn giữ) */
+.custom-btn:active {
+    background-color: #2e8b57; /* Màu đậm hơn khi nhấn */
+    transform: scale(0.98); /* Nhấn xuống nhẹ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Trạng thái Disabled */
+.custom-btn:disabled {
+    background-color: #a9a9a9;
+    cursor: not-allowed;
+    opacity: 0.7;
+}

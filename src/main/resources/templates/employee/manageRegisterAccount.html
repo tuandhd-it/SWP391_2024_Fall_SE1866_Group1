@@ -48,6 +48,7 @@
                             <table class="table table-bordered table-hover">
                                 <thead>
                                 <tr>
+                                    <th>Số thứ tự</th>
                                     <th>Email</th>
                                     <th>Số điện thoại</th>
                                     <th>Tên</th>
@@ -56,11 +57,13 @@
                                     <th>Ngày sinh</th>
                                     <th>Ảnh</th>
                                     <th data-sortable="true">Chi nhánh</th>
-                                    <th>Trạng thái</th>
+                                    <th>Xem chi tiết</th>
+                                    <th>Phê duyệt</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="employee : ${employees}">
+                                <tr th:each="employee, stat : ${employees}">
+                                    <td th:text="${stat.index + 1}"></td>
                                     <td th:text="${employee.getEmail()}"></td>
                                     <td th:text="${employee.getPhone()}"></td>
                                     <td th:text="${employee.getFirst_name()} + ' ' + ${employee.getLast_name()}"></td>
@@ -76,9 +79,14 @@
                                         <input type="checkbox" class="empCheckbox" name="emp_id"
                                                th:value="${employee.getEmp_id()}"/>
                                     </td>
+                                    <td>
+                                        <button class="btn btn-primary">
+                                            <a href="#" style="text-decoration: none; color: white">Xem chi tiết</a>
+                                        </button>
+                                    </td>
                                 </tr>
                                 <tr style="border: none">
-                                    <td colspan="8"></td>
+                                    <td colspan="10"></td>
                                     <td>
                                         <button type="submit" class="btn btn-primary" id="approveButton" disabled>
                                             Phê duyệt

@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +32,9 @@ public class ReceptionistService {
 
     @Autowired
     private ExamRegistrationRepository examRegistrationRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
 
     public Employee findByUsername(String username) {
@@ -177,6 +183,28 @@ public class ReceptionistService {
                     .build());
         }
         return viewRequestList;
+    }
+
+    //Tìm tất cả bác sĩ có ca
+    public List<Employee> findAllDoctorShift(Employee receptionist) {
+        boolean shift;
+
+
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        LocalDate currentDate = LocalDate.now();
+        if(currentTime.isAfter(currentTime.with((LocalTime.of(7,15)))) && currentTime.isBefore(currentTime.with((LocalTime.of(11,30)))) ) {
+            shift = false;
+        } else if (currentTime.isAfter(currentTime.with((LocalTime.of(13,45)))) && currentTime.isBefore(currentTime.with((LocalTime.of(19,0)))) ) {
+            shift = true;
+        } else if (currentTime.isAfter(currentTime.with((LocalTime.of(11,30)))) && currentTime.isBefore(currentTime.with((LocalTime.of(13,45)))) ) {
+            shift = true;
+        } else {
+            shift = false;
+            currentDate = currentDate.plusDays(1);
+        }
+
+        return scheduleRepository.findEmployeeByShift(shift, currentDate);
     }
 
 }

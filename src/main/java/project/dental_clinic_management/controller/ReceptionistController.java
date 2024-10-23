@@ -31,7 +31,7 @@ public class ReceptionistController {
         String branchName = receptionist.getBranch().getBranchName();
         request.setBranchName(branchName);
         model.addAttribute("request", request);
-        List<Employee> doctors = receptionistService.findAllBranchDoctor(receptionist);
+        List<Employee> doctors = receptionistService.findAllDoctorShift(receptionist);
         model.addAttribute("doctors", doctors);
         return "/employee/examRegistration";
     }
