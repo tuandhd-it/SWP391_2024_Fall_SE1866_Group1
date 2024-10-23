@@ -26,6 +26,7 @@ a {
 #sidebar {
     max-width: 264px;
     min-width: 264px;
+    height: 100vh;
     transition: all 0.35s ease-in-out;
     background-color: #57b3cd;
     display: flex;
