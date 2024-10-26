@@ -21,24 +21,6 @@
 
         <div class="container mt-5">
             <div>
-                <h1 class="text-begin mb-4 mt-5"></h1>
-            </div>
-            <div>
-                <h1 class="text-begin mb-4 mt-5"></h1>
-            </div>
-            <div>
-                <h1 class="text-begin mb-4 mt-5"></h1>
-            </div>
-            <div>
-                <h1 class="text-begin mb-4 mt-5"></h1>
-            </div>
-            <div>
-                <h1 class="text-begin mb-4 mt-5"></h1>
-            </div>
-            <div>
-                <h1 class="text-begin mb-4 mt-5"></h1>
-            </div>
-            <div>
                 <h1 class="text-begin">Danh sách phòng chờ</h1>
             </div>
             <div class="row">
@@ -78,7 +60,7 @@
                                 <h5 class="card-title">
                                     Số bệnh nhân tối đa:
                                     <input name="capacity" type="number" class="form-control" th:value="${room.getCapacity()}"
-                                           id="capacity-${room.getWaitingRoomID()}" readonly required>
+                                           id="capacity-${room.getWaitingRoomID()}" readonly required min="1">
                                     <!-- Hiển thị số bệnh nhân tối đa -->
                                 </h5>
                                 <p class="card-text">
@@ -99,7 +81,7 @@
                                         Chỉnh Sửa Số Lượng Bệnh Nhân Tối Đa
                                     </button>
                                     <!-- Nút Lưu (sẽ hiện khi người dùng chỉnh sửa) -->
-                                    <button type="submit" class="btn btn-success d-none" id="save-btn-${room.getWaitingRoomID()}" onclick="validateAndSubmitForm('${room.getWaitingRoomID()}')">
+                                    <button type="submit" class="btn btn-success d-none" id="save-btn-${room.getWaitingRoomID()}" onclick="return validateAndSubmitForm('${room.getWaitingRoomID()}')">
                                         Lưu
                                     </button>
                                 </div>
@@ -154,15 +136,20 @@
         const capacity = inputField.value.trim();
         const errorMsg = document.getElementById(`error-msg-${roomID}`);
 
-        // Kiểm tra nếu giá trị trống hoặc nhỏ hơn 0
+        // Kiểm tra nếu giá trị trống hoặc nhỏ hơn hoặc bằng 0
         if (capacity === '' || parseInt(capacity) <= 0) {
-            errorMsg.textContent = "Vui lòng nhập số lượng lớn hơn 0."; // Thông báo lỗi
-            errorMsg.classList.remove("d-none"); // Hiện thông báo lỗi
+            // Hiển thị thông báo lỗi
+            errorMsg.textContent = "Vui lòng nhập số lượng lớn hơn 0.";
+            errorMsg.classList.remove("d-none");
             return false; // Ngăn không cho gửi form
         }
 
-        errorMsg.classList.add("d-none"); // Ẩn thông báo lỗi nếu không có vấn đề
-        document.getElementById(`form-capacity-${roomID}`).submit(); // Gửi form nếu hợp lệ
+        // Ẩn thông báo lỗi nếu có
+        errorMsg.classList.add("d-none");
+
+        // Khóa lại trường input và gửi form
+        inputField.readOnly = true;
+        document.getElementById(`form-capacity-${roomID}`).submit();
     }
 </script>
 <!-- Bootstrap 4.5.2 JS and dependencies -->
