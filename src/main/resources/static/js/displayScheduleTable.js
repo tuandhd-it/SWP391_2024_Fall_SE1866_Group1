@@ -235,13 +235,6 @@ function showEmployeeInfo(button) {
     });
 }
 
-// Khi modal được mở, gọi API để lấy dữ liệu cho select
-$('#add-schedule').on('click', function () {
-    // Gọi các hàm khi mở modal
-    loadDates();
-    loadEmployeeList();
-});
-
 // Hàm tạo ra danh sách tất cả ngày trong năm đã cho
 function generateDatesForYear(year) {
     const dates = [];
@@ -255,47 +248,65 @@ function generateDatesForYear(year) {
     return dates;
 }
 
-// Sử dụng hàm formatDate để định dạng ngày thành 'dd/mm/yyyy'
-function loadDates() {
+$('#addScheduleModal').one('show.bs.modal', function () {
+    const selectedDate = $('#flashScheduleDate').val();
+    const selectedEmployee = $('#flashEmployee').val();
+
+    // Gọi hàm load với giá trị đã chọn (nếu có)
+    loadDates(selectedDate);
+    loadEmployeeList(selectedEmployee);
+});
+
+function loadDates(selectedDate) {
     const dateSelect = $('#scheduleDate');
     dateSelect.empty(); // Xóa các option cũ
-    dateSelect.append('<option value="" selected>Chọn ngày</option>');
 
-    const currentYear = new Date().getFullYear() ; // Lấy năm tiếp theo (ví dụ: 2024)
+    const currentYear = new Date().getFullYear();
     const dates = generateDatesForYear(currentYear);
 
+    let hasSelected = false; // Để kiểm tra xem có ngày nào đã được chọn không
+
     dates.forEach(date => {
-        // Định dạng ngày 'dd/mm/yyyy'
         const formattedDate = formatDate(date);
+        const valueDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
 
-        // Lấy năm, tháng, và ngày từ đối tượng date
-        const valueDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+        const isSelected = valueDate === selectedDate ? 'selected' : '';
+        if (isSelected !== '') hasSelected = true;
 
-        // Thêm option vào select với giá trị đúng
-        dateSelect.append(`<option value="${valueDate}">${formattedDate}</option>`);
+        dateSelect.append(`<option value="${valueDate}" ${isSelected}>${formattedDate}</option>`);
     });
+
+    // Nếu không có ngày nào được chọn, thêm và chọn option "Chọn ngày"
+    if (!hasSelected) {
+        dateSelect.prepend('<option value="" selected>Chọn ngày</option>');
+    }
 }
 
-// Hàm load danh sách nhân viên
-function loadEmployeeList() {
+
+function loadEmployeeList(selectedEmployee) {
     $.ajax({
-        url: '/manager/employees', // API trả về danh sách nhân viên
+        url: '/manager/employees',
         method: 'GET',
         success: function (employees) {
             const employeeSelect = $('#employee');
-            employeeSelect.empty(); // Xóa các option cũ
-            employeeSelect.append('<option value="" selected>Chọn nhân viên</option>');
+            employeeSelect.empty();
+            let hasSelected = false;
 
-            // Thêm các nhân viên vào select
             employees.forEach(employee => {
-                employeeSelect.append(
-                    `<option value="${employee.employeeId}">${employee.employeeFullName}</option>`
-                );
+                const isSelected = employee.employeeId.toString() === selectedEmployee ? 'selected' : '';
+                if (isSelected !== '') hasSelected = true;
+                employeeSelect.append(`<option value="${employee.employeeId}" ${isSelected}>${employee.employeeFullName}</option>`);
             });
+            if (!hasSelected) {
+                employeeSelect.prepend('<option value="" selected>Chọn nhân viên</option>');
+            }
         },
         error: function (err) {
             console.error('Lỗi khi lấy danh sách nhân viên:', err);
         }
     });
 }
+
+
 
