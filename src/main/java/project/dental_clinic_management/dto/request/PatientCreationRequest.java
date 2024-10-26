@@ -1,7 +1,12 @@
 package project.dental_clinic_management.dto.request;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDate;
 
@@ -11,12 +16,31 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class PatientCreationRequest {
+    @NotNull
+    @NotBlank
+    @Length (min = 1, max = 45)
     String firstName;
+    @NotNull
+    @NotBlank
+    @Length (min = 1, max = 45)
     String lastName;
+    @NotNull
     String gender;
+    @NotNull
     LocalDate dob;
+    @NotNull
+    @NotBlank
+    @Length (min = 1, max = 255)
     String address;
+    @NotNull
+    @NotBlank
+    @Length (min = 10, max = 15)
     String phone;
+    @NotNull
+    @NotBlank
+    @Length (min = 10, max = 225)
+    @Email
     String email;
+    @Length (max = 225)
     String medicalHistory;
 }

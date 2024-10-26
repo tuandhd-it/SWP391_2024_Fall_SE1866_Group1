@@ -1,9 +1,11 @@
 package project.dental_clinic_management.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.entity.Branch;
@@ -23,7 +25,9 @@ import project.dental_clinic_management.service.ServiceService;
 import project.dental_clinic_management.service.TimeTrackingService;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *  Copyright(C) 2005, Group 1 - SE1864
@@ -194,18 +198,40 @@ public class AdminController {
     }
 
     @GetMapping("/managePatient")
-    public String getAllPatient(Model model) {
-        List<Patient> list = adminService.getAllPatient();
-        model.addAttribute("patients", list);
-        model.addAttribute("editPatient",new PatientUpdateRequest());
-        model.addAttribute("newPatient", new PatientCreationRequest());
+    public String getAllPatient(Model model, @RequestParam(value = "errors", required = false) String errors) {
+            List<Patient> list = adminService.getAllPatient();
+            model.addAttribute("patients", list);
+            model.addAttribute("editPatient",new PatientUpdateRequest());
+            model.addAttribute("newPatient", new PatientCreationRequest());
+            model.addAttribute("errors", errors);
         return "/patient/managePatient";
     }
 
     @PostMapping("/patientCreate")
-    public String createPatient(@ModelAttribute PatientCreationRequest patientRequest) {
-        adminService.createPatient(patientRequest); //Create branch
+    public String createPatient(@ModelAttribute @Valid @RequestBody PatientCreationRequest patientRequest, BindingResult bindingResult, Model model) {
+        if(bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+
+            bindingResult.getFieldErrors().forEach(
+                    error -> errors.put(error.getField(), error.getDefaultMessage())
+            );
+
+            StringBuilder errorMsg = new StringBuilder();
+
+            for (String key : errors.keySet()) {
+                errorMsg.append("Tạo mới bệnh nhân Thất Bại: ").append(key).append(", lí do: ").append(errors.get(key)).append("\n");
+            }
+            model.addAttribute("errors", errorMsg);
+            List<Patient> list = adminService.getAllPatient();
+            model.addAttribute("patients", list);
+            model.addAttribute("editPatient",new PatientUpdateRequest());
+            model.addAttribute("newPatient", patientRequest);
+            return "/patient/managePatient";
+        }else{
+        adminService.createPatient(patientRequest);
+        model.addAttribute("errors", "Thêm mới Bệnh Nhân Thành Công!");
         return "redirect:/admin/managePatient";
+        }
     }
 
     @PostMapping("/editPatient")

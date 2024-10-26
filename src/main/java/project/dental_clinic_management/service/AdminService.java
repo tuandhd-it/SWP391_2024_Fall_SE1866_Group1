@@ -63,6 +63,9 @@ public class AdminService {
      */
     public WaitingRoom updateWaitingRoom(int id, int capacity) {
         WaitingRoom waitingRoom = findWaitingRoomById(id);
+        if (capacity < 1){
+            return null;
+        }
         waitingRoom.setCapacity(capacity);
         return waitingRoomRepository.save(waitingRoom);
     }
@@ -134,9 +137,6 @@ public class AdminService {
         }
 
         return new PageImpl<>(waitingRequests.subList(start, end), pageable, waitingRequests.size());
-    }
-
-    public static void saveEmployee(Employee employee) {
     }
 
     //Get all Role
