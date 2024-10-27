@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminService {
@@ -79,19 +81,6 @@ public class AdminService {
         return waitingRoomRepository.findWaitingRoomByWaitingRoomID(waitingRoomId);
     }
 
-
-    /**
-     * Change capacity of waiting room
-     * @param waitingRoomID
-     * @param newCapacity
-     * @return
-     */
-    public WaitingRoom editCapacityOfWaitingRoom(int waitingRoomID, int newCapacity) {
-        WaitingRoom waitingRoom = findWaitingRoomById(waitingRoomID);
-        waitingRoom.setCapacity(newCapacity);
-        return waitingRoomRepository.save(waitingRoom);
-    }
-
     /**
      * Get page waiting room
      * @param index
@@ -116,27 +105,90 @@ public class AdminService {
     }
 
     /**
+     * Get page waiting room with search by name
+     * @param index
+     * @param keyword
+     * @return a page list
+     */
+    public Page<WaitingRoomRequest> getSearchWaitingRoomRequests(int index, String keyword) {
+        Pageable pageable = PageRequest.of(index - 1, 2);
+
+        // Tìm danh sách phòng chờ theo keyword
+        Page<WaitingRoom> waitingRoomsPage = waitingRoomRepository.findByNameContainingIgnoreCase(keyword, pageable);
+
+        List<WaitingRoomRequest> waitingRoomRequests = new ArrayList<>();
+
+        for (WaitingRoom waitingRoom : waitingRoomsPage) {
+            WaitingRoomRequest request = new WaitingRoomRequest();
+            request.setWaitingRoomID(waitingRoom.getWaitingRoomID());
+            request.setAvailable(countPatient(waitingRoom) < waitingRoom.getCapacity());
+            request.setNumberPatient(countPatient(waitingRoom));
+            request.setBranch(waitingRoom.getBranch());
+            request.setCapacity(waitingRoom.getCapacity());
+            waitingRoomRequests.add(request);
+        }
+
+        return new PageImpl<>(waitingRoomRequests, pageable, waitingRoomsPage.getTotalElements());
+    }
+
+    /**
      * Get all patient waiting in room
      * @param index
      * @param waitingRoomId
      * @return list patient
      */
-    public Page<PatientWaitingRoom> getAllPatientWaitingRequestsInRoom(int index, int waitingRoomId){
-        Pageable pageable = PageRequest.of(index - 1,3);
-        // Find the waiting room by ID
+    public Page<PatientWaitingRoom> getAllPatientWaitingRequestsInRoom(int index, int waitingRoomId) {
+        Pageable pageable = PageRequest.of(index - 1, 3);
 
         // Fetch all waiting requests for the waiting room
         List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomId(waitingRoomId);
 
+        // Sort the waiting requests: First by urgency (true first), then by booking status (true first)
+        List<PatientWaitingRoom> sortedRequests = waitingRequests.stream()
+                .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
+                        .thenComparing(PatientWaitingRoom::isBooked).reversed())
+                .collect(Collectors.toList());
+
         // Use PageImpl to convert list to page
         int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), waitingRequests.size());
+        int end = Math.min((start + pageable.getPageSize()), sortedRequests.size());
 
         if (start > end) {
             return new PageImpl<>(new ArrayList<>(), pageable, 0);
         }
 
-        return new PageImpl<>(waitingRequests.subList(start, end), pageable, waitingRequests.size());
+        return new PageImpl<>(sortedRequests.subList(start, end), pageable, sortedRequests.size());
+    }
+
+    /**
+     * Search patients in waiting room by full name (first name and last name)
+     * @param index
+     * @param waitingRoomId
+     * @param keyword
+     * @return list of matching patients
+     */
+    public Page<PatientWaitingRoom> searchPatientsInWaitingRoom(int index, int waitingRoomId, String keyword) {
+        Pageable pageable = PageRequest.of(index - 1, 3);
+
+        // Lấy tất cả các yêu cầu đợi theo waitingRoomId
+        List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomId(waitingRoomId);
+
+        // Lọc danh sách theo từ khóa (tìm trong firstName và lastName)
+        List<PatientWaitingRoom> filteredRequests = waitingRequests.stream()
+                .filter(request -> (request.getPatient().getFirstName() + " " + request.getPatient().getLastName()).toLowerCase().contains(keyword.toLowerCase()))
+                .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
+                        .thenComparing(PatientWaitingRoom::isBooked).reversed())
+                .collect(Collectors.toList());
+
+        // Phân trang và chuyển đổi sang Page
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredRequests.size());
+
+        if (start > end) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        return new PageImpl<>(filteredRequests.subList(start, end), pageable, filteredRequests.size());
     }
 
     //Get all Role

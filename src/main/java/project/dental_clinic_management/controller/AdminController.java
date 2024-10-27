@@ -72,7 +72,6 @@ public class AdminController {
                               Model model) {
         // Fetch the list of patients for the given waiting room ID and page index
         Page<PatientWaitingRoom> patientWaitingRequests = adminService.getAllPatientWaitingRequestsInRoom(page, waitingRoomId);
-
         // Add the list of patients and other necessary data to the model
         model.addAttribute("listPatient", patientWaitingRequests.getContent());
         model.addAttribute("waitingRoomId", waitingRoomId);
@@ -84,6 +83,38 @@ public class AdminController {
         // Return the view name that will display the patient list
         return "/branch/listPatientsWaiting"; // Ensure this path corresponds to your directory structure
     }
+
+    /**
+     * Search patient
+     * @param waitingRoomId
+     * @param searchQuery
+     * @param page
+     * @param model
+     * @return path to page
+     */
+    @GetMapping("/searchPatient/{id}/patients")
+    public String searchPatientList(@PathVariable("id") int waitingRoomId,
+                                    @RequestParam("searchQuery") String searchQuery,
+                                    @RequestParam(value = "page", defaultValue = "1") int page,
+                                    Model model) {
+        // Sử dụng searchQuery để tìm kiếm bệnh nhân trong phòng chờ
+        Page<PatientWaitingRoom> patientWaitingRequests = adminService.searchPatientsInWaitingRoom(page, waitingRoomId, searchQuery);
+
+        // Thêm dữ liệu vào model để truyền sang view
+        model.addAttribute("listPatient", patientWaitingRequests.getContent());
+        model.addAttribute("waitingRoomId", waitingRoomId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", patientWaitingRequests.getTotalPages());
+        model.addAttribute("hasPrevious", patientWaitingRequests.hasPrevious());
+        model.addAttribute("hasNext", patientWaitingRequests.hasNext());
+        model.addAttribute("searchQuery", searchQuery);
+
+        // Trả về view hiển thị danh sách bệnh nhân
+        return "/branch/listPatientsWaiting";
+    }
+
+
+
 
     /**
      * Change capacity in database
@@ -141,6 +172,29 @@ public class AdminController {
         model.addAttribute("listRoom", waitingRoomPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", waitingRoomPage.getTotalPages());
+        return "/branch/listWaitingRoom";
+    }
+
+    /**
+     * Lead to the page with the search results for waiting rooms
+     * @param page The page number to display
+     * @param keyword The search keyword for the waiting room's name
+     * @param model The model to store attributes for the view
+     * @return The URL of the waiting room list page
+     */
+    @GetMapping("/searchWaitingRoom")
+    public String searchWaitingRoom(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "") String keyword,
+            Model model) {
+
+        Page<WaitingRoomRequest> waitingRoomPage = adminService.getSearchWaitingRoomRequests(page, keyword);
+
+        model.addAttribute("listRoom", waitingRoomPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", waitingRoomPage.getTotalPages());
+        model.addAttribute("keyword", keyword);
+
         return "/branch/listWaitingRoom";
     }
 
