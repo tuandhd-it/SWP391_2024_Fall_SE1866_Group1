@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.ScheduleCreationRequest;
 import project.dental_clinic_management.dto.request.ViewDoctorInfoRequest;
 import project.dental_clinic_management.dto.response.BranchEmployeeResponse;
@@ -32,9 +33,18 @@ public class ManagerController {
     }
 
     @GetMapping("/scheduleList")
-    public String getSchedule(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String getSchedule(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("successMsg") String successMsg,
+                              @ModelAttribute("scheduleDate") String scheduleDate,
+                              @ModelAttribute("shift") String shiftString,
+                              @ModelAttribute("employee") String employeeId,
+                              @ModelAttribute("falseMsg") String falseMsg) {
         String currentUserRole = managerService.findByUsername(userDetails.getUsername()).getRole().getRoleName();
         model.addAttribute("currentUserRole", currentUserRole);
+        model.addAttribute("successMsg", successMsg);
+        model.addAttribute("scheduleDate", scheduleDate);
+        model.addAttribute("shift", shiftString);
+        model.addAttribute("employee", employeeId);
+        model.addAttribute("falseMsg", falseMsg);
         return "/employee/scheduleList"; // Tên của file HTML (schedule.html)
     }
 
@@ -83,9 +93,10 @@ public class ManagerController {
     }
 
     @PostMapping("/addSchedule")
-    public String addSchedule(Model model, @RequestParam("scheduleDate") String scheduleDate,
+    public String addSchedule(@RequestParam("scheduleDate") String scheduleDate,
                               @RequestParam("shift") String shiftString,
-                              @RequestParam("employee") String employeeId) {
+                              @RequestParam("employee") String employeeId,
+                              RedirectAttributes redirectAttributes) {
 
         // Chuyển đổi chuỗi 'YYYY-MM-DD' thành LocalDate
         LocalDate date = LocalDate.parse(scheduleDate);
@@ -95,7 +106,15 @@ public class ManagerController {
                 .date(date)
                 .shift(shift)
                 .build();
-        managerService.createSchedule(scheduleCreationRequest);
+        if(!managerService.checkExistedSchedule(scheduleCreationRequest)) {
+            managerService.createSchedule(scheduleCreationRequest);
+            redirectAttributes.addFlashAttribute("successMsg", "Thêm lịch thành công");
+        } else {
+            redirectAttributes.addFlashAttribute("falseMsg", "Nhân viên đã có ca làm trong ca đã chọn");
+            redirectAttributes.addFlashAttribute("scheduleDate", scheduleDate);
+            redirectAttributes.addFlashAttribute("shift", shiftString);
+            redirectAttributes.addFlashAttribute("employee", employeeId);
+        }
         return "redirect:/manager/scheduleList";
     }
 

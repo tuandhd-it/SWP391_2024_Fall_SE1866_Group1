@@ -26,6 +26,12 @@
         <div class="dashboard-header">
             <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         </div>
+        <div id="successMsg" th:if="${successMsg}" class="alert alert-success">
+            <p th:text="${successMsg}"></p>
+        </div>
+        <div id="falseMsg" th:if="${falseMsg}" class="alert alert-danger">
+            <p th:text="${falseMsg}"></p>
+        </div>
         <hr class="my-4" style="color: #00BCD4; height: 4px">
         <div class="schedule-section" style="height: 89%">
             <h2 class="text-center mb-4 mt-2" style="color: #00BCD4; font-weight: bold; font-size: 30px">Lịch làm
@@ -141,6 +147,9 @@
             </div>
         </div>
 
+        <!-- Các input ẩn để lưu giá trị từ Flash Attributes -->
+        <input type="hidden" id="flashScheduleDate" th:value="${scheduleDate}" />
+        <input type="hidden" id="flashEmployee" th:value="${employee}" />
         <!-- Modal form thêm schedule -->
         <div class="modal fade" id="addScheduleModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -156,21 +165,19 @@
                                     <div class="col-md-6">
                                         <label for="scheduleDate" class="form-label">Ngày*</label>
                                         <select class="form-select" id="scheduleDate" name="scheduleDate" required>
-                                            <option value="" selected>Chọn ngày</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="shift" class="form-label">Ca*</label>
                                         <select class="form-select" id="shift" name="shift" required>
                                             <option value="" selected>Chọn ca</option>
-                                            <option value="morning">Sáng (7h15 – 11h30)</option>
-                                            <option value="afternoon">Chiều (13h45 – 19h)</option>
+                                            <option value="morning" th:selected="${shift == 'morning'}">Sáng (7h15 – 11h30)</option>
+                                            <option value="afternoon" th:selected="${shift == 'afternoon'}">Chiều (13h45 – 19h)</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="employee" class="form-label">Nhân viên*</label>
                                         <select class="form-select" id="employee" name="employee" required>
-                                            <option value="" selected>Chọn nhân viên</option>
                                         </select>
                                     </div>
                                 </div>
@@ -199,5 +206,27 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.1/bootstrap-table.min.js"></script>
 <script th:src="@{/js/displayScheduleTable.js}"></script>
+<script>
+    var successMsg = document.getElementById("successMsg");
+    // Ẩn thông báo sau 3 giây
+    if (successMsg && successMsg.textContent.trim() !== "") {
+        setTimeout(function () {
+            successMsg.style.display = 'none';
+        }, 3000);
+    } else {
+        successMsg.style.display = 'none';
+    }
+</script>
+<script>
+    var falseMsg = document.getElementById("falseMsg");
+    // Ẩn thông báo sau 3 giây
+    if (falseMsg && falseMsg.textContent.trim() !== "") {
+        setTimeout(function () {
+            falseMsg.style.display = 'none';
+        }, 3000);
+    } else {
+        falseMsg.style.display = 'none';
+    }
+</script>
 </body>
 </html>

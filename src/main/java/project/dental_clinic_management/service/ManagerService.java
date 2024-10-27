@@ -66,5 +66,16 @@ public class ManagerService {
         return employeeList;
     }
 
+    //Kiểm tra xem nhân viên đó đã làm việc trong ca đó chưa
+    public boolean checkExistedSchedule(ScheduleCreationRequest request) {
+        List<Schedule> schedules = getSchedulesByEmployeeId(request.getEmployeeId());
+        for(Schedule schedule : schedules) {
+            if(schedule.getDate().equals(request.getDate()) && schedule.isShift() == request.isShift()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 }

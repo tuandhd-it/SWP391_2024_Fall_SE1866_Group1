@@ -109,3 +109,53 @@ th {
     cursor: not-allowed;
     opacity: 0.7;
 }
+
+#successMsg {
+    position: absolute;              /* Đặt vị trí tuyệt đối so với phần cha */
+    top: 20px;                       /* Khoảng cách từ đầu trang xuống */
+    right: 20px;                     /* Căn cách bên phải của trang */
+    padding: 15px 30px;              /* Tạo khoảng cách padding cho thông báo */
+    background-color: #4caf50;       /* Màu nền xanh lá cây */
+    color: white;                    /* Màu chữ trắng */
+    font-size: 18px;                 /* Tăng kích thước chữ */
+    border-radius: 5px;              /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Đổ bóng cho thông báo */
+    z-index: 999;                    /* Đảm bảo thông báo nằm phía trên các phần tử khác */
+    display: inline-block;           /* Hiển thị dưới dạng khối */
+    text-align: center;              /* Căn giữa văn bản bên trong */
+    opacity: 0;                      /* Bắt đầu với thông báo ẩn */
+    animation: fadeInOut 3s ease;    /* Hiệu ứng xuất hiện và biến mất */
+}
+
+/* Hiệu ứng mờ dần */
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}#falseMsg {
+    position: absolute;              /* Đặt vị trí tuyệt đối so với phần cha */
+    top: 20px;                       /* Khoảng cách từ đầu trang xuống */
+    right: 20px;                     /* Căn cách bên phải của trang */
+    padding: 15px 30px;              /* Tạo khoảng cách padding cho thông báo */
+    background-color: red;       /* Màu nền xanh lá cây */
+    color: white;                    /* Màu chữ trắng */
+    font-size: 18px;                 /* Tăng kích thước chữ */
+    border-radius: 5px;              /* Bo tròn các góc */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Đổ bóng cho thông báo */
+    z-index: 999;                    /* Đảm bảo thông báo nằm phía trên các phần tử khác */
+    display: inline-block;           /* Hiển thị dưới dạng khối */
+    text-align: center;              /* Căn giữa văn bản bên trong */
+    opacity: 0;                      /* Bắt đầu với thông báo ẩn */
+    animation: fadeInOut 3s ease;    /* Hiệu ứng xuất hiện và biến mất */
+}
+
+/* Hiệu ứng mờ dần */
+@keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+
