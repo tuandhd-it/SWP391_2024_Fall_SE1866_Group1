@@ -30,6 +30,8 @@ public class Employee {
     double salary;
     String img;
     String description;
+    String specification;
+    String certification;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -67,7 +69,7 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(String first_name, String last_name, String email, String phone, String password, LocalDate dob, String gender, boolean is_active, String address, double salary) {
+    public Employee(String first_name, String last_name, String email, String phone, String password, LocalDate dob, String gender, boolean is_active, String address, double salary, String specification, String certification, Role role) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.email = email;
@@ -78,6 +80,8 @@ public class Employee {
         this.is_active = is_active;
         this.address = address;
         this.salary = salary;
+        this.specification = specification;
+        this.certification = certification;
     }
 
     // Method format LocalDate thành format dd/mm/yyyy

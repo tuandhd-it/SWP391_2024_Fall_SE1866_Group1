@@ -77,5 +77,23 @@ public class ManagerService {
         return false;
     }
 
+    //Get examination registration by examId
+    public RegisterExamination getExaminationById(Long examId) {
+        return examRegistrationRepository.findByRegId(examId);
+
+    }
+
+    //Phê duyệt đơn đăng ký khám
+    public void acceptExamination(List<Long> examIdList) {
+        for (Long examId : examIdList) {
+            RegisterExamination registerExamination = getExaminationById(examId);
+            if (registerExamination == null) {
+                throw new RuntimeException("Employee with id " + examId + " not found.");
+            }
+            registerExamination.setAccept(true);
+            examRegistrationRepository.save(registerExamination);
+        }
+    }
+
 
 }

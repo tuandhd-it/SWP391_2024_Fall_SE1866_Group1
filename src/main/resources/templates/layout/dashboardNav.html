@@ -4,117 +4,130 @@
         <a href="/homePage">DCMS</a>
     </div>
     <!-- Sidebar Navigation -->
-    <ul class="sidebar-nav p-0">
-        <li class="sidebar-header">
-            Quản Lý Tài Khoản
-        </li>
-        <li class="sidebar-item">
-            <a th:href="@{/profile}" class="sidebar-link">
-                <i class="lni lni-user"></i>
-                <span>Tài Khoản</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a th:href="@{/changePass}" class="sidebar-link">
-                <i class="lni lni-agenda"></i>
-                <span>Thay đổi mật khẩu</span>
-            </a>
-        </li>
-        <li class="sidebar-header">
-            Quản lý Công Việc
-        </li>
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-               data-bs-target="#auth" aria-expanded="true" aria-controls="auth">
-                <i class="lni lni-protection"></i>
-                <span>Danh sách đăng ký</span>
-            </a>
-            <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                <li class="sidebar-item"
-                    th:if="${#authorization.expression('hasAnyAuthority(''Receptionist'', ''Doctor'')')}">
-                    <a th:href="@{/recep/viewRegistration}" class="sidebar-link">Đăng ký khám bệnh</a>
-                </li>
-                <li class="sidebar-item" th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Manager'')')}">
-                    <a th:href="@{/admin/manageRegisterAccount}" class="sidebar-link">
-                        <i class="lni lni-popup"></i>
-                        <span>Đăng ký nhân viên</span>
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/manageAcc}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý tài khoản</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Receptionist'')')}">
-            <a th:href="@{/recep/examRegistration}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Tạo đơn đăng ký khám</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/manageEmp}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý nhân viên</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${!#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/manager/scheduleList}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Lịch làm việc</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/manageBranchs}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý cơ sở</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/listWaitingRoom}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý phòng chờ</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/managePatient}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý Bệnh Nhân</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/manageMedicine}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý thuốc</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/manageService}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý dịch vụ</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-            <a th:href="@{/admin/tracking}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Quản lý chấm công</span>
-            </a>
-        </li>
-        <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Doctor'')')}">
-            <a th:href="@{/tracking/attendance}" class="sidebar-link">
-                <i class="lni lni-popup"></i>
-                <span>Chấm công</span>
-            </a>
-        </li>
-        <li class="sidebar-item">
-            <a href="#" class="sidebar-link">
-                <i class="lni lni-cog"></i>
-                <span>Setting</span>
-            </a>
-        </li>
-    </ul>
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+        <ul class="sidebar-nav p-0">
+            <li class="sidebar-header">
+                Quản Lý Tài Khoản
+            </li>
+            <li class="sidebar-item">
+                <a th:href="@{/profile}" class="sidebar-link">
+                    <i class="lni lni-user"></i>
+                    <span>Tài Khoản</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a th:href="@{/changePass}" class="sidebar-link">
+                    <i class="lni lni-agenda"></i>
+                    <span>Thay đổi mật khẩu</span>
+                </a>
+            </li>
+            <li class="sidebar-header">
+                Quản lý Công Việc
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
+                   data-bs-target="#auth" aria-expanded="true" aria-controls="auth">
+                    <i class="lni lni-protection"></i>
+                    <span>Danh sách đăng ký</span>
+                </a>
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item"
+                        th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Doctor'')')}">
+                        <a th:href="@{/manager/viewRegistration}" class="sidebar-link">
+                            <i class="lni lni-popup"></i>
+                            <span>Đăng ký khám bệnh</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item"
+                        th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Manager'')')}">
+                        <a th:href="@{/admin/manageRegisterAccount}" class="sidebar-link">
+                            <i class="lni lni-popup"></i>
+                            <span>Đăng ký nhân viên</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/manageAcc}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý tài khoản</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Receptionist'')')}">
+                <a th:href="@{/recep/examRegistration}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Tạo đơn đăng ký khám</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/manageEmp}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý nhân viên</span>
+                </a>
+            </li>
+            <li class="sidebar-item"
+                th:if="${#authorization.expression('hasAnyAuthority(''Nurse'', ''Doctor'', ''Receptionist'')')}">
+                <a th:href="@{/recep/myScheduleList}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Lịch làm việc của tôi</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${!#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/manager/scheduleList}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Lịch làm việc</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/manageBranchs}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý cơ sở</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/listWaitingRoom}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý phòng chờ</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/managePatient}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý Bệnh Nhân</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/manageMedicine}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý thuốc</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/manageService}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý dịch vụ</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/tracking}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý chấm công</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Doctor'')')}">
+                <a th:href="@{/tracking/attendance}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Chấm công</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <i class="lni lni-cog"></i>
+                    <span>Setting</span>
+                </a>
+            </li>
+        </ul>
+    </div>
     <!-- Sidebar Navigation Ends -->
     <div class="sidebar-footer">
         <a th:href="@{/homePage}" class="sidebar-link">

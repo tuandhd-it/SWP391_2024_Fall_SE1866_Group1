@@ -3,7 +3,7 @@
     <button class="toggler-btn" type="button">
         <i class="lni lni-text-align-left"></i>
     </button>
-    <a th:href="@{/logout}">
+    <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">
         <button class="login-button">Đăng xuất</button>
     </a>
 </nav>

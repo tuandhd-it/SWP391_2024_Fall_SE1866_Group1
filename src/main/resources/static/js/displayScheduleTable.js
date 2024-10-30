@@ -50,7 +50,7 @@ function renderSchedule(data) {
             // Tạo nút hiển thị thông tin nhân viên
             const button = document.createElement('button');
             button.className = 'btn btn-secondary btn-small w-100';
-            button.textContent = `${item.empployeeRole}: ${item.employeeName}`; // Hiển thị tên nhân viên
+            button.textContent = `${item.employeeRole}: ${item.employeeName}`; // Hiển thị tên nhân viên
             button.setAttribute('data-emp-id', item.employeeId);
 
             // Thêm sự kiện click vào nút để gọi hàm showEmployeeInfo

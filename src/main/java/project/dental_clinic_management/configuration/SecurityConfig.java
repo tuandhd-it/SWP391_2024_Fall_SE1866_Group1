@@ -4,18 +4,17 @@ package project.dental_clinic_management.configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.service.CustomUserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
     //Custom endpoints that can access without log in
-    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/js/**", "/homePage", "/nextRegister", "/nextRegisterDoctor", "/registerDoctor", "/verifyEmail/**", "/forgotPassword/**"};
+    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/js/**", "/homePage", "/nextRegister",
+            "/nextRegisterDoctor", "/registerDoctor", "/verifyEmail/**", "/forgotPassword/**", "/guestExamRegistration", "/guestExamRegistration", "/chooseDoctor"};
     public SecurityConfig( PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService) {
         this.customUserDetailService=customUserDetailService;
         this.passwordEncoder = passwordEncoder;
@@ -35,8 +34,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/admin/manageRegisterAccount").hasAnyAuthority("Admin", "Manager")
-                        .requestMatchers("/recep/viewRegistration").hasAnyAuthority("Receptionist", "Doctor")
-                        .requestMatchers("/recep/getDetails").hasAnyAuthority("Receptionist", "Doctor")
+                        .requestMatchers("/admin/acceptAccount").hasAnyAuthority("Admin", "Manager")
+                        .requestMatchers("/recep/viewRegistration").hasAnyAuthority("Receptionist", "Doctor", "Manager", "Nurse")
+                        .requestMatchers("/recep/myScheduleList").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
+                        .requestMatchers("/manager/viewRegistration").hasAnyAuthority("Receptionist", "Doctor", "Manager", "Nurse")
+                        .requestMatchers("/recep/getDetails").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
+                        .requestMatchers("/recep/search").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
                         .requestMatchers("/manager/scheduleList").hasAnyAuthority("Doctor", "Nurse", "Manager", "Receptionist")
                         .requestMatchers("/manager/getDetails").hasAnyAuthority("Doctor", "Nurse", "Manager", "Receptionist")
                         .requestMatchers("/manager/scheduleData").hasAnyAuthority("Doctor", "Nurse", "Manager", "Receptionist")

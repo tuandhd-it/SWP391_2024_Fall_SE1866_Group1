@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.ScheduleCreationRequest;
 import project.dental_clinic_management.dto.request.ViewDoctorInfoRequest;
+import project.dental_clinic_management.dto.request.ViewDoctorSpecCert;
+import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.dto.response.BranchEmployeeResponse;
 import project.dental_clinic_management.dto.response.ScheduleEmployeeInfoResponse;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.RegisterExamination;
 import project.dental_clinic_management.entity.Schedule;
 import project.dental_clinic_management.service.ManagerService;
+import project.dental_clinic_management.service.ReceptionistService;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,9 +31,12 @@ public class ManagerController {
 
     private final ManagerService managerService;
 
+    private final ReceptionistService receptionistService;
+
     @Autowired
-    public ManagerController(ManagerService managerService) {
+    public ManagerController(ManagerService managerService, ReceptionistService receptionistService) {
         this.managerService = managerService;
+        this.receptionistService = receptionistService;
     }
 
     @GetMapping("/scheduleList")
@@ -57,13 +64,13 @@ public class ManagerController {
         String currentUserRole = managerService.findByUsername(userDetails.getUsername()).getRole().getRoleName();
         for (Schedule schedule : scheduleList) {
             responseList.add(ScheduleEmployeeInfoResponse.builder()
-                            .scheduleId(schedule.getScheduleId())
-                            .shift(schedule.isShift())
-                            .date(schedule.getDate())
-                            .currentUserRole(currentUserRole)
-                            .employeeId(schedule.getEmployee().getEmp_id())
-                            .employeeName(schedule.getEmployee().getFirst_name() + " " + schedule.getEmployee().getLast_name())
-                            .empployeeRole(schedule.getEmployee().getRole().getRoleName())
+                    .scheduleId(schedule.getScheduleId())
+                    .shift(schedule.isShift())
+                    .date(schedule.getDate())
+                    .currentUserRole(currentUserRole)
+                    .employeeId(schedule.getEmployee().getEmp_id())
+                    .employeeName(schedule.getEmployee().getFirst_name() + " " + schedule.getEmployee().getLast_name())
+                    .employeeRole(schedule.getEmployee().getRole().getRoleName())
                     .build());
         }
         return responseList;
@@ -106,7 +113,7 @@ public class ManagerController {
                 .date(date)
                 .shift(shift)
                 .build();
-        if(!managerService.checkExistedSchedule(scheduleCreationRequest)) {
+        if (!managerService.checkExistedSchedule(scheduleCreationRequest)) {
             managerService.createSchedule(scheduleCreationRequest);
             redirectAttributes.addFlashAttribute("successMsg", "Thêm lịch thành công");
         } else {
@@ -129,11 +136,86 @@ public class ManagerController {
             List<Employee> employeeList = managerService.findAllBranchEmployee(manager);
             for (Employee employee : employeeList) {
                 responseList.add(BranchEmployeeResponse.builder()
-                                .employeeId(employee.getEmp_id())
-                                .employeeFullName(employee.getFirst_name() + " " + employee.getLast_name())
+                        .employeeId(employee.getEmp_id())
+                        .employeeFullName(employee.getFirst_name() + " " + employee.getLast_name())
                         .build());
             }
             return responseList;
         }
+    }
+
+    @GetMapping("/viewRegistration")
+    public String viewRegistration(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Employee receptionist = receptionistService.findByUsername(username);
+        List<ViewExamRegistrationRequest> list = receptionistService.findAllBranchExam(receptionist);
+
+        // Thêm danh sách vào model để hiển thị trong view
+        model.addAttribute("examList", list);
+        model.addAttribute("keyword", "");
+
+        return "/employee/viewListExamRegistration";
+    }
+
+    @PostMapping("/acceptExamination")
+    public String acceptExamination(@RequestParam List<Long> exam_id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        managerService.acceptExamination(exam_id);
+        String username = userDetails.getUsername();
+        Employee manager = receptionistService.findByUsername(username);
+        List<ViewExamRegistrationRequest> list = receptionistService.findAllBranchExam(manager);
+        model.addAttribute("acceptMsg", "Phê duyệt thành công!");
+        //Gửi mail ở đây
+        model.addAttribute("examList", list);
+        return "/employee/viewListExamRegistration";
+    }
+
+    @GetMapping("/getExamDetails")
+    @ResponseBody
+    @JsonIgnore
+    public ViewExamRegistrationRequest getDetails(@RequestParam("examId") Long examId) {
+        // Kiểm tra xem examId có tồn tại trong hệ thống không
+        RegisterExamination registerExamination = receptionistService.findExamRegistrationByRegId(examId.toString());
+        if (registerExamination == null) {
+            throw new RuntimeException("Exam not found with id: " + examId);
+        }
+        return ViewExamRegistrationRequest.builder()
+                .examId(examId)
+                .firstName(registerExamination.getFirstName())
+                .lastName(registerExamination.getLastName())
+                .email(registerExamination.getEmail())
+                .phone(registerExamination.getPhone())
+                .reason(registerExamination.getReason())
+                .dob(registerExamination.getDob())
+                .gender(registerExamination.getGender())
+                .examRegisterDate(registerExamination.getExamRegisterDate())
+                .note(registerExamination.getNote())
+                .branchName(registerExamination.getBranch().getBranchName())
+                .doctorName(registerExamination.getEmployee().getFirst_name() + " " + registerExamination.getEmployee().getLast_name())
+                .build();
+    }
+
+    @GetMapping("/getDoctorDetails")
+    @ResponseBody
+    @JsonIgnore
+    public ViewDoctorSpecCert getDoctorDetails(@RequestParam("empId") int empId) {
+        // Kiểm tra xem examId có tồn tại trong hệ thống không
+        Employee employee = managerService.getEmployeeById(empId);
+        if (employee == null) {
+            throw new RuntimeException("Employee not found with id: " + empId);
+        }
+        return ViewDoctorSpecCert.builder()
+                .spec(employee.getSpecification())
+                .cert(employee.getCertification())
+                .doctorName(employee.getFirst_name() + " " + employee.getLast_name())
+                .img(employee.getImg())
+                .build();
+    }
+
+    @GetMapping("/search")
+    public String search(Model model, @RequestParam("keyword") String keyword) {
+        List<ViewExamRegistrationRequest> requestList = receptionistService.searchAllExamRegistration(keyword);
+        model.addAttribute("examList", requestList);
+        model.addAttribute("keyword", keyword);
+        return "/employee/viewListExamRegistration";
     }
 }

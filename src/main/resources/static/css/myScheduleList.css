@@ -1,0 +1,55 @@
+.table-schedule {
+    width: 95%; /* Đảm bảo bảng chiếm gần hết chiều ngang */
+    margin: auto;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+}
+
+th, td {
+    vertical-align: middle;
+    border: 1px solid #dee2e6;
+    padding: 15px;
+}
+
+th {
+    background-color: #dbe4f3;
+}
+
+.pagination {
+    margin-top: 20px;
+}
+
+.btn-small {
+    margin-bottom: 5px;
+}
+
+/* Header của bảng */
+.table-schedule th {
+    background-color: #00BCD4; /* Màu xanh cyan */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Màu cho các cột */
+.table-schedule tbody td {
+    background-color: #f1f8e9; /* Màu xanh lá nhạt */
+    vertical-align: middle;
+    text-align: center;
+}
+
+.registration-form {
+    display: flex;
+    justify-content: center; /* Căn giữa theo chiều ngang */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    max-height: calc(100vh - 100px); /* Giới hạn chiều cao form */
+    overflow-y: auto; /* Cuộn nếu form quá dài */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Bóng mờ */
+    background: #00BCD4;
+    color: white;
+    margin-bottom: 30px;
+}
