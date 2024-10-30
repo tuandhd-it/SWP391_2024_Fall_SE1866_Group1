@@ -2,10 +2,7 @@ package project.dental_clinic_management.service;
 
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
-import project.dental_clinic_management.entity.Branch;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.RegisterExamination;
-import project.dental_clinic_management.entity.Role;
+import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -123,7 +120,7 @@ public class ReceptionistService {
         List<ViewExamRegistrationRequest> exams = new ArrayList<>();
         List<RegisterExamination> registerExaminations = examRegistrationRepository.findAll();
         for (RegisterExamination registerExamination : registerExaminations) {
-            if(registerExamination.getBranch().equals(receptionist.getBranch())) {
+            if(registerExamination.getBranch().equals(receptionist.getBranch()) && !registerExamination.isAccept()) {
                 exams.add(ViewExamRegistrationRequest.builder()
                                 .firstName(registerExamination.getFirstName())
                                 .lastName(registerExamination.getLastName())
@@ -158,6 +155,7 @@ public class ReceptionistService {
                         .employee(doctor)
                         .branch(branch)
                         .note(examRegistrationRequest.getNote())
+                        .accept(false)
                 .build());
     }
 
@@ -185,8 +183,8 @@ public class ReceptionistService {
         return viewRequestList;
     }
 
-    //Tìm tất cả bác sĩ có ca
-    public List<Employee> findAllDoctorShift(Employee receptionist) {
+    //Tìm tất cả bác sĩ có ca trong ngày
+    public List<Employee> findAllDoctorShift() {
         boolean shift;
 
 
@@ -205,6 +203,25 @@ public class ReceptionistService {
         }
 
         return scheduleRepository.findEmployeeByShift(shift, currentDate);
+    }
+
+    //Tìm tất cả bác sĩ có ca trong ngày được chọn
+    public List<Employee> findDoctorShiftForGuest(LocalDate choosenDate, String branchName, String shiftString) {
+        boolean shift;
+        shift = !shiftString.equalsIgnoreCase("morning");
+        List<Employee> shiftedEmployeeList = scheduleRepository.findEmployeeByShift(shift, choosenDate);
+        List<Employee> branchEmployeeShift = new ArrayList<>();
+        for(Employee employee : shiftedEmployeeList) {
+            if(employee.getBranch().getBranchName().equals(branchName)) {
+                branchEmployeeShift.add(employee);
+            }
+        }
+        return branchEmployeeShift;
+    }
+
+    //Tìm tất cả lịch làm việc theo empId
+    public List<Schedule> getSchedulesByEmployeeId(int employeeId) {
+        return scheduleRepository.findByEmpId(employeeId);
     }
 
 }

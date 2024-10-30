@@ -10,6 +10,7 @@ import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.entity.RegisterExamination;
+import project.dental_clinic_management.entity.Schedule;
 import project.dental_clinic_management.service.ReceptionistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,7 +32,7 @@ public class ReceptionistController {
         String branchName = receptionist.getBranch().getBranchName();
         request.setBranchName(branchName);
         model.addAttribute("request", request);
-        List<Employee> doctors = receptionistService.findAllDoctorShift(receptionist);
+        List<Employee> doctors = receptionistService.findAllDoctorShift();
         model.addAttribute("doctors", doctors);
         return "/employee/examRegistration";
     }
@@ -41,24 +42,6 @@ public class ReceptionistController {
         receptionistService.createExamRegistration(request);
         redirectAttributes.addFlashAttribute("successMsg", "Đăng ký khám thành công");
         return "redirect:/recep/viewRegistration";
-    }
-
-    @GetMapping("/viewRegistration")
-    public String viewRegistration(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("successMsg") String successMsg) {
-        String username = userDetails.getUsername();
-        Employee receptionist = receptionistService.findByUsername(username);
-        List<ViewExamRegistrationRequest> list = receptionistService.findAllBranchExam(receptionist);
-
-        // Thêm danh sách vào model để hiển thị trong view
-        model.addAttribute("examList", list);
-        model.addAttribute("keyword", "");
-
-        // Thêm thông báo thành công (nếu có) vào model
-        if (successMsg != null) {
-            model.addAttribute("successMsg", successMsg);
-        }
-
-        return "/employee/viewListExamRegistration";
     }
 
     @GetMapping("/getDetails")
@@ -92,6 +75,19 @@ public class ReceptionistController {
         model.addAttribute("examList", requestList);
         model.addAttribute("keyword", keyword);
         return "/employee/viewListExamRegistration";
+    }
+
+    @GetMapping("/myScheduleList")
+    public String myScheduleList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        List<Schedule> schedules = receptionistService.getSchedulesByEmployeeId(employee.getEmp_id());
+        if (schedules == null || schedules.isEmpty()) {
+            model.addAttribute("notFoundMsg", "This employee do not have any work schedules");
+        } else {
+            model.addAttribute("schedules", schedules);
+        }
+        return "/employee/myScheduleList";
     }
 
 }
