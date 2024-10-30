@@ -2,9 +2,13 @@
 package project.dental_clinic_management.controller;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
+import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.service.CustomUserDetailService;
+import project.dental_clinic_management.service.EmailService;
 import project.dental_clinic_management.service.ReceptionistService;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import jakarta.validation.Valid;
@@ -30,6 +34,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import java.io.Console;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +49,9 @@ public class GeneralController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     //Tra ve trang login
     @GetMapping("/login")
@@ -76,7 +84,11 @@ public class GeneralController {
 
     //Check xem nguoi truy cap vao home page da dang nhap chua
     @RequestMapping("/homePage")
-    public String homePage(Model model,  @AuthenticationPrincipal UserDetails userDetails) {
+    public String homePage(Model model,  @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("successMsg") String successMsg) {
+
+        if(successMsg != null) {
+            model.addAttribute("successMsg", successMsg);
+        }
         if (userDetails != null) {
 
             model.addAttribute("loginSuccess", userDetails.getUsername());
@@ -186,6 +198,65 @@ public class GeneralController {
         } catch (MalformedURLException e) {
             throw new RuntimeException("Error: " + e.getMessage());
         }
+    }
+
+    //Đăng ký khám online
+    @GetMapping("/guestExamRegistration")
+    public String guestExamRegistration(Model model) {
+        ExamRegistrationRequest request = new ExamRegistrationRequest();
+        List<Branch> branchList = receptionistService.findAllBranches();
+        model.addAttribute("branchList", branchList);
+        model.addAttribute("request", request);
+        List<Employee> doctors = receptionistService.findAllDoctorShift();
+        model.addAttribute("doctors", doctors);
+        return "/employee/guestExamRegistration";
+    }
+
+    //Đăng ký khám online thành công
+    @PostMapping("/guestExamRegistration")
+    public String guestExamRegistrationSubmit(@ModelAttribute("request") ExamRegistrationRequest request, Model model, RedirectAttributes redirectAttributes, @RequestParam("choosenDoctor") String empId) {
+        request.setEmployeeId(empId);
+        receptionistService.createExamRegistration(request);
+        redirectAttributes.addFlashAttribute("successMsg", "Đăng ký khám thành công");
+        //Gửi mail ở đây
+        return "redirect:/homePage";
+    }
+
+    @PostMapping("/chooseDoctor")
+    public String chooseDoctor(@ModelAttribute ExamRegistrationRequest request, Model model) {
+        LocalDate choosenDate = request.getExamRegisterDate();
+        String branchName = request.getBranchName();
+        String shiftString = request.getShift();
+        List<Employee> employeeList = receptionistService.findDoctorShiftForGuest(choosenDate, branchName, shiftString);
+        model.addAttribute("request", request);
+        model.addAttribute("employeeList", employeeList);
+        return "/employee/chooseDoctor";
+    }
+
+    //Lay thong tin nhan vien trong lich lam viec
+    @GetMapping("/getDetails")
+    @ResponseBody
+    @JsonIgnore
+    public ViewExamRegistrationRequest getDetails(@RequestParam("examId") Long examId) {
+        // Kiểm tra xem examId có tồn tại trong hệ thống không
+        RegisterExamination registerExamination = receptionistService.findExamRegistrationByRegId(examId.toString());
+        if (registerExamination == null) {
+            throw new RuntimeException("Exam not found with id: " + examId);
+        }
+        return ViewExamRegistrationRequest.builder()
+                .examId(examId)
+                .firstName(registerExamination.getFirstName())
+                .lastName(registerExamination.getLastName())
+                .email(registerExamination.getEmail())
+                .phone(registerExamination.getPhone())
+                .reason(registerExamination.getReason())
+                .dob(registerExamination.getDob())
+                .gender(registerExamination.getGender())
+                .examRegisterDate(registerExamination.getExamRegisterDate())
+                .note(registerExamination.getNote())
+                .branchName(registerExamination.getBranch().getBranchName())
+                .doctorName(registerExamination.getEmployee().getFirst_name() + " " + registerExamination.getEmployee().getLast_name())
+                .build();
     }
 
 

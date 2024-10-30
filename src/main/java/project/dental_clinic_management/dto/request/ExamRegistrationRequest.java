@@ -22,4 +22,6 @@ public class ExamRegistrationRequest {
     String note;
     String employeeId;
     String branchName;
+    String shift;
+    boolean accept;
 }

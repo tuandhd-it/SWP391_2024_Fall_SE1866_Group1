@@ -10,6 +10,7 @@
                 <li><a href="#">Giới thiệu</a></li>
                 <li><a href="#">Trợ giúp</a></li>
                 <li><a href="#">Liên hệ</a></li>
+                <li th:if="${loginSuccess == null}"><a th:href="@{/guestExamRegistration}">Đăng ký khám bệnh</a></li>
             </ul>
         </nav>
         <div th:if="${loginSuccess == null}">
@@ -17,14 +18,16 @@
                 <button class="login-button">Đăng nhập</button>
             </a>
         </div>
-        <div th:if="${loginSuccess != null}">
+        <div th:if="${loginSuccess != null}" style="display: flex">
             <a th:href="@{/profile}">
                 <button class="login-button"
                         th:text="${'Hello ' + employee.getFirst_name() + ' ' + employee.getLast_name()}"></button>
             </a>
-            <a th:href="@{/logout}">
-                <button class="login-button">Đăng xuất</button>
-            </a>
+            <div th:if="${loginSuccess != null}" style="margin-left: 10px">
+                <a th:href="@{/logout}">
+                    <button class="login-button">Đăng xuất</button>
+                </a>
+            </div>
         </div>
     </div>
 </header>
