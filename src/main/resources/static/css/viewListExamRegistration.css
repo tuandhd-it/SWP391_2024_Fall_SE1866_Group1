@@ -46,6 +46,12 @@ input[type="text"]:focus, input[type="email"]:focus, input[type="date"]:focus, s
     box-shadow: 0 0 5px rgba(0, 121, 107, 0.5); /* Tạo hiệu ứng shadow khi focus */
 }
 
+.table tbody td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
 td.view_column {
     text-align: center;
     vertical-align: middle;
@@ -60,7 +66,7 @@ td.view_column {
     text-align: center;
     flex-grow: 1;
 }
-#successMsg {
+#acceptMsg {
     position: absolute;              /* Đặt vị trí tuyệt đối so với phần cha */
     top: 20px;                       /* Khoảng cách từ đầu trang xuống */
     right: 20px;                     /* Căn cách bên phải của trang */
@@ -84,4 +90,23 @@ td.view_column {
     90% { opacity: 1; }
     100% { opacity: 0; }
 }
+td.checkbox_column {
+    text-align: center;
+    vertical-align: middle;
+}
+
+#checkbox_active {
+    margin: 0 auto;
+    display: block;
+}
+/* Đảm bảo nút nằm bên phải và không bị đè */
+.approve-button-container {
+    margin-left: auto; /* Đẩy nút sang bên phải */
+    padding: 10px;
+}
+
+.table-responsive {
+    margin-bottom: 30px; /* Tạo khoảng cách với nội dung bên dưới */
+}
+
 

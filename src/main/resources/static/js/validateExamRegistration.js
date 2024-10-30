@@ -106,8 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         // Validate exam registration date not in the future
-        if (!validateDateNotInFuture(examRegisterDate)) {
-            examRegisterDate.setCustomValidity("Ngày đăng ký khám không được vượt quá ngày hôm nay. Vui lòng chọn ngày hợp lệ.");
+        if (validateDateNotInFuture(examRegisterDate)) {
+            examRegisterDate.setCustomValidity("Ngày đăng ký khám không được trước ngày hôm nay. Vui lòng chọn ngày hợp lệ.");
             examRegisterDate.reportValidity();
             e.preventDefault();
             return;
@@ -151,10 +151,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Add event listener for examRegisterDate input field to clear error when retyping
     examRegisterDate.addEventListener("input", function () {
-        if (validateDateNotInFuture(examRegisterDate)) {
+        if (!validateDateNotInFuture(examRegisterDate)) {
             examRegisterDate.setCustomValidity("");
         } else {
-            examRegisterDate.setCustomValidity("Ngày đăng ký khám không được vượt quá ngày hôm nay. Vui lòng chọn ngày hợp lệ.");
+            examRegisterDate.setCustomValidity("Ngày đăng ký khám không được trước ngày hôm nay. Vui lòng chọn ngày hợp lệ.");
         }
     });
 });
