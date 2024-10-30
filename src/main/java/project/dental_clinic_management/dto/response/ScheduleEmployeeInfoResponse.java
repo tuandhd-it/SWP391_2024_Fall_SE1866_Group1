@@ -17,6 +17,6 @@ public class ScheduleEmployeeInfoResponse {
     int employeeId;
     String employeeName;
     String currentUserRole;
-    String empployeeRole;
+    String employeeRole;
 
 }
