@@ -25,7 +25,6 @@ public class SecurityConfig {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService).passwordEncoder(passwordEncoder);
     }
-
     //Authorization
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

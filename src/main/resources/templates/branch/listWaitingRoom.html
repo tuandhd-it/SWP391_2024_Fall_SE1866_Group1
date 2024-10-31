@@ -26,13 +26,14 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-6">
-                        <form th:action="" method="get">
-                            <label for="sortSelect"></label><select id="sortSelect" class="form-control mb-4">
-                                <option value="default">Default</option>
-                                <option value="nameAsc">Tên cơ sở A-Z</option>
-                                <option value="nameDesc">Tên cơ sở Z-A</option>
-                                <option value="capacityAsc">Số bệnh nhân tăng dần</option>
-                                <option value="capacityDesc">Số bệnh nhân giảm dần</option>
+                        <form th:action="@{/admin/listWaitingRoom}" th:object="${sortOption}" method="get" id="sortForm">
+                            <input type="hidden" name="page" th:value="${currentPage}"/>
+                            <select  style="width: 250px" id="sortSelect" name="sort" class="form-control mb-4" onchange="document.getElementById('sortForm').submit()">
+                                <option value="default" th:selected="${sortOption == 'default'}">Default</option>
+                                <option value="nameAsc" th:selected="${sortOption == 'nameAsc'}">Tên cơ sở A-Z</option>
+                                <option value="nameDesc" th:selected="${sortOption == 'nameDesc'}">Tên cơ sở Z-A</option>
+                                <option value="capacityAsc" th:selected="${sortOption == 'capacityAsc'}">Số bệnh nhân tăng dần</option>
+                                <option value="capacityDesc" th:selected="${sortOption == 'capacityDesc'}">Số bệnh nhân giảm dần</option>
                             </select>
                         </form>
                     </div>
@@ -102,7 +103,7 @@
             <nav aria-label="Page navigation">
                 <ul class="pagination">
                     <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${currentPage - 1}}"
+                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${currentPage - 1} +'&' + 'sort=' + ${sortOption}}"
                            aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
@@ -112,7 +113,7 @@
                         <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${i}}" th:text="${i}">1</a>
                     </li>
                     <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${currentPage + 1}}"
+                        <a class="page-link" th:href="@{'/admin/listWaitingRoom?page=' + ${currentPage + 1}+'&' + 'sort=' + ${sortOption}}"
                            aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
@@ -171,34 +172,7 @@
         sortRooms(sortOption);
     });
 
-        function sortRooms(sortOption) {
-        const roomsContainer = document.querySelector('.col-12.mb-2'); // Chứa tất cả các thẻ phòng
-        const rooms = Array.from(roomsContainer.querySelectorAll('.card')); // Chuyển NodeList thành mảng
 
-        rooms.sort((a, b) => {
-        const nameA = a.querySelector('.card-title span').textContent.trim().toLowerCase();
-        const nameB = b.querySelector('.card-title span').textContent.trim().toLowerCase();
-        const capacityA = parseInt(a.querySelector('[name="capacity"]').value);
-        const capacityB = parseInt(b.querySelector('[name="capacity"]').value);
-
-        switch (sortOption) {
-        case 'nameAsc':
-        return nameA.localeCompare(nameB);
-        case 'nameDesc':
-        return nameB.localeCompare(nameA);
-        case 'capacityAsc':
-        return capacityA - capacityB;
-        case 'capacityDesc':
-        return capacityB - capacityA;
-        default:
-        return 0;
-    }
-    });
-
-        // Xóa các thẻ cũ và thêm lại theo thứ tự đã sắp xếp
-        roomsContainer.innerHTML = '';
-        rooms.forEach(room => roomsContainer.appendChild(room));
-    }
 </script>
 <!-- Bootstrap 4.5.2 JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
