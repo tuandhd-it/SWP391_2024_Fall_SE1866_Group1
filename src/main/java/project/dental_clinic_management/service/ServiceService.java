@@ -58,6 +58,8 @@ public class ServiceService {
             existingService.setActive(updatedService.isActive());
             existingService.setGuarantee(updatedService.getGuarantee());
             existingService.setMaterial(updatedService.getMaterial());
+            existingService.setQuantity(updatedService.getQuantity());
+            existingService.setUnit(updatedService.getUnit());
 
             // Lưu lại dịch vụ đã cập nhật
             serviceRepository.save(existingService);
