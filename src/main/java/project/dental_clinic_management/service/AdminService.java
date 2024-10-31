@@ -7,6 +7,7 @@ import project.dental_clinic_management.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -67,6 +68,10 @@ public class AdminService {
      */
     public WaitingRoom findWaitingRoomById(int waitingRoomId) {
         return waitingRoomRepository.findWaitingRoomByWaitingRoomID(waitingRoomId);
+    }
+
+    public Employee findByUsername(String username) {
+        return employeeRepository.findByEmail(username);
     }
 
     /**
@@ -230,6 +235,24 @@ public class AdminService {
         }
 
         return new PageImpl<>(filteredRequests.subList(start, end), pageable, filteredRequests.size());
+    }
+
+    /**
+     * Find waiting room by branchId
+     * @param branchId
+     * @return waiting room
+     */
+    public WaitingRoom findWaitingRoomByBranchId(int branchId) {
+        return findWaitingRoomByBranchId(branchId);
+    }
+
+    /**
+     * Find an employee by email
+     * @param email
+     * @return employee
+     */
+    public Employee findByEmail(String email) {
+        return employeeRepository.findByEmail(email);
     }
 
     //Get all Role
@@ -460,4 +483,29 @@ public class AdminService {
         patient.setDob(updateRequest.getDob());
         return patientRepository.save(patient);
     }
+
+    /**
+     * Add patient waiting room
+     * @param patientWaitingRoom
+     * @return patient added
+     */
+    public PatientWaitingRoom addPatientWaitingRoom(PatientWaitingRoomRequest patientWaitingRoom) {
+        patientWaitingRoom.setStatus("Waiting");
+        patientWaitingRoom.setWaitingDate(LocalDate.now());
+
+        PatientWaitingRoom newPatientWaitingRoom = new PatientWaitingRoom();
+        newPatientWaitingRoom.setPatient(patientWaitingRoom.getPatient());
+        newPatientWaitingRoom.setWaitingDate(patientWaitingRoom.getWaitingDate());
+        newPatientWaitingRoom.setStatus(patientWaitingRoom.getStatus());
+        newPatientWaitingRoom.setBooked(patientWaitingRoom.isBooked());
+        newPatientWaitingRoom.setNote(patientWaitingRoom.getNote());
+        newPatientWaitingRoom.setUrgency(patientWaitingRoom.isUrgency());
+        newPatientWaitingRoom.setWaitingRoomId(patientWaitingRoom.getWaitingRoom());
+        return patientWaitingRoomRepository.save(newPatientWaitingRoom);
+    }
+
+    public Patient findPatientById(int id) {
+        return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Patient ID"));
+    }
+
 }
