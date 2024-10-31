@@ -52,6 +52,8 @@ function renderSchedule(data) {
             button.className = 'btn btn-secondary btn-small w-100';
             button.textContent = `${item.employeeRole}: ${item.employeeName}`; // Hiển thị tên nhân viên
             button.setAttribute('data-emp-id', item.employeeId);
+            button.setAttribute('data-date', dateStr); // Lưu ngày vào thuộc tính data-date
+            button.setAttribute('data-shift', shift); // Lưu shift vào thuộc tính data-shift
 
             // Thêm sự kiện click vào nút để gọi hàm showEmployeeInfo
             button.addEventListener('click', function () {
@@ -195,7 +197,11 @@ function formatDateToDDMMYYYY(dateString) {
 function showEmployeeInfo(button) {
     // Lấy examId từ thuộc tính data-exam-id của button
     var empId = $(button).attr('data-emp-id');
+    var date = $(button).attr('data-date');
+    var shift = $(button).attr('data-shift');
     console.log(empId);
+    console.log(date);
+    console.log(shift);
 
     // Gửi yêu cầu AJAX tới server để lấy thông tin chi tiết
     $.ajax({
@@ -221,6 +227,13 @@ function showEmployeeInfo(button) {
                     imgElement.src = 'default-avatar.png'; // Ảnh mặc định nếu không có ảnh
                     imgElement.alt = 'Ảnh mặc định';
                 }
+
+                // Gán giá trị date vào input hidden với ID "delete-schedule-btn"
+                $('#delete-schedule-btn').val(date);
+
+                // Gán giá trị date vào input hidden với ID "delete-emp-btn"
+                $('#delete-emp-btn').val(empId);
+
                 // Mở modal
                 $('#infoModal').modal('show');
             } else {
