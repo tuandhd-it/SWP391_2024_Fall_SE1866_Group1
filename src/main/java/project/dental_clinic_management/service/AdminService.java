@@ -1,8 +1,5 @@
 package project.dental_clinic_management.service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
@@ -39,22 +36,13 @@ public class AdminService {
     private PatientRepository patientRepository;
 
 
-
-    /**
-     * Get waiting room list
-     * @return waiting room list
-     */
-    public List<WaitingRoom> getAllWaitingRooms() {
-        return waitingRoomRepository.findAll(); //return  waiting room list
-    }
-
     /**
      * Count patient in a waiting room
      * @param waitingRoomId
      * @return number of patients in waiting room
      */
     public int countPatient(WaitingRoom waitingRoomId) {
-        return patientWaitingRoomRepository.countByWaitingRoomId(waitingRoomId);
+        return patientWaitingRoomRepository.countByWaitingRoom(waitingRoomId);
     }
 
     /**
@@ -82,16 +70,18 @@ public class AdminService {
     }
 
     /**
-     * Get page waiting room
+     * Get page waiting room with sorting
      * @param index
-     * @return a page list
+     * @param sortOption
+     * @return a sorted page list of waiting rooms
      */
-    public Page<WaitingRoomRequest> getAllWaitingRoomRequests(int index){
-        Pageable pageable = PageRequest.of(index - 1,2);
-        Page<WaitingRoom> waitingRoomsPage = waitingRoomRepository.findAll(pageable); // Lấy danh sách phòng chờ theo trang
-        List<WaitingRoomRequest> waitingRoomRequests = new ArrayList<>(); // Tạo danh sách WaitingRoomRequest
+    public Page<WaitingRoomRequest> getAllWaitingRoomRequests(int index, String sortOption) {
+        // Lấy toàn bộ phòng chờ từ cơ sở dữ liệu
+        List<WaitingRoom> allWaitingRooms = waitingRoomRepository.findAll();
+        List<WaitingRoomRequest> waitingRoomRequests = new ArrayList<>();
 
-        for (WaitingRoom waitingRoom : waitingRoomsPage) {
+        // Chuyển đổi danh sách phòng chờ thành WaitingRoomRequest
+        for (WaitingRoom waitingRoom : allWaitingRooms) {
             WaitingRoomRequest request = new WaitingRoomRequest();
             request.setWaitingRoomID(waitingRoom.getWaitingRoomID());
             request.setAvailable(countPatient(waitingRoom) < waitingRoom.getCapacity());
@@ -101,7 +91,58 @@ public class AdminService {
             waitingRoomRequests.add(request);
         }
 
-        return new PageImpl<>(waitingRoomRequests, pageable, waitingRoomsPage.getTotalElements());
+        // Áp dụng sắp xếp
+        getSortOption(sortOption, waitingRoomRequests);
+
+        // Thiết lập phân trang thủ công
+        Pageable pageable = PageRequest.of(index - 1, 2);
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), waitingRoomRequests.size());
+
+        // Lấy danh sách phòng chờ đã phân trang
+        List<WaitingRoomRequest> pagedRequests = waitingRoomRequests.subList(startIndex, endIndex);
+
+        // Trả về đối tượng Page với kết quả đã phân trang
+        return new PageImpl<>(pagedRequests, pageable, waitingRoomRequests.size());
+    }
+
+
+    private static void sortByBranchNameAscending(List<WaitingRoomRequest> waitingRoomRequests) {
+        waitingRoomRequests.sort(Comparator.comparing(request -> request.getBranch().getBranchName()));
+    }
+    private static void sortByBranchNameDescending(List<WaitingRoomRequest> waitingRoomRequests) {
+        waitingRoomRequests.sort(Comparator.comparing((WaitingRoomRequest request) ->
+                request.getBranch().getBranchName()).reversed());
+    }
+    public static void sortByCapacityDescending(List<WaitingRoomRequest> waitingRoomRequests) {
+        waitingRoomRequests.sort(Comparator.comparingInt(WaitingRoomRequest::getCapacity).reversed());
+    }
+    public static void sortByCapacityAscending(List<WaitingRoomRequest> waitingRoomRequests) {
+        waitingRoomRequests.sort(Comparator.comparingInt(WaitingRoomRequest::getCapacity));
+    }
+
+    /**
+     * Determine the sorting criteria based on the sort option
+     * @param sortOption
+     * @return Sort object for sorting the query
+     */
+    private static void getSortOption(String sortOption, List<WaitingRoomRequest> waitingRoomRequests) {
+        switch (sortOption) {
+            case "nameAsc":
+                sortByBranchNameAscending(waitingRoomRequests);
+                break;
+            case "nameDesc":
+                sortByBranchNameDescending(waitingRoomRequests);
+                break;
+            case "capacityAsc":
+                sortByCapacityAscending(waitingRoomRequests);
+                break;
+            case "capacityDesc":
+                sortByCapacityDescending(waitingRoomRequests);
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -281,6 +322,13 @@ public class AdminService {
 
         return  branchRepository.save(newBranch); //save in database
     }
+
+    /**
+     * Create waiting room
+     * @param waitingRoom
+     * @param newBranch
+     * @return waiting room created
+     */
     public WaitingRoom createWaitingRoom(WaitingRoom waitingRoom, Branch newBranch){
         WaitingRoom newWaitingRoom = new WaitingRoom();
         newWaitingRoom.setBranch(newBranch);
@@ -297,6 +345,11 @@ public class AdminService {
     public List<Branch> getAllBranches() {
         return branchRepository.findAll(); //Return list of branch
     }
+
+    public Page<Branch> getAllBranchesPage(Pageable pageable) {
+        return branchRepository.findAll(pageable); // Trả về danh sách phân trang
+    }
+
 
     /**
      * Get a branch by Id

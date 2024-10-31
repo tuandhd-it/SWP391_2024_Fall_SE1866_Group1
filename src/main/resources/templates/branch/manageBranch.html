@@ -54,7 +54,26 @@
                         data-bs-toggle="modal" data-bs-target="#createModal">
                     <b>+</b></button>
             </div>
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li th:classappend="${currentPage == 0} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/admin/manageBranchs(page=${currentPage - 1}, size=${size})}">Previous</a>
+                        </li>
+
+                        <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'" class="page-item">
+                            <a class="page-link" th:href="@{/admin/manageBranchs(page=${i}, size=${size})}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <li th:classappend="${currentPage + 1 == totalPages} ? 'disabled'" class="page-item">
+                            <a class="page-link" th:href="@{/admin/manageBranchs(page=${currentPage + 1}, size=${size})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
         </div>
+
+
     </div>
 </div>
 
@@ -68,7 +87,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-
                     <div class="mb-3" hidden>
                         <label for="branchId" class="form-label">id</label>
                         <input type="text" class="form-control" id="branchId" th:field="*{id}">
@@ -132,7 +150,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="branchCreateImg" class="form-label">Hình Ảnh *</label>
-                        <input type="url" class="form-control" id="branchCreateImg" th:field="*{branch_img}" required>
+                        <input type="text" class="form-control" id="branchCreateImg" th:field="*{branch_img}" required>
                         <img id="branchCreateImage" src="" alt="Preview" class="img-fluid mt-2"
                              style="max-height: 200px;">
                     </div>

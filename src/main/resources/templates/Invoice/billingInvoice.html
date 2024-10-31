@@ -1,0 +1,94 @@
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Hóa Đơn</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center">Hóa Đơn</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Thông Tin Khách Hàng</h4>
+            <p><strong>Tên:</strong> Nguyễn Văn A</p>
+            <p><strong>Giới Tính:</strong> Nam</p>
+            <p><strong>Ngày Sinh:</strong> 01/01/1990</p>
+            <p><strong>Địa Chỉ:</strong> 123 Đường ABC, Quận 1, TP.HCM</p>
+            <p><strong>Số Điện Thoại:</strong> 0901234567</p>
+            <p><strong>Email:</strong> nguyenvana@example.com</p>
+            <p><strong>Lịch Sử Bệnh:</strong> Không có</p>
+        </div>
+        <div class="col-md-6 text-right">
+            <h4>Thông Tin Hóa Đơn</h4>
+            <p><strong>Số Hóa Đơn:</strong> 001234</p>
+            <p><strong>Ngày:</strong> 30/10/2024</p>
+        </div>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Tên Dịch Vụ</th>
+            <th>Đơn Giá</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Khám Răng</td>
+            <td>500.000 VNĐ</td>
+        </tr>
+        <tr>
+            <td>Trám Răng</td>
+            <td>300.000 VNĐ</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Tên Thuốc</th>
+            <th>Đơn Giá</th>
+            <th>Số Lượng</th>
+            <th>Thành tiền</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Khám Răng</td>
+            <td>500.000 VNĐ</td>
+            <td>1</td>
+            <td>500.000 VNĐ</td>
+        </tr>
+        <tr>
+            <td>Trám Răng</td>
+            <td>300.000 VNĐ</td>
+            <td>2</td>
+            <td>600.000 VNĐ</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <h4 class="text-right">Tổng Tiền: <strong>1.100.000 VNĐ</strong></h4>
+        <div class="ml-3">
+            <h4>Phương Thức Thanh Toán</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="cash" value="cash" checked>
+                <label class="form-check-label" for="cash">Tiền Mặt</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="creditCard" value="creditCard">
+                <label class="form-check-label" for="creditCard">Chuyển khoản</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center">
+        <button class="btn btn-primary" onclick="window.print()">In Hóa Đơn</button>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

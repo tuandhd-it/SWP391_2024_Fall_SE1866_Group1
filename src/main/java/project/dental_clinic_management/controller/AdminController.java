@@ -2,6 +2,8 @@ package project.dental_clinic_management.controller;
 
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -161,17 +163,25 @@ public class AdminController {
     /**
      * Lead to page need
      * @param page
+     * @param sortOption
      * @param model
      * @return string url
      */
     @GetMapping("/listWaitingRoom")
-    public String listWaitingRoom(@RequestParam(defaultValue = "1") int page, Model model) {
+    public String listWaitingRoom(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(name = "sort" , defaultValue = "default") String sortOption,
+            Model model) {
 
-        Page<WaitingRoomRequest> waitingRoomPage = adminService.getAllWaitingRoomRequests(page);
+        // Gọi hàm service với tham số sortOption
+        Page<WaitingRoomRequest> waitingRoomPage = adminService.getAllWaitingRoomRequests(page, sortOption);
 
+        // Đưa danh sách phòng chờ và các thông tin phân trang vào model
         model.addAttribute("listRoom", waitingRoomPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", waitingRoomPage.getTotalPages());
+        model.addAttribute("sortOption", sortOption); // Gán sortOption để giữ trạng thái sắp xếp hiện tại trong view
+
         return "/branch/listWaitingRoom";
     }
 
@@ -198,22 +208,25 @@ public class AdminController {
         return "/branch/listWaitingRoom";
     }
 
-    /**
-     * Get a list of branchs and send models to specified page
-     * @param model, it is <code>org.springframework.ui.Model</code>
-     * @return a url <code>java.lang.String</code>
-     */
     @GetMapping("/manageBranchs")
-    public String getAllBranches(Model model) {
-        //Get list Branch
-        List<Branch> list = adminService.getAllBranches();
-        model.addAttribute("branches", list);//Add in model
-        ClinicBranchUpdateRequest updateRequest = new ClinicBranchUpdateRequest(); // Create a object to update branch
-        model.addAttribute("updateBranch", updateRequest); //Add in model
-        ClinicBranchCreationRequest creationRequest = new ClinicBranchCreationRequest();// Create a object to create branch
-        model.addAttribute("createBranch", creationRequest); //Add in model
+    public String getAllBranches(Model model,
+                                 @RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "2") int size) {
+        // Phân trang danh sách cơ sở
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Branch> branchPage = adminService.getAllBranchesPage(pageable);
+
+        model.addAttribute("branches", branchPage.getContent()); // Lấy danh sách cơ sở cho trang hiện tại
+        model.addAttribute("totalPages", branchPage.getTotalPages()); // Tổng số trang
+        model.addAttribute("currentPage", page); // Trang hiện tại
+
+        // Đối tượng update và create
+        model.addAttribute("updateBranch", new ClinicBranchUpdateRequest());
+        model.addAttribute("createBranch", new ClinicBranchCreationRequest());
+
         return "/branch/manageBranch";
     }
+
     /**
      * Get a list of branchs and send models to specified page
      * @param model, it is <code>org.springframework.ui.Model</code>

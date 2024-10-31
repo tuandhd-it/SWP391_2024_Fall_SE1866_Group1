@@ -1,0 +1,120 @@
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thống Kê Hóa Đơn</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="container">
+    <h2 class="text-center">Thống Kê Hóa Đơn</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <label for="startMonth">Tháng Bắt Đầu:</label>
+            <input type="number" id="startMonth" class="form-control" min="1" max="12">
+        </div>
+        <div class="col-md-3">
+            <label for="startYear">Năm Bắt Đầu:</label>
+            <input type="number" id="startYear" class="form-control" min="2020">
+        </div>
+        <div class="col-md-3">
+            <label for="endMonth">Tháng Kết Thúc:</label>
+            <input type="number" id="endMonth" class="form-control" min="1" max="12" step="1">
+        </div>
+        <div class="col-md-3">
+            <label for="endYear">Năm Kết Thúc:</label>
+            <input type="number" id="endYear" class="form-control" min="2020">
+        </div>
+        <div class="col-md-12 mt-4">
+            <button class="btn btn-success" onclick="updateChart()">Cập Nhật Biểu Đồ</button>
+        </div>
+    </div>
+
+    <canvas id="invoiceChart" width="400" height="200"></canvas>
+    <div class="text-center mt-4">
+        <button class="btn btn-primary" onclick="window.print()">In Thống Kê</button>
+    </div>
+</div>
+
+<script>
+    // Dữ liệu tĩnh cho biểu đồ
+    const labels = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+    let dataValues = [1200000, 1500000, 900000, 1800000, 2000000, 1700000, 2100000, 2300000, 1900000, 2500000, 3000000, 2800000]; // Dữ liệu tĩnh
+    let chart;
+
+    const config = {
+        type: 'line', // Bạn có thể thay đổi loại biểu đồ ở đây: 'bar', 'line', 'pie', ...
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Tổng Hóa Đơn (VNĐ)',
+                data: dataValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Số Tiền (VNĐ)'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Tháng'
+                    }
+                }
+            }
+        }
+    };
+
+    // Khởi tạo biểu đồ
+    function initChart() {
+        const ctx = document.getElementById('invoiceChart').getContext('2d');
+        chart = new Chart(ctx, config);
+    }
+
+    // Cập nhật biểu đồ theo tháng và năm
+    function updateChart() {
+        const startMonth = parseInt(document.getElementById('startMonth').value) - 1; // Chuyển sang chỉ số mảng
+        const startYear = parseInt(document.getElementById('startYear').value);
+        const endMonth = parseInt(document.getElementById('endMonth').value) - 1; // Chuyển sang chỉ số mảng
+        const endYear = parseInt(document.getElementById('endYear').value);
+
+        // Kiểm tra tính hợp lệ
+        if (
+            startMonth < 0 || endMonth < 0 || startMonth > 11 || endMonth > 11 ||
+            startYear < 2020 || endYear < 2020 || startYear > endYear ||
+            (startYear === endYear && startMonth > endMonth)
+        ) {
+            alert('Vui lòng nhập tháng và năm hợp lệ!');
+            return;
+        }
+        // Tính số tháng từ bắt đầu đến kết thúc
+        const totalMonths = (endYear - startYear) * 12 + (endMonth - startMonth + 1);
+
+        // Cập nhật dữ liệu của biểu đồ
+        const updatedData = dataValues.slice(startMonth, startMonth + totalMonths);
+        const updatedLabels = labels.slice(startMonth, startMonth + totalMonths);
+
+        chart.data.labels = updatedLabels; // Cập nhật nhãn tháng
+        chart.data.datasets[0].data = updatedData; // Cập nhật dữ liệu
+        chart.update();
+    }
+
+
+    // Khởi động biểu đồ khi tải trang
+    window.onload = initChart;
+</script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
