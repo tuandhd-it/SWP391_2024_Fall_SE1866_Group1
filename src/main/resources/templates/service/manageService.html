@@ -62,7 +62,7 @@
             <button class="btn btn-outline-success col-md-3" type="submit">Tìm kiếm</button>
           </form>
             <table class="table table-bordered table-hover mt-3">
-              <thead class="table-dark">
+              <thead class="table-ligth">
                 <tr>
                   <th style="width: 10%;">ID</th>
                   <th style="width: 35%;">Tên dịch vụ</th>
@@ -110,7 +110,7 @@
             <ul class="pagination justify-content-center">
               <!-- Previous button -->
               <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/manageService(page=${currentPage - 1}, search=${search}, sort=${sort})}" tabindex="-1">Previous</a>
+                <a class="page-link" th:href="@{/admin/manageService(page=${currentPage - 1}, search=${search}, sort=${sort})}" tabindex="-1">Trước</a>
               </li>
 
               <!-- Pagination Numbers -->
@@ -121,7 +121,7 @@
 
               <!-- Next button -->
               <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/manageService(page=${currentPage + 1}, search=${search}, sort=${sort})}">Next</a>
+                <a class="page-link" th:href="@{/admin/manageService(page=${currentPage + 1}, search=${search}, sort=${sort})}">Sau</a>
               </li>
             </ul>
           </nav>
@@ -149,7 +149,7 @@
               <div id="imagePreviewContainer" style="display: none; text-align: center;">
                 <br>
                 <img id="imagePreview" src="#" alt="Ảnh xem trước" style="max-width: 50%; height: auto;">
-                <div id="serviceImageHelp" class="form-text">Service Image</div>
+                <div id="serviceImageHelp" class="form-text">Ảnh dịch vụ</div>
               </div>
             </div>
           </div>
@@ -161,12 +161,12 @@
 
           <div class="form-group">
             <label for="price">Giá:</label>
-            <input type="number" step="0.01" id="price" class="form-control" name="price" oninput="checkFormValidity()">
+            <input type="number" step="0.01" id="price" class="form-control" name="price" oninput="checkFormValidity()" required min="0">
           </div>
 
           <div class="form-group">
             <label for="detail" class="form-label">Mô tả:</label>
-            <textarea class="form-control" id="detail" name="detail" rows="3" placeholder="Enter service details" oninput="checkFormValidity()"></textarea>
+            <textarea class="form-control" id="detail" name="detail" rows="3" placeholder="Hãy nhập mô tả" oninput="checkFormValidity()"></textarea>
           </div>
           <div class="form-group">
             <label for="material">Chất liệu:</label>
@@ -178,7 +178,7 @@
           </div>
 
           <div class="form-group row">
-            <div class="col-sm-2" >Active:</div>
+            <div class="col-sm-2" >Trạng thái:</div>
             <div class="col-sm-10">
               <input type="checkbox" class="form-check-input" id="isActive" name="isActive" value="1">
             </div>
@@ -318,17 +318,17 @@
     });
   }
   function checkFormValidity() {
-    // const serviceName = document.getElementById('serviceName').value.trim();
-    // const price = document.getElementById('price').value.trim();
-    // const detail = document.getElementById('detail').value.trim();
-    // const imageInput = document.getElementById('imageInput').value;
-    //
-    // // Kiểm tra tất cả các trường xem có được nhập đầy đủ không
-    // if (serviceName && price && detail && imageInput) {
-    //   document.getElementById('saveButton').disabled = false; // Enable nút lưu
-    // } else {
-    //   document.getElementById('saveButton').disabled = true; // Disable nút lưu
-    // }
+    const serviceName = document.getElementById('serviceName').value.trim();
+    const price = document.getElementById('price').value.trim();
+    const detail = document.getElementById('detail').value.trim();
+    const imageInput = document.getElementById('imageInput').value;
+
+    // Kiểm tra tất cả các trường xem có được nhập đầy đủ không
+    if (serviceName && price && detail && imageInput) {
+      document.getElementById('saveButton').disabled = false; // Enable nút lưu
+    } else {
+      document.getElementById('saveButton').disabled = true; // Disable nút lưu
+    }
   }
   document.getElementById('serviceForm').addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -367,11 +367,11 @@
       return;
     }
 
-    if (price.length < 1 || price.length > 200) {
+    if (price.length < 1 || price.length > 9) {
       Swal.fire({
         icon: "error",
         title: "Lỗi",
-        text: "Giá dịch vụ phải từ 1 đến 200 ký tự!"
+        text: "Giá dịch vụ dưới 1.000.000.000"
       });
       return;
     }
