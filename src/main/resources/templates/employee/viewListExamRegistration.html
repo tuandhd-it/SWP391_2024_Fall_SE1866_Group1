@@ -29,6 +29,9 @@
         <div id="acceptMsg" th:if="${acceptMsg}" class="alert alert-success">
             <p th:text="${acceptMsg}"></p>
         </div>
+        <div id="rejectMsg" th:if="${rejectMsg}" class="alert alert-danger">
+            <p th:text="${rejectMsg}"></p>
+        </div>
         <div id="detailsContainer" style="background-color: #00BCD4">
             <!-- Danh Sách Đăng Ký Khám -->
             <div class="registration-form">
@@ -82,8 +85,13 @@
                             </tr>
                             </tbody>
                         </table>
-                        <div class="d-flex justify-content-end mt-4 pe-2">
-                            <button type="submit" class="btn btn-primary" id="approveButton" disabled>Phê duyệt</button>
+                        <div class="d-flex justify-content-end">
+                        <div class="mt-4 pe-2">
+                            <button type="submit" class="btn btn-primary" id="approveButton" name="action" value="accept" disabled>Phê duyệt</button>
+                        </div>
+                        <div class="mt-4 pe-2">
+                            <button type="submit" class="btn btn-primary" id="rejectButton" name="action" value="reject" disabled>Từ chối</button>
+                        </div>
                         </div>
                     </form>
                 </div>
@@ -202,11 +210,13 @@
 
     $(document).ready(function () {
         const approveButton = $('#approveButton'); // Lấy nút phê duyệt
+        const rejectButotn = $('#rejectButton');
 
         // Hàm kiểm tra trạng thái checkbox và bật/tắt nút phê duyệt
         function toggleApproveButton() {
             const isChecked = $('.examCheckbox:checked').length > 0;
             approveButton.prop('disabled', !isChecked);
+            rejectButotn.prop('disabled', !isChecked);
         }
 
         // Hàm gán sự kiện cho checkbox
@@ -288,6 +298,20 @@
             }, 3000);
         } else {
             acceptMsg.style.display = 'none';
+        }
+    }
+</script>
+<script>
+    var rejectMsg = document.getElementById("rejectMsg");
+
+    // Chỉ thực thi nếu acceptMsg tồn tại
+    if (rejectMsg) {
+        if (rejectMsg.textContent.trim() !== "") {
+            setTimeout(function () {
+                rejectMsg.style.display = 'none';
+            }, 3000);
+        } else {
+            rejectMsg.style.display = 'none';
         }
     }
 </script>

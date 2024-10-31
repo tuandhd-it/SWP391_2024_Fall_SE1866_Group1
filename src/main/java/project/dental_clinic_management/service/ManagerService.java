@@ -88,10 +88,21 @@ public class ManagerService {
         for (Long examId : examIdList) {
             RegisterExamination registerExamination = getExaminationById(examId);
             if (registerExamination == null) {
-                throw new RuntimeException("Employee with id " + examId + " not found.");
+                throw new RuntimeException("Customer with id " + examId + " not found.");
             }
             registerExamination.setAccept(true);
             examRegistrationRepository.save(registerExamination);
+        }
+    }
+
+    //Reject đơn đăng ký khám
+    public void rejectExamination(List<Long> examIdList) {
+        for (Long examId : examIdList) {
+            RegisterExamination registerExamination = getExaminationById(examId);
+            if (registerExamination == null) {
+                throw new RuntimeException("Customer with id " + examId + " not found.");
+            }
+            examRegistrationRepository.delete(registerExamination);
         }
     }
 
