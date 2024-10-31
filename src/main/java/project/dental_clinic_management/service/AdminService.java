@@ -416,6 +416,17 @@ public class AdminService {
         }
     }
 
+    //Reject tài khoản
+    public void rejectAccount(List<Integer> empIdList) {
+        for (Integer empId : empIdList) {
+            Employee employee = getEmployeeById(empId);
+            if (employee == null) {
+                throw new RuntimeException("Employee with id " + empId + " not found.");
+            }
+            employeeRepository.delete(employee);
+        }
+    }
+
     public List<Medicine> getAllMedicines() {
         return medicineRepository.findAll();
     }
