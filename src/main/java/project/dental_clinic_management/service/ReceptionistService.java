@@ -212,7 +212,7 @@ public class ReceptionistService {
         List<Employee> shiftedEmployeeList = scheduleRepository.findEmployeeByShift(shift, choosenDate);
         List<Employee> branchEmployeeShift = new ArrayList<>();
         for(Employee employee : shiftedEmployeeList) {
-            if(employee.getBranch().getBranchName().equals(branchName)) {
+            if(employee.getBranch().getBranchName().equals(branchName) && employee.getRole().getRoleName().equalsIgnoreCase("Doctor")) {
                 branchEmployeeShift.add(employee);
             }
         }
