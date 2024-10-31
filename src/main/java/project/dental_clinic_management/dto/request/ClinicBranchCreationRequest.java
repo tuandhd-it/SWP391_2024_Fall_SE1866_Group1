@@ -1,7 +1,6 @@
 package project.dental_clinic_management.dto.request;
 
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
