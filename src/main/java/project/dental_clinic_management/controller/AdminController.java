@@ -467,11 +467,17 @@ public class AdminController {
 
     //Phê duyệt tài khoản
     @PostMapping("/acceptAccount")
-    public String acceptAccount(@RequestParam List<Integer> emp_id, Model model) {
-        adminService.acceptAccount(emp_id);
+    public String acceptAccount(@RequestParam List<Integer> emp_id, Model model, @RequestParam("action") String action) {
+        if(action.equalsIgnoreCase("accept")) {
+            adminService.acceptAccount(emp_id);
+            model.addAttribute("acceptMsg", "Accounts accepted!");
+        } else if (action.equalsIgnoreCase("reject")) {
+            adminService.rejectAccount(emp_id);
+            model.addAttribute("rejectMsg", "Accounts rejected!");
+        }
         List<Employee> list = adminService.findAllInactiveAccount();
         model.addAttribute("employees", list);
-        model.addAttribute("acceptMsg", "Accounts accepted!");
+
         return "/employee/manageRegisterAccount";
     }
     @GetMapping("/manageService")

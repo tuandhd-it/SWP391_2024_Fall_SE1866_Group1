@@ -72,6 +72,8 @@ public class ServiceController {
                                              @RequestParam("isActive") boolean isActive,
                                              @RequestParam("material") String material,
                                              @RequestParam("guarantee") String guarantee,
+                                             @RequestParam("quantity") String quantity,
+                                             @RequestParam("unit") String unit,
                                              @RequestParam("img") MultipartFile imgFile,
                                              Model model) {
         List<Service> exitsServiceName = serviceRepository.findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(serviceName,material);
@@ -114,6 +116,8 @@ public class ServiceController {
         service.setActive(isActive);
         service.setMaterial(material);
         service.setGuarantee(guarantee);
+        service.setQuantity(quantity);
+        service.setUnit(unit);
         serviceService.saveService(service);
 
         return ResponseEntity.ok("Service add successfully");

@@ -24,6 +24,8 @@ public class Service {
     boolean isActive;
     String guarantee;
     String material;
+    String quantity;
+    String unit;
 
     @OneToMany(mappedBy = "service")
     private List<RecordService> recordService;
@@ -32,7 +34,7 @@ public class Service {
 
     }
 
-    public Service(int serviceId, String serviceName, String detail, String img, double price, boolean isActive, String material, String guarantee) {
+    public Service(int serviceId, String serviceName, String detail, String img, double price, boolean isActive, String material, String guarantee, String quantity, String unit) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
         this.detail = detail;
@@ -41,6 +43,8 @@ public class Service {
         this.isActive = isActive;
         this.material = material;
         this.guarantee = guarantee;
+        this.quantity = quantity;
+        this.unit = unit;
     }
 
     public FileSystemResource getImgSrc() {

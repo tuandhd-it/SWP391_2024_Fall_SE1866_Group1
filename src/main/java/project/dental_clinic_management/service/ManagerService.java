@@ -7,6 +7,7 @@ import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,11 +89,27 @@ public class ManagerService {
         for (Long examId : examIdList) {
             RegisterExamination registerExamination = getExaminationById(examId);
             if (registerExamination == null) {
-                throw new RuntimeException("Employee with id " + examId + " not found.");
+                throw new RuntimeException("Customer with id " + examId + " not found.");
             }
             registerExamination.setAccept(true);
             examRegistrationRepository.save(registerExamination);
         }
+    }
+
+    //Reject đơn đăng ký khám
+    public void rejectExamination(List<Long> examIdList) {
+        for (Long examId : examIdList) {
+            RegisterExamination registerExamination = getExaminationById(examId);
+            if (registerExamination == null) {
+                throw new RuntimeException("Customer with id " + examId + " not found.");
+            }
+            examRegistrationRepository.delete(registerExamination);
+        }
+    }
+
+    //Xoá lịch làm việc
+    public void deleteScheduleByEmpIdAndScheduleId(int empId, LocalDate scheduleDate, boolean shift) {
+        scheduleRepository.deleteEmpSchedule(scheduleDate, empId, shift);
     }
 
 

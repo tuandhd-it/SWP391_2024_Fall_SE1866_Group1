@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label" for="phone">Số điện thoại: </label>
-                                            <span class="label-span" id="phone">1</span>
+                                            <span class="label-span" id="phone"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +141,13 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>\
+                        <form th:action="@{/manager/deleteSchedule}" method="post">
+                            <input type="hidden" id="delete-schedule-btn" name="dateValue" value="">
+                            <input type="hidden" id="delete-emp-btn" name="empId" value="">
+                            <input type="hidden" id="delete-shift-btn" name="shift" value="">
+                            <button  type="submit" class="btn btn-primary">Xoá lịch</button>
+                        </form>
                     </div>
                 </div>
             </div>
