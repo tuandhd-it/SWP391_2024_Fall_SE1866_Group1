@@ -1,6 +1,7 @@
 package project.dental_clinic_management.service;
 
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
+import project.dental_clinic_management.dto.request.PatientWaitingRoomRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
@@ -33,11 +34,17 @@ public class ReceptionistService {
     @Autowired
     private ScheduleRepository scheduleRepository;
 
+    @Autowired
+    private PatientWaitingRoomRepository patientWaitingRoomRepository;
+
 
     public Employee findByUsername(String username) {
         return employeeRepository.findByEmail(username);
     }
-    public Employee findById(int id) {return employeeRepository.findByEmp_id(id);}
+
+    public Patient findPatientById(int id){
+        return findPatientById(id);
+    }
 
     //Create a new receptionist
     public void createReceptionist(ReceptionistCreationRequest request) {
@@ -223,5 +230,7 @@ public class ReceptionistService {
     public List<Schedule> getSchedulesByEmployeeId(int employeeId) {
         return scheduleRepository.findByEmpId(employeeId);
     }
+
+
 
 }
