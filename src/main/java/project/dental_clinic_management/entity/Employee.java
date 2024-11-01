@@ -1,7 +1,10 @@
 package project.dental_clinic_management.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
@@ -93,6 +96,10 @@ public class Employee {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
         return date.format(formatter);
+    }
+
+    public String getFormattedDob() {
+        return dob != null ? dob.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
     }
 
 }

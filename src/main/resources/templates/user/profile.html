@@ -24,37 +24,32 @@
 
                 <div class="tab-content">
                     <div class="tab-pane fade show active" id="basic-info">
-                        <div class="row">
+                        <div class="row" th:object="${employee}">
                             <!-- Avatar Section -->
-                            <div class="col-lg-4 mb-4">
-                                <div class="avatar-upload">
-                                    <div class="avatar-edit">
-                                        <input type='file' id="avatarUpload" accept=".png, .jpg, .jpeg"/>
-                                        <label for="avatarUpload">
-                                            <i class="fas fa-camera"></i>
-                                        </label>
-                                    </div>
-                                    <div class="avatar-preview">
-                                        <div id="imagePreview"
-                                             th:style="'background-image: url(' + ${employee.getImg()} + ');'">
+                            <div class="col-lg-4">
+                                <!-- Avatar Section -->
+                                <form enctype="multipart/form-data" method="post" th:action="@{/profile/avatar}">
+                                    <div class="avatar-upload">
+                                        <div class="avatar-edit">
+                                            <input accept=".png, .jpg, .jpeg" id="avatarUpload" name="avatar"
+                                                   type='file'/>
+                                            <label for="avatarUpload">
+                                                <i class="fas fa-camera"></i>
+                                            </label>
+                                        </div>
+                                        <div class="avatar-preview">
+                                            <div id="imagePreview"
+                                                 th:style="'background-image: url(/assets/image/' + ${employee.getImg()} + ');'">
+                                            </div>
+                                        </div>
+                                        <div class="avatar-buttons">
+                                            <button class="btn btn-upload-avatar" type="submit">
+                                                <i class="fas fa-save me-2"></i>Lưu ảnh đại diện
+                                            </button>
                                         </div>
                                     </div>
-                                    <div class="avatar-buttons">
-                                        <button class="btn btn-upload-avatar" onclick="saveAvatar()">
-                                            <i class="fas fa-save me-2"></i>Lưu ảnh đại diện
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- Description Section -->
-                                <div class="profile-section" style="margin-top: 32px">
-                                    <h3 class="section-title">Mô tả</h3>
-                                    <div class="form-group">
-                                                <textarea class="form-control" rows="5"
-                                                          placeholder="Mô tả về bản thân..."></textarea>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
-
 
                             <!-- Basic Info Form Section -->
                             <div class="col-lg-8">
@@ -65,8 +60,22 @@
                                     <span th:text="${message}"></span>
                                 </div>
 
-                                <form th:action="@{/profile/update}" th:object="${employee}" method="post">
+                                <form method="post" th:action="@{/profile/update}">
                                     <div class="row">
+                                        <!-- Description Section -->
+                                        <div class="profile-section" style="margin-top: 32px">
+                                            <h3 class="section-title">Mô tả</h3>
+                                            <div class="form-group">
+                                        <span class="label-span"
+                                              style="display:inline-block;"
+                                              th:text="${employee.getDescription()}"></span>
+                                                <textarea class="form-control" placeholder="Mô tả về bản thân..."
+                                                          rows="5"
+                                                          style="display: none"
+                                                          th:field="*{description}"></textarea>
+                                            </div>
+                                        </div>
+
                                         <!-- Họ và tên -->
                                         <div class="col-md-6 mb-3">
                                             <div class="profile-section">
@@ -75,9 +84,11 @@
                                                     <span class="label-span"
                                                           style="display:inline-block;"
                                                           th:text="${employee.first_name} + ' ' + ${employee.last_name}"></span>
-                                                    <input type="text" th:field="*{first_name}" class="form-control col-md-3"
-                                                           style="display:none;" required>
-                                                    <input type="text" th:field="*{last_name}" class="form-control col-md-3"
+                                                    <input class="form-control" required
+                                                           style="display:none; margin-bottom: 12px"
+                                                           th:field="*{first_name}" type="text">
+                                                    <input class="form-control" th:field="*{last_name}"
+                                                           type="text"
                                                            style="display:none;" required>
                                                 </div>
                                             </div>
@@ -108,12 +119,12 @@
                                                           style="display:inline-block;"
                                                           th:text="${employee.getDob()}"
                                                     ></span>
-                                                    <input type="date" th:field="*{dob}" class="form-control"
+                                                    <input class="form-control" id="dob"
+                                                           name="dob" th:value="${employee.getFormattedDob()}" type="date"
                                                            style="display:none;" required>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Chức vụ -->
                                         <div class="col-md-6 mb-3">
                                             <div class="profile-section">
@@ -127,7 +138,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Số điện thoại -->
                                         <div class="col-md-6 mb-3">
                                             <div class="profile-section">
@@ -141,7 +151,6 @@
                                                 </div>
                                             </div>
                                         </div>
-
                                         <!-- Email -->
                                         <div class="col-md-6 mb-3">
                                             <div class="profile-section">
@@ -156,7 +165,6 @@
 
                                             </div>
                                         </div>
-
                                         <!-- Địa chỉ -->
                                         <div class="col-6 mb-3">
                                             <div class="profile-section">
@@ -179,8 +187,9 @@
                                                     <span class="label-span"
                                                           style="display:inline-block;"
                                                           th:text="${employee.salary}"></span>
-                                                    <input type="number" class="form-control" name="salary" style="display:none;"
-                                                           th:value="${employee.salary}"/>
+                                                    <input class="form-control" name="salary" style="display:none;"
+                                                           th:field="*{salary}"
+                                                           type="number"/>
                                                 </div>
                                             </div>
                                         </div>
@@ -194,7 +203,7 @@
                                                           style="display:inline-block;"
                                                           th:text="${employee.certification}"></span>
                                                     <input type="text"
-                                                           th:value="${employee.certification}" style="display:none;"
+                                                           style="display:none;" th:field="*{certification}"
                                                            class="form-control mb-2"
                                                            placeholder="Tên chứng chỉ"/>
                                                 </div>
@@ -210,7 +219,7 @@
                                                           style="display:inline-block;"
                                                           th:text="${employee.specification}"></span>
                                                     <input type="text" class="form-control mb-2"
-                                                           th:value="${employee.specification}"
+                                                           th:field="*{specification}"
                                                            style="display:none;"
                                                            placeholder="Kỹ năng chuyên môn"/>
                                                     <div class="specification-tags mt-2">
@@ -268,30 +277,6 @@
     $("#avatarUpload").change(function () {
         readURL(this);
     });
-
-    function saveAvatar() {
-        // Implement avatar save functionality
-        const fileInput = document.getElementById('imageUpload');
-        if (fileInput.files && fileInput.files[0]) {
-            const formData = new FormData();
-            formData.append('avatar', fileInput.files[0]);
-
-            fetch('/api/profile/avatar', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Ảnh đại diện đã được cập nhật thành công!');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Có lỗi xảy ra khi cập nhật ảnh đại diện.');
-                });
-        }
-    }
 </script>
 </body>
 </html>
