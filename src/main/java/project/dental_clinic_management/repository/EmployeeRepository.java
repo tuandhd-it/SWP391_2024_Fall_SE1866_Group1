@@ -10,10 +10,10 @@ import java.util.List;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
-    public Employee findByEmail(String email);
-    public Employee findByPhone(String phone);
+    Employee findByEmail(String email);
+    Employee findByPhone(String phone);
     @Query("SELECT e FROM Employee e WHERE e.emp_id = ?1")
-    public Employee findByEmp_id(int emp_id);
+    Employee findByEmp_id(int emp_id);
 
     @Transactional
     @Modifying
