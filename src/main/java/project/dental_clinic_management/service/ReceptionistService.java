@@ -35,6 +35,9 @@ public class ReceptionistService {
     private ScheduleRepository scheduleRepository;
 
     @Autowired
+    private PatientRepository patientRepository;
+
+    @Autowired
     private PatientWaitingRoomRepository patientWaitingRoomRepository;
 
 
@@ -145,7 +148,7 @@ public class ReceptionistService {
         List<ViewExamRegistrationRequest> exams = new ArrayList<>();
         List<RegisterExamination> registerExaminations = examRegistrationRepository.findAll();
         for (RegisterExamination registerExamination : registerExaminations) {
-            if(registerExamination.getBranch().equals(receptionist.getBranch()) && registerExamination.isAccept()) {
+            if(registerExamination.getBranch().equals(receptionist.getBranch()) && registerExamination.isAccept() && !registerExamination.isInWaitingRoom()) {
                 exams.add(ViewExamRegistrationRequest.builder()
                         .firstName(registerExamination.getFirstName())
                         .lastName(registerExamination.getLastName())
@@ -161,6 +164,16 @@ public class ReceptionistService {
     //Tìm thông tin khám bệnh qua regId
     public RegisterExamination findExamRegistrationByRegId(String regId) {
         return examRegistrationRepository.findByRegId(Long.parseLong(regId));
+    }
+
+    //Tìm bệnh nhân qua số điện thoại
+    public Patient findPatientByPhone(String phone) {
+        return patientRepository.findByPhone(phone);
+    }
+
+    //Xoá đơn khám của bệnh nhân
+    public void deleteExam(RegisterExamination registerExamination) {
+        examRegistrationRepository.delete(registerExamination);
     }
 
     //Lưu examinatioh
@@ -181,6 +194,7 @@ public class ReceptionistService {
                         .branch(branch)
                         .note(examRegistrationRequest.getNote())
                         .accept(false)
+                        .inWaitingRoom(false)
                 .build());
     }
 
@@ -247,6 +261,12 @@ public class ReceptionistService {
     //Tìm tất cả lịch làm việc theo empId
     public List<Schedule> getSchedulesByEmployeeId(int employeeId) {
         return scheduleRepository.findByEmpId(employeeId);
+    }
+
+    //Update trang thái của đơn (vào phòng chờ ?)
+    public void updateInWaitingRoom(RegisterExamination registerExamination) {
+        registerExamination.setInWaitingRoom(true);
+        examRegistrationRepository.save(registerExamination);
     }
 
 

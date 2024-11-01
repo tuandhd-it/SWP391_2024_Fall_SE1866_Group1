@@ -23,4 +23,5 @@ public class ViewExamRegistrationRequest {
     String note;
     String doctorName;
     String email;
+
 }

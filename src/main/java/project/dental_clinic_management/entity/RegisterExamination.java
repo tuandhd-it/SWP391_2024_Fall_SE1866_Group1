@@ -27,6 +27,7 @@ public class RegisterExamination {
     LocalDate examRegisterDate;
     String note;
     boolean accept;
+    boolean inWaitingRoom;
 
     @ManyToOne
     @JoinColumn(name = "emp_id")
@@ -36,7 +37,7 @@ public class RegisterExamination {
     @JoinColumn (name = "bran_id")
     private Branch branch;
 
-    public RegisterExamination(String firstName, String lastName, String email, String phone, String reason, LocalDate dob, String gender, LocalDate examRegisterDate, String note, boolean accept) {
+    public RegisterExamination(String firstName, String lastName, String email, String phone, String reason, LocalDate dob, String gender, LocalDate examRegisterDate, String note, boolean accept, boolean inWaitingRoom) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -47,5 +48,6 @@ public class RegisterExamination {
         this.examRegisterDate = examRegisterDate;
         this.note = note;
         this.accept = accept;
+        this.inWaitingRoom = inWaitingRoom;
     }
 }

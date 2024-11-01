@@ -52,8 +52,7 @@
             <!-- Bảng danh sách đăng ký khám -->
             <div th:if="${examList != null}">
                 <div class="table-responsive" style="margin-top: 30px">
-                    <form th:action="@{/recep/addExamToWaitingRoom}" method="post"
-                          class="d-flex flex-column registration-form">
+                    <form class="d-flex flex-column registration-form">
                         <table id="examListTable" class="table table-bordered table-hover" data-toggle="table">
                             <thead class="thead-light">
                             <tr>
@@ -62,7 +61,7 @@
                                 <th data-sortable="true">Số điện thoại</th>
                                 <th data-sortable="true">Chi nhánh khám</th>
                                 <th>Xem chi tiết</th>
-                                <th>Phê duyệt</th>
+                                <th>Hành động</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -78,20 +77,18 @@
                                         Xem
                                     </button>
                                 </td>
-                                <td class="checkbox_column">
-                                    <input type="checkbox" class="examCheckbox" name="exam_id"
-                                           th:value="${list.examId}"/>
+                                <td>
+                                    <a th:href="@{/recep/addExamToWaitingRoom/{examId}(examId=${list.examId})}">
+                                        <i class="fa-regular fa-paper-plane" style="color:green; font-size: 28px" title="Chuyển"></i>
+                                    </a>
+                                    <a th:href="@{/recep/deleteExam/{examId}(examId=${list.examId})}" class="ms-2">
+                                        <i class="fa-solid fa-trash" style="color: red; font-size: 28px" title="Xóa"></i>
+                                    </a>
                                 </td>
                             </tr>
                             </tbody>
                         </table>
                         <div class="d-flex justify-content-end">
-                        <div class="mt-4 pe-2">
-                            <button type="submit" class="btn btn-primary" id="approveButton" name="action" value="accept" disabled>Chuyển sang phòng chờ</button>
-                        </div>
-                        <div class="mt-4 pe-2">
-                            <button type="submit" class="btn btn-primary" id="rejectButton" name="action" value="reject" disabled>Xoá</button>
-                        </div>
                         </div>
                     </form>
                 </div>
