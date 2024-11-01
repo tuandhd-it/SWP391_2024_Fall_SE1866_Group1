@@ -34,3 +34,5 @@ logging:
     org:
       springframework:
         security: DEBUG
+file:
+  upload-dir: src/main/resources/static/assets/image/

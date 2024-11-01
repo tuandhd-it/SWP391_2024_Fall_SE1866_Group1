@@ -1,57 +1,58 @@
-
 package project.dental_clinic_management.controller;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
-import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
-import project.dental_clinic_management.entity.*;
-import project.dental_clinic_management.repository.RoleRepository;
-import project.dental_clinic_management.service.CustomUserDetailService;
-import project.dental_clinic_management.service.EmailService;
-import project.dental_clinic_management.service.ReceptionistService;
-import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
+import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
+import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
+import project.dental_clinic_management.entity.Branch;
+import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.RegisterExamination;
+import project.dental_clinic_management.entity.Role;
+import project.dental_clinic_management.repository.RoleRepository;
+import project.dental_clinic_management.service.CustomUserDetailService;
+import project.dental_clinic_management.service.EmailService;
+import project.dental_clinic_management.service.FileStorageService;
+import project.dental_clinic_management.service.ReceptionistService;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
-import java.io.Console;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 public class GeneralController {
 
+    @Autowired
+    FileStorageService fileStorageService;
     @Autowired
     private ReceptionistService receptionistService;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
     private CustomUserDetailService customUserDetailService;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private EmailService emailService;
 
@@ -86,9 +87,9 @@ public class GeneralController {
 
     //Check xem nguoi truy cap vao home page da dang nhap chua
     @RequestMapping("/homePage")
-    public String homePage(Model model,  @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("successMsg") String successMsg) {
+    public String homePage(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("successMsg") String successMsg) {
 
-        if(successMsg != null) {
+        if (successMsg != null) {
             model.addAttribute("successMsg", successMsg);
         }
         if (userDetails != null) {
@@ -102,7 +103,7 @@ public class GeneralController {
 
 
     @GetMapping("/changePass")
-    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails,@ModelAttribute("error") String messageChange) {
+    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("error") String messageChange) {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         model.addAttribute("employee", employee);
@@ -119,31 +120,31 @@ public class GeneralController {
                              RedirectAttributes redirectAttributes,
                              @AuthenticationPrincipal UserDetails userDetails,
                              Model model) {
-    try {
-        String username = userDetails.getUsername();
-        Employee employee = receptionistService.findByUsername(username);
-        if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
-            redirectAttributes.addFlashAttribute("error", "Hãy nhập đúng mật khẩu cũ");
-            return "redirect:/changePass"; // Quay lại trang đổi mật khẩu nếu sai
-        }
-        if (!newPassword.equals(confirmNewPassword)) {
-            redirectAttributes.addFlashAttribute("error", "Mật khẩu không trùng khớp");
+        try {
+            String username = userDetails.getUsername();
+            Employee employee = receptionistService.findByUsername(username);
+            if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
+                redirectAttributes.addFlashAttribute("error", "Hãy nhập đúng mật khẩu cũ");
+                return "redirect:/changePass"; // Quay lại trang đổi mật khẩu nếu sai
+            }
+            if (!newPassword.equals(confirmNewPassword)) {
+                redirectAttributes.addFlashAttribute("error", "Mật khẩu không trùng khớp");
+                return "redirect:/changePass";
+            }
+
+            employee.setPassword(passwordEncoder.encode(newPassword));
+            customUserDetailService.saveEmployee(employee);
+
+            redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
+        } catch (Exception e) {
+            model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "redirect:/changePass";
         }
-
-        employee.setPassword(passwordEncoder.encode(newPassword));
-        customUserDetailService.saveEmployee(employee);
-
-        redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
-    } catch (Exception e) {
-        model.addAttribute("error", "An error occurred: " + e.getMessage());
-        return "redirect:/changePass";
+        return "redirect:/profile";
     }
-    return "redirect:/profile";
-}
 
     @GetMapping("/profile")
-    public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails,@ModelAttribute("messageChange") String messageChange) {
+    public String viewProfile(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("messageChange") String messageChange) {
         String username = userDetails.getUsername();
         Employee employee = customUserDetailService.findByUsername(username);
         model.addAttribute("employee", employee);
@@ -154,36 +155,59 @@ public class GeneralController {
         return "/user/profile";
     }
 
-        @PostMapping("/profile/update")
-        public String updateProfile(@Valid @ModelAttribute("employee") Employee employee,
-                                    BindingResult bindingResult,
-                                    RedirectAttributes redirectAttributes,
-                                    @AuthenticationPrincipal UserDetails userDetails,
-                                    Model model) {
+    @PostMapping("/profile/update")
+    @Transactional
+    public String updateProfile(@Valid @ModelAttribute("employee") Employee employee,
+                                BindingResult bindingResult,
+                                RedirectAttributes redirectAttributes,
+                                @AuthenticationPrincipal UserDetails userDetails,
+                                Model model) {
 
-            if (bindingResult.hasErrors()) {
-                model.addAttribute("editMode", true);
-                return "/user/profile";
-            }
-
-
-            String username = userDetails.getUsername();
-            Employee existingEmployee = customUserDetailService.findByUsername(username);
-
-            if (existingEmployee != null) {
-                existingEmployee.setFirst_name(employee.getFirst_name());
-                existingEmployee.setLast_name(employee.getLast_name());
-                existingEmployee.setEmail(employee.getEmail());
-                existingEmployee.setPhone(employee.getPhone());
-                existingEmployee.setDob(employee.getDob());
-                existingEmployee.setGender(employee.getGender());
-                existingEmployee.setAddress(employee.getAddress());
-                customUserDetailService.saveEmployee(existingEmployee);
-                redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
-            }
-
-            return "profile";
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("editMode", true);
+            return "/user/profile";
         }
+
+        String username = userDetails.getUsername();
+        Employee existingEmployee = customUserDetailService.findByUsername(username);
+
+        if (existingEmployee != null) {
+            existingEmployee.setFirst_name(employee.getFirst_name());
+            existingEmployee.setLast_name(employee.getLast_name());
+            existingEmployee.setEmail(employee.getEmail());
+            existingEmployee.setPhone(employee.getPhone());
+            existingEmployee.setDob(employee.getDob());
+            existingEmployee.setGender(employee.getGender());
+            existingEmployee.setAddress(employee.getAddress());
+            existingEmployee.setCertification(employee.getCertification());
+            existingEmployee.setSpecification(employee.getSpecification());
+            existingEmployee.setSalary(employee.getSalary());
+            existingEmployee.setDescription(employee.getDescription());
+            customUserDetailService.saveEmployee(existingEmployee);
+            redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
+        }
+
+        return "redirect:/profile";
+    }
+
+    @PostMapping("/profile/avatar")
+    public String updateAvatar(@RequestParam("avatar") MultipartFile avatar, RedirectAttributes redirectAttributes, @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            String username = userDetails.getUsername();
+            Employee employee = customUserDetailService.findByUsername(username);
+
+            // Save the avatar file
+            String avatarUrl = fileStorageService.saveImage(avatar);
+            employee.setImg(avatarUrl);
+            customUserDetailService.saveEmployee(employee);
+
+            redirectAttributes.addFlashAttribute("message", "Ảnh đại diện đã được cập nhật thành công!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật ảnh đại diện: " + e.getMessage());
+        }
+        return "redirect:/profile";
+    }
+
     @GetMapping("/images/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
         try {

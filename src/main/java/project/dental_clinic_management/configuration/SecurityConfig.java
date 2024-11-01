@@ -1,13 +1,13 @@
 package project.dental_clinic_management.configuration;
 
 
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import project.dental_clinic_management.service.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import project.dental_clinic_management.service.CustomUserDetailService;
 
 @Configuration
 public class SecurityConfig {
@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         .requestMatchers("/manager/**").hasAuthority("Manager")
                         .requestMatchers("/recep/**").hasAuthority("Receptionist")
+                        .requestMatchers("/profile/**").permitAll()
                         .requestMatchers("changePass").permitAll()
                         .anyRequest().authenticated()
                 ).formLogin(login -> login
