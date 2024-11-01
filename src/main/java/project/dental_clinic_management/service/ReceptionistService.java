@@ -140,6 +140,24 @@ public class ReceptionistService {
         return exams;
     }
 
+    //Tìm tất cả danh sách đăng ký khám thuộc chi nhánh đã được phê duyệt của receptionist
+    public List<ViewExamRegistrationRequest> findAllBranchExamAccept(Employee receptionist) {
+        List<ViewExamRegistrationRequest> exams = new ArrayList<>();
+        List<RegisterExamination> registerExaminations = examRegistrationRepository.findAll();
+        for (RegisterExamination registerExamination : registerExaminations) {
+            if(registerExamination.getBranch().equals(receptionist.getBranch()) && registerExamination.isAccept()) {
+                exams.add(ViewExamRegistrationRequest.builder()
+                        .firstName(registerExamination.getFirstName())
+                        .lastName(registerExamination.getLastName())
+                        .branchName(registerExamination.getBranch().getBranchName())
+                        .phone(registerExamination.getPhone())
+                        .examId(registerExamination.getRegId())
+                        .build());
+            }
+        }
+        return exams;
+    }
+
     //Tìm thông tin khám bệnh qua regId
     public RegisterExamination findExamRegistrationByRegId(String regId) {
         return examRegistrationRepository.findByRegId(Long.parseLong(regId));

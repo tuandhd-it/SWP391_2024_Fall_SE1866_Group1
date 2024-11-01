@@ -87,6 +87,7 @@ public class ReceptionistController {
         return "/employee/viewListExamRegistration";
     }
 
+    //Hiển thị lịch làm việc cá nhân
     @GetMapping("/myScheduleList")
     public String myScheduleList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
@@ -98,6 +99,22 @@ public class ReceptionistController {
             model.addAttribute("schedules", schedules);
         }
         return "/employee/myScheduleList";
+    }
+
+    //Thêm bệnh nhân vào phòng chờ từ đơn khám online
+    @GetMapping("/viewListExaminationOnline")
+    public String viewListExaminationOnline(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        List<ViewExamRegistrationRequest> viewExamRegistrationRequestList = receptionistService.findAllBranchExamAccept(employee);
+        model.addAttribute("examList", viewExamRegistrationRequestList);
+
+        return "/employee/viewListExamRegistrationRecep";
+    }
+
+    @GetMapping("/addExamToWaitingRoom")
+    public String addExamToWaitingRoom(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        return "";
     }
 
 }
