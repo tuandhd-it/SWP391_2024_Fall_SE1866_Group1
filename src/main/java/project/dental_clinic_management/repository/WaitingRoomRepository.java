@@ -14,4 +14,7 @@ public interface WaitingRoomRepository extends JpaRepository<WaitingRoom, Intege
 
     @Query("SELECT wr FROM WaitingRoom wr WHERE LOWER(wr.branch.branchName) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     Page<WaitingRoom> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
+
+    @Query("SELECT wr FROM WaitingRoom wr WHERE wr.branch.bran_id = ?1")
+    WaitingRoom findWaitingRoomByBranchID(int id);
 }

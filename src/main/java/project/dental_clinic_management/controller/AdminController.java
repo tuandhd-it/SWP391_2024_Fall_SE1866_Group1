@@ -330,9 +330,9 @@ public class AdminController {
             patientWaitingRoom.setPatient(patient);
             patientWaitingRoom.setBooked(booked);
             patientWaitingRoom.setUrgency(urgented);
-//            String username = userDetails.getUsername();
-//            Employee receptionist = adminService.findByUsername(username);
-//            patientWaitingRoom.setWaitingRoom(adminService.findWaitingRoomByBranchId(receptionist.getBranch().getBran_id()));
+            String username = userDetails.getUsername();
+            Employee receptionist = adminService.findByUsername(username);
+            patientWaitingRoom.setWaitingRoom(adminService.findWaitingRoomByBranchId(receptionist.getBranch().getBran_id()));
             adminService.addPatientWaitingRoom(patientWaitingRoom);
         } catch (Exception e){
 

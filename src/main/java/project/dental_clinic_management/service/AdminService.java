@@ -243,7 +243,7 @@ public class AdminService {
      * @return waiting room
      */
     public WaitingRoom findWaitingRoomByBranchId(int branchId) {
-        return findWaitingRoomByBranchId(branchId);
+        return waitingRoomRepository.findWaitingRoomByBranchID(branchId);
     }
 
     /**
