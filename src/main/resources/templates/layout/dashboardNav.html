@@ -39,6 +39,13 @@
                         </a>
                     </li>
                     <li class="sidebar-item"
+                        th:if="${#authorization.expression('hasAuthority(''Receptionist'')')}">
+                        <a th:href="@{/recep/viewListExaminationOnline}" class="sidebar-link">
+                            <i class="lni lni-popup"></i>
+                            <span>Đăng ký khám bệnh</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item"
                         th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Manager'')')}">
                         <a th:href="@{/admin/manageRegisterAccount}" class="sidebar-link">
                             <i class="lni lni-popup"></i>
