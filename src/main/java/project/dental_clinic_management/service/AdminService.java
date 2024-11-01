@@ -459,8 +459,12 @@ public class AdminService {
         return patientRepository.findAll();
     }
 
+    public Page<Patient> getPatientPaging(int page, int size){
+        return patientRepository.findAll(PageRequest.of(page, size));
+    }
+
     //Create new Patient
-    public Patient createPatient(PatientCreationRequest request) {
+    public void createPatient(PatientCreationRequest request) {
         Patient newPatient = new Patient();
         newPatient.setFirstName(request.getFirstName());
         newPatient.setLastName(request.getLastName());
@@ -469,7 +473,7 @@ public class AdminService {
         newPatient.setAddress(request.getAddress());
         newPatient.setGender(request.getGender());
         newPatient.setDob(request.getDob());
-        return  patientRepository.save(newPatient); //save in database
+        patientRepository.save(newPatient);
     }
 
     //Get Patient By ID
@@ -478,13 +482,12 @@ public class AdminService {
     }
 
     //Update Patient
-    public Patient updatePatient(int id, PatientUpdateRequest updateRequest) {
+    public void updatePatient(int id, PatientUpdateRequest updateRequest) {
         Patient patient = getPatient(id);
 
-        if (patient == null) { //If null throw run time exception
+        if (patient == null) {
             throw new RuntimeException("Patient with id " + id + " not found.");
         }
-        //Set information need to modify
         patient.setFirstName(updateRequest.getFirstName().trim());
         patient.setLastName(updateRequest.getLastName().trim());
         patient.setEmail(updateRequest.getEmail().trim());
@@ -492,7 +495,8 @@ public class AdminService {
         patient.setAddress(updateRequest.getAddress().trim());
         patient.setGender(updateRequest.getGender().trim());
         patient.setDob(updateRequest.getDob());
-        return patientRepository.save(patient);
+        patient.setMedicalHistory(updateRequest.getMedicalHistory());
+        patientRepository.save(patient);
     }
 
     /**

@@ -3,7 +3,6 @@ package project.dental_clinic_management.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.validator.constraints.Length;
@@ -39,7 +38,7 @@ public class PatientCreationRequest {
     @NotNull
     @NotBlank
     @Length (min = 10, max = 225)
-    @Email
+    @Email(message = "Sai dinh dang email")
     String email;
     @Length (max = 225)
     String medicalHistory;
