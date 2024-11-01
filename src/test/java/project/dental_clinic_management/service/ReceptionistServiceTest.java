@@ -23,12 +23,11 @@ public class ReceptionistServiceTest {
     @Test
     public void testFindByUsername_ExistingUsername() {
         // Tìm nhân viên bằng email tồn tại
-        String username = "tuan6a1thcstv@gmail.com";
-        Employee foundEmployee = receptionistService.findByUsername(username);
+        Employee foundEmployee = receptionistService.findByUsername("tuan6a1thcstv@gmail.com");
 
         // Kiểm tra kết quả
         assertNotNull(foundEmployee, "Employee should not be null");
-        assertEquals(username, foundEmployee.getEmail(), "Emails should match");
+        assertEquals("tuan6a1thcstv@gmail.com", foundEmployee.getEmail(), "Emails should match");
         assertEquals("Đỗ", foundEmployee.getFirst_name(), "First names should match");
         assertEquals("Tuấn", foundEmployee.getLast_name(), "Last names should match");
     }

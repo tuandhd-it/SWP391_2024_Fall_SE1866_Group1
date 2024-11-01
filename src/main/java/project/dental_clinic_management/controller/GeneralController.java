@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.repository.RoleRepository;
 import project.dental_clinic_management.service.CustomUserDetailService;
 import project.dental_clinic_management.service.EmailService;
 import project.dental_clinic_management.service.ReceptionistService;
@@ -43,7 +44,8 @@ public class GeneralController {
 
     @Autowired
     private ReceptionistService receptionistService;
-
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private CustomUserDetailService customUserDetailService;
 
@@ -64,9 +66,9 @@ public class GeneralController {
     public String register(Model model) {
         // Retreat role that can register
         List<Role> registerRoles = new ArrayList<>();
-        registerRoles.add(receptionistService.findRoleById(3));
-        registerRoles.add(receptionistService.findRoleById(4));
-        registerRoles.add(receptionistService.findRoleById(5));
+        registerRoles.add(roleRepository.findById(3));
+        registerRoles.add(roleRepository.findById(4));
+        registerRoles.add(roleRepository.findById(5));
         model.addAttribute("roles", registerRoles);
         return "/auth/register";
     }

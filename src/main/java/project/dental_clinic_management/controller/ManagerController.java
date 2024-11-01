@@ -226,4 +226,14 @@ public class ManagerController {
         model.addAttribute("keyword", keyword);
         return "/employee/viewListExamRegistration";
     }
+
+    //Xoá lịch làm việc
+    @PostMapping("/deleteSchedule")
+    public String deleteSchedule(@RequestParam("dateValue") String dateValue, @RequestParam("empId") int empId, @RequestParam("shift") String shiftString, RedirectAttributes redirectAttributes) {
+        LocalDate date = LocalDate.parse(dateValue);
+        boolean shift = !shiftString.equals("morning");
+        managerService.deleteScheduleByEmpIdAndScheduleId(empId, date, shift);
+        redirectAttributes.addFlashAttribute("falseMsg", "Xoá lịch làm việc thành công!");
+        return "redirect:/manager/scheduleList";
+    }
 }

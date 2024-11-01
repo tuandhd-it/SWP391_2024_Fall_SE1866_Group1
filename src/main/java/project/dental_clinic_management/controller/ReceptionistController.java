@@ -1,16 +1,20 @@
 package project.dental_clinic_management.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
+import project.dental_clinic_management.dto.request.PatientWaitingRoomRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.PatientWaitingRoom;
 import project.dental_clinic_management.entity.RegisterExamination;
 import project.dental_clinic_management.entity.Schedule;
+import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.service.ReceptionistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +27,9 @@ public class ReceptionistController {
 
     @Autowired
     private ReceptionistService receptionistService;
+
+    @Autowired
+    private AdminService adminService;
 
     @GetMapping("/examRegistration")
     public String examRegistration(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -43,6 +50,9 @@ public class ReceptionistController {
         redirectAttributes.addFlashAttribute("successMsg", "Đăng ký khám thành công");
         return "redirect:/recep/viewRegistration";
     }
+
+
+
 
     @GetMapping("/getDetails")
     @ResponseBody
@@ -77,6 +87,7 @@ public class ReceptionistController {
         return "/employee/viewListExamRegistration";
     }
 
+    //Hiển thị lịch làm việc cá nhân
     @GetMapping("/myScheduleList")
     public String myScheduleList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
@@ -88,6 +99,22 @@ public class ReceptionistController {
             model.addAttribute("schedules", schedules);
         }
         return "/employee/myScheduleList";
+    }
+
+    //Thêm bệnh nhân vào phòng chờ từ đơn khám online
+    @GetMapping("/viewListExaminationOnline")
+    public String viewListExaminationOnline(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails.getUsername();
+        Employee employee = receptionistService.findByUsername(username);
+        List<ViewExamRegistrationRequest> viewExamRegistrationRequestList = receptionistService.findAllBranchExamAccept(employee);
+        model.addAttribute("examList", viewExamRegistrationRequestList);
+
+        return "/employee/viewListExamRegistrationRecep";
+    }
+
+    @GetMapping("/addExamToWaitingRoom")
+    public String addExamToWaitingRoom(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        return "";
     }
 
 }

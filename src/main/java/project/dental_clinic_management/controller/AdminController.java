@@ -23,8 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dental_clinic_management.service.ReceptionistService;
 import project.dental_clinic_management.service.ServiceService;
 import project.dental_clinic_management.service.TimeTrackingService;
+import project.dental_clinic_management.service.RecordService;
+import project.dental_clinic_management.entity.Record;
+
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -58,6 +62,10 @@ public class AdminController {
     private ServiceService serviceService;
     @Autowired
     private TimeTrackingService timeTrackingService;
+    @Autowired
+    private RecordService recordService;
+    @Autowired
+    private ReceptionistService receptionistService;
 
 
 
@@ -265,17 +273,21 @@ public class AdminController {
     }
 
     @GetMapping("/managePatient")
-    public String getAllPatient(Model model, @RequestParam(value = "errors", required = false) String errors) {
-            List<Patient> list = adminService.getAllPatient();
+    public String getAllPatient(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "5") int size,Model model, @RequestParam(value = "errors", required = false) String errors) {
+            Page<Patient> list = adminService.getPatientPaging(page,size);
             model.addAttribute("patients", list);
             model.addAttribute("editPatient",new PatientUpdateRequest());
             model.addAttribute("newPatient", new PatientCreationRequest());
+            model.addAttribute("totalPatient", list.getTotalElements());
+            model.addAttribute("start", page * size + 1);
+            model.addAttribute("end", Math.min((page + 1) * size, (int)list.getTotalElements()));
             model.addAttribute("errors", errors);
         return "/patient/managePatient";
     }
 
     @PostMapping("/patientCreate")
-    public String createPatient(@ModelAttribute @Valid @RequestBody PatientCreationRequest patientRequest, BindingResult bindingResult, Model model) {
+    public String createPatient(@ModelAttribute @Valid @RequestBody PatientCreationRequest patientRequest, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if(bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
 
@@ -295,16 +307,66 @@ public class AdminController {
             model.addAttribute("newPatient", patientRequest);
             return "/patient/managePatient";
         }else{
-        adminService.createPatient(patientRequest);
+        Patient patient = adminService.createPatient(patientRequest);
         model.addAttribute("errors", "Thêm mới Bệnh Nhân Thành Công!");
-        return "redirect:/admin/managePatient";
+        PatientWaitingRoomRequest patientWaitingRoom = new PatientWaitingRoomRequest();
+        patientWaitingRoom.setPatient(patient);
+        model.addAttribute("patientWaitingRoom", patientWaitingRoom);
+        return "/branch/addPatientWaitingRoom";
         }
+    }
+
+    @PostMapping("/addPatientWaitingRoom")
+    public String addPatientToWaitingRoom(@ModelAttribute @Valid @RequestBody PatientWaitingRoomRequest patientWaitingRoom,
+                                          @RequestParam(name = "book", defaultValue = "false") String book,
+                                          @RequestParam(name = "urgent", defaultValue = "false") String urgent,
+                                            @RequestParam(name = "patientId") String patientId,
+                                            @AuthenticationPrincipal UserDetails userDetails) {
+        // Lưu thông tin bệnh nhân vào phòng chờ
+        boolean booked = false;
+        boolean urgented = false;
+        int patientid;
+        try {
+            if (book.equals("true")) {
+                booked = true;
+            }
+            if (urgent.equals("true")) {
+                urgented = true;
+            }
+            patientid = Integer.parseInt(patientId);
+            Patient patient = adminService.findPatientById(patientid);
+            patientWaitingRoom.setPatient(patient);
+            patientWaitingRoom.setBooked(booked);
+            patientWaitingRoom.setUrgency(urgented);
+            String username = userDetails.getUsername();
+            Employee receptionist = adminService.findByUsername(username);
+            patientWaitingRoom.setWaitingRoom(adminService.findWaitingRoomByBranchId(receptionist.getBranch().getBran_id()));
+            adminService.addPatientWaitingRoom(patientWaitingRoom);
+        } catch (Exception e){
+
+        }
+
+        // Điều hướng lại trang hiển thị danh sách bệnh nhân trong phòng chờ hoặc trang khác
+        return "redirect:/admin/listWaitingRoom"; // Cập nhật URL theo cấu trúc của bạn
     }
 
     @PostMapping("/editPatient")
     public String editPatient(@ModelAttribute PatientUpdateRequest patientRequest) {
         adminService.updatePatient(patientRequest.getPatientId(), patientRequest); // Update branch
         return "redirect:/admin/managePatient";
+    }
+
+    @GetMapping("/listRecord/{id}")
+    public String getRecordOfPatient(@PathVariable Integer id,
+                                     @RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "5") int size,
+                                     Model model) {
+        Page<Record> records = recordService.getAllRecordsByPatientID(id,page,size);
+        model.addAttribute("records",records);
+        model.addAttribute("totalRecord", records.getTotalElements());
+        model.addAttribute("start", page * size + 1);
+        model.addAttribute("end", Math.min((page + 1) * size, (int)records.getTotalElements()));
+        return "/patient/manageRecord";
     }
 
 

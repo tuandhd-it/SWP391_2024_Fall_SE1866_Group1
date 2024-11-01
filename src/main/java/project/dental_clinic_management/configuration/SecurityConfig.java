@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers("/recep/viewRegistration").hasAnyAuthority("Receptionist", "Doctor", "Manager", "Nurse")
                         .requestMatchers("/recep/myScheduleList").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
                         .requestMatchers("/manager/viewRegistration").hasAnyAuthority("Receptionist", "Doctor", "Manager", "Nurse")
+                        .requestMatchers("/manager/getExamDetails").hasAnyAuthority("Receptionist", "Manager")
                         .requestMatchers("/recep/getDetails").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
                         .requestMatchers("/recep/search").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
                         .requestMatchers("/manager/scheduleList").hasAnyAuthority("Doctor", "Nurse", "Manager", "Receptionist")

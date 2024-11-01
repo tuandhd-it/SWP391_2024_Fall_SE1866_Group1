@@ -7,6 +7,7 @@ import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -104,6 +105,11 @@ public class ManagerService {
             }
             examRegistrationRepository.delete(registerExamination);
         }
+    }
+
+    //Xoá lịch làm việc
+    public void deleteScheduleByEmpIdAndScheduleId(int empId, LocalDate scheduleDate, boolean shift) {
+        scheduleRepository.deleteEmpSchedule(scheduleDate, empId, shift);
     }
 
 

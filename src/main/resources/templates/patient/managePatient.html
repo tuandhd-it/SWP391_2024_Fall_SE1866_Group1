@@ -8,7 +8,31 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-
+    <style>
+        .table thead th {
+            background-color: #00BCD4;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+            padding: 12px;
+        }
+        .pagination{
+            --bs-pagination-color: #00bcd4;
+            --bs-pagination-hover-color:#00bcd4;
+            --bs-pagination-focus-color:#00bcd4;
+            --bs-pagination-active-bg:#00bcd4;
+            --bs-pagination-active-border-color:#00bcd4;
+        }
+        /*.page-link{*/
+        /*    background-color: #00BCD4;*/
+        /*    border-color: #00BCD4;*/
+        /*}*/
+        .active>.page-link, .page-link.active{
+            background-color: #00BCD4;
+            border-color: #00BCD4;
+        }
+    </style>
 </head>
 <body>
 <div class="d-flex">
@@ -17,33 +41,35 @@
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-12 profile">
-                    <h1>Danh sách Bệnh Nhân</h1>
-                    <button class="btn btn-primary m-4" style="height: 50px; font-size: large"
-                            data-bs-toggle="modal" data-bs-target="#createModal">
-                        <b>Thêm bệnh nhân</b></button>
-                    <div class="table-responsive">
-                        <table class="table table-striped" style="width:100%">
+                <div class="col-md-12 mt-5">
+                    <h1 style="margin-bottom: 0px;">Danh sách Bệnh Nhân</h1>
+                    <div style="display: flex">
+                        <button class="btn mt-2 ms-auto" style="color: #6c757d;font-size: 20px" data-bs-toggle="modal" data-bs-target="#createModal">
+                            + Thêm Mới
+                        </button>
+                    </div>
+
+                    <div class="table-responsive w-100">
+                        <table class="table text-center mt-3">
                             <thead>
                             <tr>
+                                <th>STT</th>
                                 <th>Họ Tên</th>
                                 <th>Ngày sinh</th>
-                                <th>Số điện thoại</th>
                                 <th>Giới tính</th>
-                                <th>Địa chỉ</th>
-                                <th>Email</th>
+                                <th>Số điện thoại</th>
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr th:each="patient : ${patients}">
+                            <tr th:each="patient, stat : ${patients}">
+                                <td th:text="${stat.index + 1}"></td>
                                 <td th:text="${patient.getFirstName() + ' ' + patient.getLastName()}"></td>
                                 <td th:text="${patient.getDob()}"></td>
-                                <td th:text="${patient.getPhone()}"></td>
                                 <td th:text="${patient.getGender()}"></td>
-                                <td th:text="${patient.getAddress()}"></td>
-                                <td th:text="${patient.getEmail()}"></td>
-                                <td style="width:12%;font-size: 18px"> <button type="button" style="border: none"
+                                <td th:text="${patient.getPhone()}"></td>
+                                <td style="width:14%;font-size: 18px">
+                                    <button style="border: none;background-color: var(--bs-table-bg)"
                                              data-bs-toggle="modal" data-bs-target="#editModal"
                                              th:data-id="${patient.getPatientId()}"
                                              th:data-name="${patient.getFirstName()}"
@@ -54,23 +80,53 @@
                                              th:data-gender="${patient.getGender()}"
                                              th:data-dob="${patient.getDob()}"
                                              th:data-medicalHistory="${patient.getMedicalHistory()}">
-                                    <i class="fa-solid fa-pen-to-square"></i>
+                                    <i class="fa-solid fa-pen"></i>
                                 </button>
-
-<!--                                    Delete Patient Button-->
+                                     <!--Delete Patient Button-->
                                     <i class="fa-solid fa-trash"></i>
 
-<!--                                    View Patient Records-->
-                                    <span class="table-action-icons">
-                                         <a style="color: black" th:href="@{/admin/manageRecord/{id}(id=${patient.getPatientId()})}">
-                                             <i class="fa-regular fa-eye"></i>
-                                         </a>
-                                    </span>
+                                    <!--View Patient Records-->
+                                    <button style="border: none;background-color: var(--bs-table-bg)"
+                                            data-bs-toggle="modal" data-bs-target="#viewModal"
+                                            th:data-id="${patient.getPatientId()}"
+                                            th:data-name="${patient.getFirstName()}"
+                                            th:data-description="${patient.getLastName()}"
+                                            th:data-address="${patient.getAddress()}"
+                                            th:data-phone="${patient.getPhone()}"
+                                            th:data-email="${patient.getEmail()}"
+                                            th:data-gender="${patient.getGender()}"
+                                            th:data-dob="${patient.getDob()}"
+                                            th:data-medicalHistory="${patient.getMedicalHistory()}">
+                                        <i class="fa-regular fa-eye"></i>
+                                    </button>
                                 </td>
-
                             </tr>
                             </tbody>
                         </table>
+
+                        <!-- Paging Section-->
+                        <div style="display: flex">
+                            <span th:text="'Hiển thị từ ' + ${start} + ' đến ' + ${end} + ' trên ' + ${totalPatient} + ' Bệnh Nhân '"></span>
+                            <nav class="ms-auto">
+                                <ul class="pagination">
+                                    <li class="page-item" th:classappend="${patients.hasPrevious() ? '' : 'disabled'}">
+                                        <a class="page-link" th:href="@{/admin/managePatient(page=${patients.number - 1}, size=${patients.size})}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, patients.totalPages - 1)}"
+                                        th:classappend="${i == patients.number ? 'active' : ''}">
+                                        <a class="page-link" th:href="@{/admin/managePatient(page=${i}, size=${patients.size})}">[[${i + 1}]]</a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${patients.hasNext() ? '' : 'disabled'}">
+                                        <a class="page-link" th:href="@{/admin/managePatient(page=${patients.number + 1}, size=${patients.size})}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -89,9 +145,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-<!--                    <div class="m-2" style="text-align: center">-->
-<!--                        <b><i>Bệnh Nhân <p id="spanPatientId"></p></i></b>-->
-<!--                    </div>-->
                     <div class="mb-3" hidden>
                         <label for="editPatientId" class="form-label">Mã bệnh nhân</label>
                         <input type="number" class="form-control" id="editPatientId" th:field="*{patientId}">
@@ -130,7 +183,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="editMedicalHistory" class="form-label">Tiền sử Sức Khỏe</label>
-                        <input type="text" class="form-control" id="editMedicalHistory" th:field="*{medicalHistory}" placeholder="Tiền sử Sức Khỏe">
+                        <textarea class="form-control" id="editMedicalHistory" th:field="*{medicalHistory}" placeholder="Tiền sử Sức Khỏe" style="height: 120px"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -205,6 +258,59 @@
     </form>
 </div>
 
+<!--View Patient Details Modal-->
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel"><strong>Chi Tiết Bệnh Nhân</strong></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 d-flex">
+                        <label class="form-label"><strong>Họ và Tên:</strong></label>
+                        <p class="mx-2" id="viewFullName"></p>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <label class="form-label"><strong>Giới tính:</strong></label>
+                        <p class="mx-2" id="viewGender"></p>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <label for="dob" class="form-label"><strong>Ngày Sinh:</strong></label>
+                        <p class="mx-2" id="viewDob"></p>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <label for="email" class="form-label"><strong>Email:</strong></label>
+                        <p class="mx-2" id="viewEmail"></p>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <label for="phone" class="form-label"><strong>Điện Thoại:</strong></label>
+                        <p class="mx-2" id="viewPhone"></p>
+                    </div>
+                    <div class="mb-3 d-flex">
+                        <label for="address" class="form-label"><strong>Địa Chỉ:</strong></label>
+                        <p class="mx-2" id="viewAddress"></p>
+                    </div>
+                    <div class="mb-3">
+                        <label for="medicalHistory" class="form-label"><strong>Tiền sử Sức Khỏe:</strong></label>
+                        <p class="form-control-plaintext" id="viewMedicalHistory"></p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                        <a id="viewRecords">
+                            <button type="submit" class="btn btn-success">
+                                Hồ Sơ Bệnh Án  <i class="fa-solid fa-stethoscope"></i>
+                            </button>
+                        </a>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
 <!--Error Messages Notification-->
 <div class="toast-container top-0 end-0 p-3">
     <!-- Render the toast only if 'errors' is not null -->
@@ -221,6 +327,11 @@
     </div>
 </div>
 
+<script th:src="@{/js/dashboard.js}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
+
 <!-- Add JavaScript to trigger the toast when it is rendered -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -231,11 +342,48 @@
         }
     });
 </script>
-<script th:src="@{/js/dashboard.js}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-        crossorigin="anonymous"></script>
 
+
+<!--View Modal Script-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const viewModal = document.getElementById('viewModal');
+        const viewFullName = document.getElementById('viewFullName');
+        const viewGender = document.getElementById('viewGender');
+        const viewDob = document.getElementById('viewDob');
+        const viewEmail = document.getElementById('viewEmail');
+        const viewPhone = document.getElementById('viewPhone');
+        const viewAddress = document.getElementById('viewAddress');
+        const viewMedicalHistory = document.getElementById('viewMedicalHistory');
+        const viewRecords = document.getElementById('viewRecords');
+
+
+        viewModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+
+            // Lấy dữ liệu từ các thuộc tính data- của nút bấm
+            const fullName = button.getAttribute('data-name') + ' ' + button.getAttribute('data-description');
+            const gender = button.getAttribute('data-gender');
+            const dob = button.getAttribute('data-dob');
+            const email = button.getAttribute('data-email');
+            const phone = button.getAttribute('data-phone');
+            const address = button.getAttribute('data-address');
+            const medicalHistory = button.getAttribute('data-medicalHistory');
+            const patientID = button.getAttribute('data-id');
+
+            // Điền dữ liệu vào các phần tử trong modal
+            viewFullName.textContent = fullName;
+            viewGender.textContent = gender;
+            viewDob.textContent = dob;
+            viewEmail.textContent = email;
+            viewPhone.textContent = phone;
+            viewAddress.textContent = address;
+            viewMedicalHistory.textContent = medicalHistory;
+            viewRecords.href = `/admin/listRecord/`+patientID;
+        });
+    });
+
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var editButtons = document.querySelectorAll('[data-bs-toggle="modal"]');
@@ -257,7 +405,6 @@
 
                 // Điền vào các trường trong modal
                 document.getElementById('editPatientId').value = patientId;
-                // document.getElementById('spanPatientId').value = patientId;
                 document.getElementById('editFirstName').value = firstName;
                 document.getElementById('editLastName').value = lastName;
                 document.getElementById('editAddress').value = address;
