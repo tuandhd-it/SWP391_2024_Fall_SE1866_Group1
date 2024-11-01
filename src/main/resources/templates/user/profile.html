@@ -86,10 +86,14 @@
                                                           th:text="${employee.first_name} + ' ' + ${employee.last_name}"></span>
                                                     <input class="form-control" required
                                                            style="display:none; margin-bottom: 12px"
-                                                           th:field="*{first_name}" type="text">
+                                                           pattern="[A-Za-zÀ-ỹà-ỹ\s]+" th:field="*{first_name}"
+                                                           title="Họ và tên chỉ chứa chữ cái và khoảng trắng."
+                                                           type="text">
                                                     <input class="form-control" th:field="*{last_name}"
                                                            type="text"
-                                                           style="display:none;" required>
+                                                           pattern="[A-Za-zÀ-ỹà-ỹ\s]+" required
+                                                           style="display:none;"
+                                                           title="Họ và tên chỉ chứa chữ cái và khoảng trắng.">
                                                 </div>
                                             </div>
                                         </div>
@@ -147,7 +151,9 @@
                                                           style="display:inline-block;"
                                                           th:text="${employee.getPhone()}"></span>
                                                     <input type="tel" th:field="*{phone}" class="form-control"
-                                                           style="display:none;" required>
+                                                           pattern="\d{10,11}" required
+                                                           style="display:none;"
+                                                           title="Số điện thoại phải chứa từ 10 đến 11 chữ số.">
                                                 </div>
                                             </div>
                                         </div>
@@ -160,7 +166,9 @@
                                                           style="display:inline-block;"
                                                           th:text="${employee.getEmail()}"></span>
                                                     <input type="email" th:field="*{email}" class="form-control"
-                                                           style="display:none;" required>
+                                                           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required
+                                                           style="display:none;"
+                                                           title="Email phải đúng định dạng (ví dụ: example@domain.com)">
                                                 </div>
 
                                             </div>
@@ -261,7 +269,7 @@
 <script>
     document.getElementById('avatarUpload').style.display = 'none';
 
-
+    // Preview avatar
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
