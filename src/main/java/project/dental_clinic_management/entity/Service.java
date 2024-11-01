@@ -1,7 +1,9 @@
 package project.dental_clinic_management.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import org.springframework.core.io.FileSystemResource;
 
@@ -20,6 +22,7 @@ public class Service {
     String serviceName;
     String img;
     double price;
+    @Column(columnDefinition = "TEXT")
     String detail;
     boolean isActive;
     String guarantee;

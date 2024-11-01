@@ -1,11 +1,15 @@
 package project.dental_clinic_management.service;
-import org.springframework.data.domain.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -464,7 +468,7 @@ public class AdminService {
     }
 
     //Create new Patient
-    public void createPatient(PatientCreationRequest request) {
+    public Patient createPatient(PatientCreationRequest request) {
         Patient newPatient = new Patient();
         newPatient.setFirstName(request.getFirstName());
         newPatient.setLastName(request.getLastName());
@@ -473,7 +477,7 @@ public class AdminService {
         newPatient.setAddress(request.getAddress());
         newPatient.setGender(request.getGender());
         newPatient.setDob(request.getDob());
-        patientRepository.save(newPatient);
+        return patientRepository.save(newPatient);
     }
 
     //Get Patient By ID
