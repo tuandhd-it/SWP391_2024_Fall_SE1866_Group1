@@ -1,6 +1,8 @@
 const toggler = document.querySelector(".toggler-btn");
+const mainContent = document.querySelector('.main');
 toggler.addEventListener("click", function () {
     document.querySelector("#sidebar").classList.toggle("collapsed");
+    mainContent.classList.toggle('no-margin');
 });
 
 

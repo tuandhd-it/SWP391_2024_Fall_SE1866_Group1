@@ -168,23 +168,27 @@ public class GeneralController {
             return "/user/profile";
         }
 
-        String username = userDetails.getUsername();
-        Employee existingEmployee = customUserDetailService.findByUsername(username);
+        try {
+            String username = userDetails.getUsername();
+            Employee existingEmployee = customUserDetailService.findByUsername(username);
 
-        if (existingEmployee != null) {
-            existingEmployee.setFirst_name(employee.getFirst_name());
-            existingEmployee.setLast_name(employee.getLast_name());
-            existingEmployee.setEmail(employee.getEmail());
-            existingEmployee.setPhone(employee.getPhone());
-            existingEmployee.setDob(employee.getDob());
-            existingEmployee.setGender(employee.getGender());
-            existingEmployee.setAddress(employee.getAddress());
-            existingEmployee.setCertification(employee.getCertification());
-            existingEmployee.setSpecification(employee.getSpecification());
-            existingEmployee.setSalary(employee.getSalary());
-            existingEmployee.setDescription(employee.getDescription());
-            customUserDetailService.saveEmployee(existingEmployee);
-            redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
+            if (existingEmployee != null) {
+                existingEmployee.setFirst_name(employee.getFirst_name());
+                existingEmployee.setLast_name(employee.getLast_name());
+                existingEmployee.setEmail(employee.getEmail());
+                existingEmployee.setPhone(employee.getPhone());
+                existingEmployee.setDob(employee.getDob());
+                existingEmployee.setGender(employee.getGender());
+                existingEmployee.setAddress(employee.getAddress());
+                existingEmployee.setCertification(employee.getCertification());
+                existingEmployee.setSpecification(employee.getSpecification());
+                existingEmployee.setSalary(employee.getSalary());
+                existingEmployee.setDescription(employee.getDescription());
+                customUserDetailService.saveEmployee(existingEmployee);
+                redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật thông tin: " + e.getMessage());
         }
 
         return "redirect:/profile";

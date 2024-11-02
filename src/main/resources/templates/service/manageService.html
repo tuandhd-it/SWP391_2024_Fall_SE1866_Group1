@@ -1,99 +1,116 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/">
 <head>
-  <meta charset="UTF-8">
-  <title>Manage Service</title>
-  <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <!-- Option 1: Include in HTML -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-  <script crossorigin="anonymous"
-          integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
-          src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <meta charset="UTF-8">
+    <title>Manage Service</title>
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" rel="stylesheet">
+    <!-- Option 1: Include in HTML -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <script crossorigin="anonymous"
+            integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
 </head>
 <body>
 <div class="d-flex">
-  <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
-  <div class="main">
-    <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12 profile">
-          <div class="row" style="width: 100%;">
-            <h1 class="col-md-10">
-              Danh sách dịch vụ
-            </h1>
-            <div class="col-md-2">
-              <button type="button" style="margin-bottom: 20px" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#serviceModal">
-                Thêm dịch vụ
-              </button>
-            </div>
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
+    <div class="main">
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12 profile">
+                    <div class="row" style="width: 100%;">
+                        <h1 class="col-md-10">
+                            Danh sách dịch vụ
+                        </h1>
+                        <div class="col-md-2">
+                            <button class="btn btn-primary" data-bs-target="#serviceModal" data-bs-toggle="modal"
+                                    style="margin-bottom: 20px" type="button">
+                                Thêm dịch vụ
+                            </button>
+                        </div>
 
-          </div>
-          <form class="input-group row">
-            <!-- Sort Type Dropdown -->
-            <div class="col-md-2">
-              <select class="form-select" id="sortType" name="sort" aria-label="Sort By">
-                <option value="idAsc" th:selected="${sort == 'idAsc'}">Bộ lọc</option>
-                <option value="nameAsc" th:selected="${sort == 'nameAsc'}">Tên Tăng Dần</option>
-                <option value="nameDesc" th:selected="${sort == 'nameDesc'}">Tên Giảm Dần</option>
-                <option value="priceAsc" th:selected="${sort == 'priceAsc'}">Giá Tăng Dần</option>
-                <option value="priceDesc" th:selected="${sort == 'priceDesc'}">Giá Giảm Dần</option>
-              </select>
-            </div>
+                    </div>
+                    <form class="input-group row">
+                        <!-- Sort Type Dropdown -->
+                        <div class="col-md-2">
+                            <select aria-label="Sort By" class="form-select" id="sortType" name="sort">
+                                <option th:selected="${sort == 'idAsc'}" value="idAsc">Bộ lọc</option>
+                                <option th:selected="${sort == 'nameAsc'}" value="nameAsc">Tên Tăng Dần</option>
+                                <option th:selected="${sort == 'nameDesc'}" value="nameDesc">Tên Giảm Dần</option>
+                                <option th:selected="${sort == 'priceAsc'}" value="priceAsc">Giá Tăng Dần</option>
+                                <option th:selected="${sort == 'priceDesc'}" value="priceDesc">Giá Giảm Dần</option>
+                            </select>
+                        </div>
 
-            <!-- Search Type Dropdown -->
-            <div class="col-md-3">
-              <select class="form-select" id="searchType" aria-label="Search Type" name="searchType">
-                <option value="name" th:selected="${searchType == 'name'}">Tìm kiếm theo tên</option>
-                <option value="id" th:selected="${searchType == 'id'}">Tìm kiếm theo ID</option>
-              </select>
-            </div>
+                        <!-- Search Type Dropdown -->
+                        <div class="col-md-3">
+                            <select aria-label="Search Type" class="form-select" id="searchType" name="searchType">
+                                <option th:selected="${searchType == 'name'}" value="name">Tìm kiếm theo tên</option>
+                                <option th:selected="${searchType == 'id'}" value="id">Tìm kiếm theo ID</option>
+                            </select>
+                        </div>
 
-            <!-- Search Input -->
-            <input class="form-control col-md-4" type="search" placeholder="Nhập tên dịch vụ" aria-label="Search" id="searchInput" name="search" th:placeholder="${searchType == 'id'} ? 'Nhập ID dịch vụ' : 'Nhập tên dịch vụ'" th:value="${search}">
+                        <!-- Search Input -->
+                        <input aria-label="Search" class="form-control col-md-4" id="searchInput"
+                               name="search" placeholder="Nhập tên dịch vụ" th:placeholder="${searchType == 'id'} ? 'Nhập ID dịch vụ' : 'Nhập tên dịch vụ'"
+                               th:value="${search}"
+                               type="search">
 
-            <!-- Search Button -->
-            <button class="btn btn-outline-success col-md-3" type="submit">Tìm kiếm</button>
-          </form>
-            <table class="table table-bordered table-hover mt-3">
-              <thead class="table-ligth">
-                <tr>
-                  <th style="width: 10%;">ID</th>
-                  <th style="width: 35%;">Tên dịch vụ</th>
-                  <th style="width: 20%;">Giá</th>
-                  <th style="width: 20%;">Trạng thái</th>
-                  <th style="width: 15%;">Tùy chỉnh</th>
-                </tr>
-              </thead>
-              <tbody>
-              <tr th:each="ser : ${listService}">
-                <td th:text="${ser.serviceId}"></td>
-                <td th:text="${ser.serviceName}"></td>
+                        <!-- Search Button -->
+                        <button class="btn btn-outline-success col-md-3" type="submit">Tìm kiếm</button>
+                    </form>
+                    .
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover mt-3">
+                            <thead class="table-ligth">
+                            <tr>
+                                <th style="width: 10%;">ID</th>
+                                <th style="width: 35%;">Tên dịch vụ</th>
+                                <th style="width: 20%;">Giá</th>
+                                <th style="width: 20%;">Thời gian bảo hành</th>
+                                <th style="width: 20%;">Chất liệu</th>
+                                <th style="width: 20%;">Đơn vị</th>
+                                <th style="width: 20%;">Số lượng</th>
+                                <th style="width: 20%;">Trạng thái</th>
+                                <th style="width: 15%;">Tùy chỉnh</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="ser : ${listService}">
+                                <td th:text="${ser.serviceId}"></td>
+                                <td th:text="${ser.serviceName}"></td>
+                                <td th:text="${#numbers.formatCurrency(ser.price)}"></td>
+                                <td th:text="${ser.guarantee}"></td>
+                                <td th:text="${ser.material}"></td>
+                                <td th:text="${ser.unit}"></td>
+                                <td th:text="${ser.quantity}"></td>
+                                <td>
+                                    <div style="display: flex" th:switch="${ser.isActive}">
 
-                <td th:text="${#numbers.formatCurrency(ser.price)}"></td>
-                <td>
-                  <div style="display: flex" th:switch="${ser.isActive}">
+                                        <button class="btn btn-success" style="padding: 5px; margin: 5px" th:case="${true}"
+                                                th:value="${ser.serviceId}" type="button">Kích hoạt
+                                        </button>
 
-                      <button th:case="${true}" type="button" class="btn btn-success" style="padding: 5px; margin: 5px" th:value="${ser.serviceId}">Kích hoạt</button>
+                                        <button class="btn btn-warning" style="padding: 5px;margin: 5px" th:case="${false}"
+                                                th:value="${ser.serviceId}" type="button">Tạm ngưng
+                                        </button>
+                                    </div>
 
-                      <button th:case="${false}" type="button" class="btn btn-warning" style="padding: 5px;margin: 5px" th:value="${ser.serviceId}">Tạm ngưng</button>
-                  </div>
-
-                </td>
-                <td>
+                                </td>
+                                <td>
                   <span class="table-action-icons">
                       <button type="button" class="btn btn-link p-0">
                         <a th:href="@{detail/{id}(id=${ser.serviceId})}">
                           <i class="bi bi-eye"></i>
                         </a>
 
-                      </button >
+                      </button>
                       <button type="button" class="btn btn-link p-0">
                         <a th:href="@{updateService/{id}(id=${ser.serviceId})}">
                           <i class="bi bi-pencil-square"></i>
@@ -101,353 +118,365 @@
 
                       </button>
                   </span>
-                </td>
+                                </td>
 
-              </tr>
-              </tbody>
-            </table>
-          <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-              <!-- Previous button -->
-              <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/manageService(page=${currentPage - 1}, search=${search}, sort=${sort})}" tabindex="-1">Trước</a>
-              </li>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            <!-- Previous button -->
+                            <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                                <a class="page-link"
+                                   tabindex="-1"
+                                   th:href="@{/admin/manageService(page=${currentPage - 1}, search=${search}, sort=${sort})}">Trước</a>
+                            </li>
 
-              <!-- Pagination Numbers -->
-              <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}"
-                  th:classappend="${currentPage == i} ? 'active'">
-                <a class="page-link" th:href="@{/admin/manageService(page=${i}, search=${search}, sort=${sort})}" th:text="${i}">1</a>
-              </li>
+                            <!-- Pagination Numbers -->
+                            <li class="page-item" th:classappend="${currentPage == i} ? 'active'"
+                                th:each="i : ${#numbers.sequence(1, totalPages)}">
+                                <a class="page-link"
+                                   th:href="@{/admin/manageService(page=${i}, search=${search}, sort=${sort})}"
+                                   th:text="${i}">1</a>
+                            </li>
 
-              <!-- Next button -->
-              <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-                <a class="page-link" th:href="@{/admin/manageService(page=${currentPage + 1}, search=${search}, sort=${sort})}">Sau</a>
-              </li>
-            </ul>
-          </nav>
+                            <!-- Next button -->
+                            <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                                <a class="page-link"
+                                   th:href="@{/admin/manageService(page=${currentPage + 1}, search=${search}, sort=${sort})}">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="serviceModalLabel">Thêm dịch vụ mới</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body">
-        <form id="serviceForm">
-          <div class="mb-3">
-
-            <div class="form-group">
-              <label for="imageInput" class="form-label">Ảnh minh họa</label>
-              <input type="file" name="img" class="form-control" id="imageInput" onchange="previewImage()">
-              <div id="imagePreviewContainer" style="display: none; text-align: center;">
-                <br>
-                <img id="imagePreview" src="#" alt="Ảnh xem trước" style="max-width: 50%; height: auto;">
-                <div id="serviceImageHelp" class="form-text">Ảnh dịch vụ</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label for="serviceName">Tên dịch vụ:</label>
-            <input type="text" id="serviceName" class="form-control" name="serviceName">
-          </div>
-
-          <div class="form-group">
-            <label for="price">Giá:</label>
-            <input type="number" step="0.01" id="price" class="form-control" name="price" oninput="checkFormValidity()" required min="0">
-          </div>
-
-          <div class="form-group">
-            <label for="detail" class="form-label">Mô tả:</label>
-            <textarea class="form-control" id="detail" name="detail" rows="3" placeholder="Hãy nhập mô tả" oninput="checkFormValidity()"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="material">Chất liệu:</label>
-            <input type="text" id="material" class="form-control" name="material">
-          </div>
-          <div class="form-group">
-            <label for="guarantee">Bảo hành:</label>
-            <input type="text" id="guarantee" class="form-control" name="guarantee">
-          </div>
-
-          <div class="form-group row">
-            <div class="col-sm-2" >Trạng thái:</div>
-            <div class="col-sm-10">
-              <input type="checkbox" class="form-check-input" id="isActive" name="isActive" value="1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="serviceModalLabel">Thêm dịch vụ mới</h5>
+                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
             </div>
 
+            <div class="modal-body">
+                <form id="serviceForm">
+                    <div class="mb-3">
 
-          </div>
+                        <div class="form-group">
+                            <label class="form-label" for="imageInput">Ảnh minh họa</label>
+                            <input class="form-control" id="imageInput" name="img" onchange="previewImage()"
+                                   type="file">
+                            <div id="imagePreviewContainer" style="display: none; text-align: center;">
+                                <br>
+                                <img alt="Ảnh xem trước" id="imagePreview" src="#"
+                                     style="max-width: 50%; height: auto;">
+                                <div class="form-text" id="serviceImageHelp">Ảnh dịch vụ</div>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="modal-footer justify-content-center mt-3">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-            <button type="submit" class="btn btn-primary" id="saveButton" >Lưu thay đổi</button>
-          </div>
-        </form>
-      </div>
+                    <div class="form-group">
+                        <label for="serviceName">Tên dịch vụ:</label>
+                        <input class="form-control" id="serviceName" name="serviceName" type="text">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Giá:</label>
+                        <input class="form-control" id="price" min="0" name="price" oninput="checkFormValidity()"
+                               required step="0.01" type="number">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="detail">Mô tả:</label>
+                        <textarea class="form-control" id="detail" name="detail" oninput="checkFormValidity()" placeholder="Hãy nhập mô tả"
+                                  rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="material">Chất liệu:</label>
+                        <input class="form-control" id="material" name="material" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label for="guarantee">Bảo hành:</label>
+                        <input class="form-control" id="guarantee" name="guarantee" type="text">
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-2">Trạng thái:</div>
+                        <div class="col-sm-10">
+                            <input class="form-check-input" id="isActive" name="isActive" type="checkbox" value="1">
+                        </div>
+
+
+                    </div>
+
+                    <div class="modal-footer justify-content-center mt-3">
+                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Đóng</button>
+                        <button class="btn btn-primary" id="saveButton" type="submit">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <!-- Modal -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
-  document.getElementById('searchType').addEventListener('change', function() {
-    const searchInput = document.getElementById('searchInput');
-    if (this.value === 'id') {
-      searchInput.placeholder = 'Nhập ID dịch vụ';
-    } else {
-      searchInput.placeholder = 'Nhập tên dịch vụ';
+    document.getElementById('searchType').addEventListener('change', function () {
+        const searchInput = document.getElementById('searchInput');
+        if (this.value === 'id') {
+            searchInput.placeholder = 'Nhập ID dịch vụ';
+        } else {
+            searchInput.placeholder = 'Nhập tên dịch vụ';
+        }
+    });
+    const banButtons = document.querySelectorAll('.btn-success');
+    const inactiveButtons = document.querySelectorAll('.btn-warning');
+
+    const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+        },
+        buttonsStyling: false
+    });
+    banButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('value');
+
+            swalWithBootstrapButtons.fire({
+                title: "Bạn có muốn tạm ngưng dịch vụ không ?",
+                text: "Tạm ngưng dịch vụ với ID: " + id + "!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Đồng ý!",
+                cancelButtonText: "Hủy!",
+                dangerMode: true,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    banService(id);
+                } else {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelled",
+                        icon: "error"
+                    });
+                }
+            });
+        });
+    });
+
+    inactiveButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            const id = this.getAttribute('value');
+
+            swalWithBootstrapButtons.fire({
+                title: "Bạn có muốn kích hoạt ?",
+                text: "Kích hoạt dịch vụ với ID: " + id + "!",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonText: "  Đồng ý!  ",
+                cancelButtonText: "  Hủy!  ",
+                dangerMode: false,
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    activateService(id);
+                } else {
+                    swalWithBootstrapButtons.fire({
+                        title: "Cancelled",
+                        icon: "error"
+                    });
+                }
+            });
+        });
+    });
+
+    function banService(id) {
+        fetch('/service/ban', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'id=' + encodeURIComponent(id)
+        }).then(response => {
+            if (response.ok) {
+                swalWithBootstrapButtons.fire({
+                    title: "Thành công!",
+                    text: "Tạm ngưng dịch vụ thành công",
+                    icon: "success"
+                })
+                    .then(() => {
+                        location.reload();
+                    });
+            } else {
+                Swal.fire("Please try again later.");
+            }
+        }).catch(error => {
+            swal("Please try again later.");
+        });
     }
-  });
-  const banButtons = document.querySelectorAll('.btn-success');
-  const inactiveButtons = document.querySelectorAll('.btn-warning');
 
-  const swalWithBootstrapButtons = Swal.mixin({
-    customClass: {
-      confirmButton: "btn btn-success",
-      cancelButton: "btn btn-danger"
-    },
-    buttonsStyling: false
-  });
-  banButtons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      const id = this.getAttribute('value');
+    function activateService(id) {
+        fetch('/service/activate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: 'id=' + encodeURIComponent(id)
+        }).then(response => {
+            if (response.ok) {
+                swalWithBootstrapButtons.fire({
+                    title: "Thành công!",
+                    text: "Kích hoạt dịch vụ thành công",
+                    icon: "success"
+                })
+                    .then(() => {
+                        location.reload();
+                    });
+            } else {
+                Swal.fire("Please try again later.");
+            }
+        }).catch(error => {
+            swal("Please try again later.");
+        });
+    }
 
-      swalWithBootstrapButtons.fire({
-        title: "Bạn có muốn tạm ngưng dịch vụ không ?",
-        text: "Tạm ngưng dịch vụ với ID: " + id + "!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Đồng ý!",
-        cancelButtonText: "Hủy!",
-        dangerMode: true,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          banService(id);
+    function checkFormValidity() {
+        const serviceName = document.getElementById('serviceName').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const detail = document.getElementById('detail').value.trim();
+        const imageInput = document.getElementById('imageInput').value;
+
+        // Kiểm tra tất cả các trường xem có được nhập đầy đủ không
+        if (serviceName && price && detail && imageInput) {
+            document.getElementById('saveButton').disabled = false; // Enable nút lưu
         } else {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            icon: "error"
-          });
+            document.getElementById('saveButton').disabled = true; // Disable nút lưu
         }
-      });
-    });
-  });
+    }
 
-  inactiveButtons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      const id = this.getAttribute('value');
-
-      swalWithBootstrapButtons.fire({
-        title: "Bạn có muốn kích hoạt ?",
-        text: "Kích hoạt dịch vụ với ID: " + id + "!",
-        icon: "success",
-        showCancelButton: true,
-        confirmButtonText: "  Đồng ý!  ",
-        cancelButtonText: "  Hủy!  ",
-        dangerMode: false,
-      }).then((result) => {
-        if (result.isConfirmed) {
-          activateService(id);
-        } else {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            icon: "error"
-          });
+    document.getElementById('serviceForm').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const serviceName = document.getElementById('serviceName').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const detail = document.getElementById('detail').value.trim();
+        const material = document.getElementById('material').value.trim();
+        const guarantee = document.getElementById('guarantee').value.trim();
+        const checkbox = document.getElementById('isActive');
+        let isActive = 0;
+        if (checkbox.checked) {
+            isActive = checkbox.value;
         }
-      });
-    });
-  });
 
-  function banService(id) {
-    fetch('/service/ban', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'id=' + encodeURIComponent(id)
-    }).then(response => {
-      if (response.ok) {
-        swalWithBootstrapButtons.fire({
-          title: "Thành công!",
-          text: "Tạm ngưng dịch vụ thành công",
-          icon: "success"
-        })
-                .then(() => {
-                  location.reload();
+        const imgInput = document.getElementById('imageInput');
+        console.log("imgInput:" + imgInput);
+        const imgFile = imgInput.files[0];
+        console.log("imgFile:" + imgFile);
+        // Lấy dữ liệu từ các trường input
+        // Kiểm tra dữ liệu trước khi gửi
+        if (!imgFile) {
+            Swal.fire({
+                icon: "error",
+                title: "Lỗi",
+                text: "Vui lòng tải lên ảnh!"
+            });
+            return;
+        }
+
+        if (serviceName.length < 1 || serviceName.length > 200) {
+            Swal.fire({
+                icon: "error",
+                title: "Lỗi",
+                text: "Tên dịch vụ phải từ 1 đến 200 ký tự!"
+            });
+            return;
+        }
+
+        if (price.length < 1 || price.length > 9) {
+            Swal.fire({
+                icon: "error",
+                title: "Lỗi",
+                text: "Giá dịch vụ dưới 1.000.000.000"
+            });
+            return;
+        }
+
+        if (detail.length < 1 || detail.length > 1000) {
+            Swal.fire({
+                icon: "error",
+                title: "Lỗi",
+                text: "Mô tả dịch vụ phải từ 1 đến 1000 ký tự!"
+            });
+            return;
+        }
+
+        if (material.length < 2 || material.length > 200) {
+            Swal.fire({
+                icon: "error",
+                title: "Lỗi",
+                text: "Chất liệu phải từ 2 đến 200 ký tự!"
+            });
+            return;
+        }
+        const formData = new FormData();
+        formData.append('serviceName', serviceName);
+        formData.append('price', price);
+        formData.append('isActive', isActive);
+        formData.append('material', material);
+        formData.append('guarantee', guarantee);
+        formData.append('detail', detail);
+        formData.append('img', imgFile);
+
+        try {
+            const response = await fetch('/service/addService', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                swalWithBootstrapButtons.fire({
+                    title: "Thành công!",
+                    text: "Thêm dịch vụ thành công",
+                    icon: "success"
+                }).then(() => {
+                    // Reload the page
+                    location.reload();
                 });
-      } else {
-        Swal.fire("Please try again later.");
-      }
-    }).catch(error => {
-      swal("Please try again later.");
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Đã tồn tại dịch vụ này",
+                })
+            }
+        } catch (error) {
+            // Xử lý lỗi kết nối
+            console.error('Lỗi kết nối:', error);
+        }
     });
-  }
 
-  function activateService(id) {
-    fetch('/service/activate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
-      body: 'id=' + encodeURIComponent(id)
-    }).then(response => {
-      if (response.ok) {
-        swalWithBootstrapButtons.fire({
-          title: "Thành công!",
-          text: "Kích hoạt dịch vụ thành công",
-          icon: "success"
-        })
-        .then(() => {
-          location.reload();
-        });
-      } else {
-        Swal.fire("Please try again later.");
-      }
-    }).catch(error => {
-      swal("Please try again later.");
-    });
-  }
-  function checkFormValidity() {
-    const serviceName = document.getElementById('serviceName').value.trim();
-    const price = document.getElementById('price').value.trim();
-    const detail = document.getElementById('detail').value.trim();
-    const imageInput = document.getElementById('imageInput').value;
+    function previewImage() {
+        var input = document.getElementById("imageInput");
+        var previewContainer = document.getElementById("imagePreviewContainer");
+        var preview = document.getElementById("imagePreview");
 
-    // Kiểm tra tất cả các trường xem có được nhập đầy đủ không
-    if (serviceName && price && detail && imageInput) {
-      document.getElementById('saveButton').disabled = false; // Enable nút lưu
-    } else {
-      document.getElementById('saveButton').disabled = true; // Disable nút lưu
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                previewContainer.style.display = "block";
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            previewContainer.style.display = "none";
+            preview.src = "#";
+        }
     }
-  }
-  document.getElementById('serviceForm').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const serviceName = document.getElementById('serviceName').value.trim();
-    const price = document.getElementById('price').value.trim();
-    const detail = document.getElementById('detail').value.trim();
-    const material = document.getElementById('material').value.trim();
-    const guarantee = document.getElementById('guarantee').value.trim();
-    const checkbox = document.getElementById('isActive');
-    let isActive = 0;
-    if (checkbox.checked) {
-      isActive = checkbox.value;
-    }
-
-    const imgInput = document.getElementById('imageInput');
-    console.log("imgInput:"+imgInput);
-    const imgFile = imgInput.files[0];
-    console.log("imgFile:"+imgFile);
-    // Lấy dữ liệu từ các trường input
-    // Kiểm tra dữ liệu trước khi gửi
-    if (!imgFile) {
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi",
-        text: "Vui lòng tải lên ảnh!"
-      });
-      return;
-    }
-
-    if (serviceName.length < 1 || serviceName.length > 200) {
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi",
-        text: "Tên dịch vụ phải từ 1 đến 200 ký tự!"
-      });
-      return;
-    }
-
-    if (price.length < 1 || price.length > 9) {
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi",
-        text: "Giá dịch vụ dưới 1.000.000.000"
-      });
-      return;
-    }
-
-    if (detail.length < 1 || detail.length > 1000) {
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi",
-        text: "Mô tả dịch vụ phải từ 1 đến 1000 ký tự!"
-      });
-      return;
-    }
-
-    if (material.length < 2 || material.length > 200) {
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi",
-        text: "Chất liệu phải từ 2 đến 200 ký tự!"
-      });
-      return;
-    }
-    const formData = new FormData();
-    formData.append('serviceName', serviceName);
-    formData.append('price', price);
-    formData.append('isActive', isActive);
-    formData.append('material', material);
-    formData.append('guarantee', guarantee);
-    formData.append('detail', detail);
-    formData.append('img', imgFile);
-
-    try {
-      const response = await fetch('/service/addService', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (response.ok) {
-        swalWithBootstrapButtons.fire({
-          title: "Thành công!",
-          text: "Thêm dịch vụ thành công",
-          icon: "success"
-        }).then(() => {
-          // Reload the page
-          location.reload();
-        });
-      } else {
-        Swal.fire({
-          icon: "error",
-          title: "Đã tồn tại dịch vụ này",
-        })
-      }
-    } catch (error) {
-      // Xử lý lỗi kết nối
-      console.error('Lỗi kết nối:', error);
-    }
-  });
-
-  function previewImage() {
-    var input = document.getElementById("imageInput");
-    var previewContainer = document.getElementById("imagePreviewContainer");
-    var preview = document.getElementById("imagePreview");
-
-    if (input.files && input.files[0]) {
-      var reader = new FileReader();
-
-      reader.onload = function (e) {
-        preview.src = e.target.result;
-        previewContainer.style.display = "block";
-      }
-
-      reader.readAsDataURL(input.files[0]);
-    } else {
-      previewContainer.style.display = "none";
-      preview.src = "#";
-    }
-  }
 
 </script>
 <script th:src="@{/js/dashboard.js}"></script>

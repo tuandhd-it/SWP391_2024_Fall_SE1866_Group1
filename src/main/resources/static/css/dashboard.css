@@ -30,9 +30,11 @@ a {
     transition: all 0.35s ease-in-out;
     /*background-color: #57b3cd;*/
     background-color: #00bcd4;
-
+    position: fixed;
+    width: 264px;
     display: flex;
     flex-direction: column;
+    z-index: 1000;
 }
 
 #sidebar.collapsed {
@@ -165,9 +167,9 @@ body {
 .main-content {
     flex-grow: 1;
     padding: 2rem;
+    margin-left: 264px;
     background-color: white;
     border-radius: 10px;
-    margin: 2rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -257,11 +259,19 @@ aside {
 .main {
     flex: 1;
     display: flex;
+    margin-left: 264px;
     flex-direction: column;
     height: 100%; /* Ensures the main content takes up the remaining space */
     overflow: hidden;
 }
 
+.main-content.no-margin {
+    margin-left: 0;
+}
+
+.main.no-margin {
+    margin-left: 0;
+}
 .navbar {
     height: 60px; /* Fixed height for the navbar */
 }
