@@ -144,7 +144,7 @@ public class ServiceController {
                 }
 
                 // Tạo tên tệp mới với UUID
-                String newFileName = UUID.randomUUID().toString() + fileExtension;
+                String newFileName = UUID.randomUUID() + fileExtension;
 
                 // Lưu tệp với tên mới
                 imgFile.transferTo(uploadPath.resolve(newFileName).toFile());

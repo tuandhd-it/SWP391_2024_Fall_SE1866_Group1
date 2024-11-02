@@ -53,11 +53,7 @@ public class CustomEmployeeDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         boolean enabled;
-        if(employee.is_active()) {
-            enabled = true;
-        } else {
-            enabled = false;
-        }
+        enabled = employee.is_active();
         return enabled;
     }
 }

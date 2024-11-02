@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
             examRegisterDate.setCustomValidity("Ngày đăng ký khám không được trước ngày hôm nay. Vui lòng chọn ngày hợp lệ.");
             examRegisterDate.reportValidity();
             e.preventDefault();
-            return;
+
         }
     });
 
