@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/profile.css}">
-    <!-- Toastr -->
-    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" type="text/css">
-    <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" type="text/css">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body>
 <div class="d-flex">
@@ -43,7 +39,7 @@
                                         </div>
                                         <div class="avatar-preview">
                                             <div id="imagePreview"
-                                                 th:style="'background-image: url(/assets/image/' + ${employee.getImg()} + ');'">
+                                                 th:style="'background-image: url(/uploads/'+ ${employee.getImg()} +');'">
                                             </div>
                                         </div>
                                         <div class="avatar-buttons">
