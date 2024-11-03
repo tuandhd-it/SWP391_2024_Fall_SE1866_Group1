@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dental_clinic_management.dto.MailBody;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
@@ -36,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 @RequiredArgsConstructor
@@ -262,6 +265,23 @@ public class GeneralController {
         receptionistService.createExamRegistration(request);
         redirectAttributes.addFlashAttribute("successMsg", "Đăng ký khám thành công");
         //Gửi mail ở đây
+        //Tạo 1 tin nhắn mail để gửi tới email user
+        MailBody mailBody = MailBody.builder()
+                .to(request.getEmail())
+                .text("Dear " + request.getFirstName() + " " + request.getLastName() + ",\n" +
+                        "\n" +
+                        "Thank you for submitting your examination registration request. We are currently reviewing your information to confirm your booking.\n" +
+                        "\n" +
+                        "Your registration is important to us, and we are committed to ensuring a smooth process. You will receive an update from us shortly with the status of your booking, or if there is any additional information needed to complete it.\n" +
+                        "\n" +
+                        "Thank you for your patience and trust in our services.\n" +
+                        "\n" +
+                        "Best regards,\n" +
+                        "DCMS Team")
+                .subject("Your Examination Registration is Under Review")
+                .build();
+
+        emailService.sendSimpleMessage(mailBody);
         return "redirect:/homePage";
     }
 
