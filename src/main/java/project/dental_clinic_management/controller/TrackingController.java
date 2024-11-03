@@ -40,14 +40,17 @@ public class TrackingController {
             mess = "Bạn chưa có lịch làm việc!";
             return false;
         }
+
         if (schedules.getFirst().getDate().isAfter(LocalDate.now())) {
             mess = "Chưa đến ngày làm việc!";
             return false;
         }
+
         if (schedules.getLast().getDate().isBefore(LocalDate.now())) {
             mess = "Đã hết ngày làm việc!";
             return false;
         }
+
         if (schedules.stream().noneMatch(schedule -> schedule.getDate().isEqual(LocalDate.now()))) {
             mess = "Hôm nay không có lịch làm việc!";
             return false;
@@ -56,29 +59,35 @@ public class TrackingController {
     }
 
     @PostMapping("/checkin")
-    public String checkIn(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String checkIn(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String reason , Model model) {
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
         if (!isValidateSchedule(employee)) {
             return "redirect:/tracking/attendance";
         }
         try {
-            timeTrackingService.checkIn(employee.getEmp_id());
+            timeTrackingService.checkIn(employee.getEmp_id(), reason);
             mess = "Check in thành công!";
         } catch (IllegalStateException e) {
             mess = e.getMessage();
         }
-        return "redirect:/tracking/attendance"; // Redirect to the attendance page
+        model.addAttribute("message", mess);
+        return "employee/tracking";
     }
 
     @PostMapping("/checkout")
-    public String checkOut(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+    public String checkOut(@AuthenticationPrincipal UserDetails userDetails, @RequestParam(required = false) String reason , Model model) {
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
         if (!isValidateSchedule(employee)) {
             return "redirect:/tracking/attendance";
         }
-        timeTrackingService.checkOut(employee.getEmp_id());
-        mess = "Check-out successful!";
-        return "redirect:/tracking/attendance"; // Redirect to the attendance page
+        try {
+            timeTrackingService.checkOut(employee.getEmp_id(), reason);
+            mess = "Check-out thành công!";
+        } catch (IllegalStateException e) {
+            mess = e.getMessage();
+        }
+        model.addAttribute("message", mess);
+        return "employee/tracking";
     }
 
     // View monthly records
@@ -95,15 +104,21 @@ public class TrackingController {
         }
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
         List<TimeTracking> attendanceRecords = timeTrackingService.getMonthlyRecords(month, year, employee.getEmp_id());
+        Schedule schedule = scheduleRepository.findByEmpId(employee.getEmp_id()).stream().filter(s -> Objects.equals(s.getDate(), LocalDate.now())).findFirst().orElse(null);
+        if (schedule == null) {
+            mess = "Bạn chưa có lịch làm việc!";
+        } else {
+            model.addAttribute("shift", schedule.isShift());
+        }
         model.addAttribute("attendances", attendanceRecords);
         model.addAttribute("selectedMonth", month);
         model.addAttribute("selectedYear", year);
         model.addAttribute("message", mess);
+
         mess = null;
         return "employee/tracking";
     }
 
-    // Get attendance records within a date range
     @GetMapping("/attendanceByDate")
     public String getAttendanceByDate(@RequestParam(value = "startDate", required = false) LocalDate startDate,
                                       @RequestParam(value = "endDate", required = false) LocalDate endDate,

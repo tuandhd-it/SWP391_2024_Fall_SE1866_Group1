@@ -29,7 +29,7 @@ public class TimeTrackingService {
     public List<TimeTracking> findByEmpId(int emp_id) {
         return timeTrackingRepository.findAllByEmployeeId(emp_id);
     }
-    public void checkIn(int employeeId) {
+    public void checkIn(int employeeId, String reason) {
         List<TimeTracking> existingRecords = timeTrackingRepository.findAllByEmployeeIdAndCheckInDate(employeeId, LocalDate.now());
 
         if (!existingRecords.isEmpty()) {
@@ -37,19 +37,23 @@ public class TimeTrackingService {
         }
         TimeTracking timeTracking = new TimeTracking();
         timeTracking.setCheckIn(LocalDateTime.now());
-        // Giả sử có cách để lấy employee từ employeeId
         timeTracking.setEmployee(employeeRepository.findByEmp_id(employeeId));
+        timeTracking.setNote("Check in: " + reason);
         timeTrackingRepository.save(timeTracking);
     }
 
-    public void checkOut(int employeeId) {
+    public void checkOut(int employeeId, String reason) {
         Pageable pageable = PageRequest.of(0, 1);
         List<TimeTracking> latestRecords = timeTrackingRepository.findLatestByEmployeeId(employeeId, pageable);
-        if (latestRecords != null) {
-            TimeTracking timeTracking = latestRecords.get(0);
-            timeTracking.setCheckOut(LocalDateTime.now());
-            timeTrackingRepository.save(timeTracking);
+
+        if (latestRecords == null || latestRecords.isEmpty() || latestRecords.getFirst().getCheckOut() != null) {
+            throw new IllegalStateException("Bạn đã check out hôm nay rồi.");
         }
+
+        TimeTracking timeTracking = latestRecords.getFirst();
+        timeTracking.setCheckOut(LocalDateTime.now());
+        timeTracking.setNote(timeTracking.getNote()==null?"":timeTracking.getNote() + "\nCheck out: " + reason);
+        timeTrackingRepository.save(timeTracking);
     }
 
     public List<TimeTracking> getMonthlyRecords(int month, int year,int employeeId) {

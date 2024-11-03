@@ -507,6 +507,7 @@ public class AdminController {
         model.addAttribute("searchType", type);
         return "/service/manageService";
     }
+
     @GetMapping("/detail/{id}")
     public String serviceList(Model model,@PathVariable("id")int id)
     {

@@ -91,6 +91,7 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <a class="btn btn-sm btn-primary"
+                                           th:if="${#authorization.expression('hasAuthority(''Admin'')')}"
                                            th:href="@{updateService/{id}(id=${ser.serviceId})}">
                                             <i class="bi bi-pencil"></i>
                                         </a>
@@ -176,7 +177,7 @@
                                 <input class="form-control" id="price" min="0" name="price" placeholder="Nhập giá" required
                                        type="number">
                                 <label for="price">Giá (VNĐ) <span class="text-danger">*</span></label>
-                                <div class="invalid-feedback">Vui lòng nhập giá hợp lệ</div>
+                                <div class="invalid-feedback">Vui lòng nhập giá</div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -188,7 +189,7 @@
                                        type="number"
                                 />
                                 <label for="quantity">Số lượng <span class="text-danger">*</span></label>
-                                <div class="invalid-feedback">Vui lòng nhập giá hợp lệ</div>
+                                <div class="invalid-feedback">Vui lòng nhập số lượng</div>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -197,15 +198,16 @@
                                        required
                                        type="text">
                                 <label for="unit">Đơn vị <span class="text-danger">*</span></label>
-                                <div class="invalid-feedback">Vui lòng nhập đơn vị hợp lệ</div>
+                                <div class="invalid-feedback">Vui lòng nhập đơn vị</div>
                             </div>
                         </div>
 
                         <div class="col-12">
                             <div class="form-floating">
-                                <textarea class="form-control" id="detail" name="detail" placeholder="Nhập mô tả" rows="3"
+                                <textarea class="form-control" id="detail" name="detail" placeholder="Nhập mô tả" rows="3" required
                                           style="height: 100px"></textarea>
-                                <label for="detail">Mô tả chi tiết</label>
+                                <label for="detail">Mô tả chi tiết<span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Vui lòng nhập mô tả</div>
                             </div>
                         </div>
 
@@ -215,6 +217,7 @@
                                        required
                                        type="text">
                                 <label for="material">Chất liệu<span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Vui lòng nhập chất liệu</div>
                             </div>
                         </div>
 
@@ -224,6 +227,7 @@
                                        required
                                        type="text">
                                 <label for="guarantee">Thời gian bảo hành<span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Vui lòng nhập thời gian bảo hành</div>
                             </div>
                         </div>
 
@@ -560,6 +564,7 @@
                 }).then(() => {
                     // Reload the page
                     location.reload();
+                    location.href = '/admin/manageService';
                 });
             } else {
                 Swal.fire({

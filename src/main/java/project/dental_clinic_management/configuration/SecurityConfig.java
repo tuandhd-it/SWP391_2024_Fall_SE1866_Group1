@@ -34,6 +34,8 @@ public class SecurityConfig {
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                         .requestMatchers("/admin/manageRegisterAccount").hasAnyAuthority("Admin", "Manager")
                         .requestMatchers("/admin/acceptAccount").hasAnyAuthority("Admin", "Manager")
+                        .requestMatchers("/admin/manageService").hasAuthority("Receptionist")
+                        .requestMatchers("/admin/detail/**").hasAuthority("Receptionist")
                         .requestMatchers("/recep/viewRegistration").hasAnyAuthority("Receptionist", "Doctor", "Manager", "Nurse")
                         .requestMatchers("/recep/myScheduleList").hasAnyAuthority("Receptionist", "Doctor", "Nurse")
                         .requestMatchers("/manager/viewRegistration").hasAnyAuthority("Receptionist", "Doctor", "Manager", "Nurse")
