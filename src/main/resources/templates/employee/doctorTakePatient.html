@@ -19,12 +19,16 @@
     <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
     <div class="container mt-5">
       <h2 class="text-center mb-4">Danh sách bệnh nhân trong phòng chờ</h2>
-      <div class="mb-6">
-        <form action="/search" method="get">
+
+      <!-- Form tìm kiếm bệnh nhân -->
+      <div class="mb-4">
+        <form th:action="@{/doctor/patientList}" method="get">
           <input type="text" id="searchInput" class="form-control" name="searchQuery" placeholder="Tên bệnh nhân">
           <button type="submit" class="btn btn-primary mt-2">Tìm kiếm</button>
         </form>
       </div>
+
+      <!-- Bảng danh sách bệnh nhân -->
       <table class="table table-striped table-bordered mt-5">
         <thead class="bg-primary text-white">
         <tr>
@@ -39,55 +43,35 @@
         </tr>
         </thead>
         <tbody>
-        <!-- Hiển thị danh sách bệnh nhân tĩnh -->
-        <tr>
-          <td>Nguyễn Văn A</td>
-          <td>1990-05-21</td>
-          <td>Waiting</td>
-          <td>10:30 AM</td>
-          <td>Không có</td>
-          <td>Ưu tiên</td>
-          <td>Đã đặt trước</td>
-          <td><button class="btn btn-success">Nhận bệnh nhân</button></td>
-        </tr>
-        <tr>
-          <td>Trần Thị B</td>
-          <td>1985-11-02</td>
-          <td>Checked-in</td>
-          <td>9:15 AM</td>
-          <td>Cần hỗ trợ</td>
-          <td>Không</td>
-          <td>Không</td>
-          <td><button class="btn btn-success">Nhận bệnh nhân</button></td>
-        </tr>
-        <tr>
-          <td>Phạm Minh C</td>
-          <td>1995-08-30</td>
-          <td>Waiting</td>
-          <td>11:00 AM</td>
-          <td>Ưu tiên điều trị</td>
-          <td>Ưu tiên</td>
-          <td>Đã đặt trước</td>
+        <!-- Hiển thị danh sách bệnh nhân -->
+        <tr th:each="patient : ${listPatient}">
+          <td th:text="${patient.getPatient().getLastName()} + ' ' + ${patient.getPatient().getFirstName()}"></td>
+          <td th:text="${patient.getPatient().getDob()}"></td>
+          <td th:text="${patient.getStatus()}"></td>
+          <td th:text="${patient.getWaitingDate()}"></td>
+          <td th:text="${patient.getNote()}"></td>
+          <td th:text="${patient.isUrgency() ? 'Ưu tiên' : 'Không'}"></td>
+          <td th:text="${patient.isBooked() ? 'Đã đặt trước' : 'Không'}"></td>
           <td><button class="btn btn-success">Nhận bệnh nhân</button></td>
         </tr>
         </tbody>
       </table>
 
-      <!-- Hiển thị phân trang tĩnh -->
+      <!-- Hiển thị phân trang -->
       <div class="d-flex justify-content-between">
         <div>
-          <span>Trang 1 / 3</span>
+          <span>Trang <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span></span>
         </div>
         <div>
-          <a href="#" class="btn btn-secondary">Trước</a>
-          <a href="#" class="btn btn-secondary">Tiếp theo</a>
+          <a th:href="@{/doctor/patientList(page=${currentPage - 1})}"
+             th:if="${currentPage > 1}" class="btn btn-secondary">Trước</a>
+          <a th:href="@{/doctor/patientList(page=${currentPage + 1})}"
+             th:if="${currentPage < totalPages}" class="btn btn-secondary">Tiếp theo</a>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-
 
 <!-- Bootstrap 4.5.2 JS and dependencies -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
