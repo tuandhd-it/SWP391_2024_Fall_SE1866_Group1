@@ -106,6 +106,10 @@ public class GeneralController {
             Employee employee = receptionistService.findByUsername(userDetails.getUsername());
             model.addAttribute("employee", employee);
         }
+        List<Service> services = serviceRepository.findAll();
+        List<Employee> doctors = employeeRepository.findByRole(roleRepository.findById(3));
+        model.addAttribute("services", services);
+        model.addAttribute("doctors", doctors);
         return "LandingPage";
     }
 
@@ -298,14 +302,7 @@ public class GeneralController {
                 .build();
     }
 
-    @GetMapping("homePage")
-    public String homePage(Model model) {
-        List<Service> services = serviceRepository.findAll();
-        List<Employee> doctors = employeeRepository.findByRole(roleRepository.findById(3));
-        model.addAttribute("services", services);
-        model.addAttribute("doctors", doctors);
-        return "LandingPage";
-    }
+
 
     @GetMapping("attendanceStatistic")
     public String attendanceStatistic(Model model) {

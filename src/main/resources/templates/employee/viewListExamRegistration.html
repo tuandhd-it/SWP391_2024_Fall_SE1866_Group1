@@ -17,15 +17,9 @@
 <body>
 
 <div class="d-flex">
-    <!-- Sidebar sẽ được thay thế từ file khác -->
     <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
-
-    <!-- Main Content -->
-    <div class="main-content" style="margin: 0; background-color: transparent; padding: 10px">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-        </div>
+    <div class="main">
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div id="acceptMsg" th:if="${acceptMsg}" class="alert alert-success">
             <p th:text="${acceptMsg}"></p>
         </div>
