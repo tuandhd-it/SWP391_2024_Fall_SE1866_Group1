@@ -1,11 +1,13 @@
 package project.dental_clinic_management.repository;
 
-import project.dental_clinic_management.entity.Employee;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Role;
+
 import java.util.List;
 
 @Repository
@@ -36,5 +38,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     void updatePassword(int empId, String newPassword);
 
 
-
+    List<Employee> findByRole(Role byId);
 }

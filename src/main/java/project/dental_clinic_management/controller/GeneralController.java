@@ -22,15 +22,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
-import project.dental_clinic_management.entity.Branch;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.RegisterExamination;
-import project.dental_clinic_management.entity.Role;
+import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.repository.EmployeeRepository;
 import project.dental_clinic_management.repository.RoleRepository;
-import project.dental_clinic_management.service.CustomUserDetailService;
-import project.dental_clinic_management.service.EmailService;
-import project.dental_clinic_management.service.FileStorageService;
-import project.dental_clinic_management.service.ReceptionistService;
+import project.dental_clinic_management.repository.ServiceRepository;
+import project.dental_clinic_management.service.*;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
@@ -55,6 +51,12 @@ public class GeneralController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ServiceService serviceService;
+    @Autowired
+    private ServiceRepository serviceRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     //Tra ve trang login
     @GetMapping("/login")
@@ -290,5 +292,12 @@ public class GeneralController {
                 .build();
     }
 
-
+    @GetMapping("homePage")
+    public String homePage(Model model) {
+        List<Service> services = serviceRepository.findAll();
+        List<Employee> doctors = employeeRepository.findByRole(roleRepository.findById(3));
+        model.addAttribute("services", services);
+        model.addAttribute("doctors", doctors);
+        return "LandingPage";
+    }
 }
