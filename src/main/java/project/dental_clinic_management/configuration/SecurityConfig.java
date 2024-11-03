@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .requestMatchers("/manager/getDetails").hasAnyAuthority("Doctor", "Nurse", "Manager", "Receptionist")
                         .requestMatchers("/manager/scheduleData").hasAnyAuthority("Doctor", "Nurse", "Manager", "Receptionist")
                         .requestMatchers("/doctor/**").hasAnyAuthority("Doctor", "Nurse")
-                        .requestMatchers("/tracking/**").hasAnyAuthority("Doctor", "Nurse","Receptionist")
+                        .requestMatchers("/tracking/**").hasAnyAuthority("Doctor", "Nurse", "Receptionist", "Admin")
                         .requestMatchers("/admin/**").hasAuthority("Admin")
                         .requestMatchers("/manager/**").hasAuthority("Manager")
                         .requestMatchers("/recep/**").hasAuthority("Receptionist")

@@ -22,6 +22,7 @@ public class TimeTracking {
     LocalDateTime checkOut;
     @Column(columnDefinition = "TEXT")
     String note;
+
     @ManyToOne
     @JoinColumn(name="emp_id")
     public Employee employee;

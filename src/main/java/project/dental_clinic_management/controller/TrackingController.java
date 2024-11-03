@@ -9,41 +9,73 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Schedule;
 import project.dental_clinic_management.entity.TimeTracking;
 import project.dental_clinic_management.repository.EmployeeRepository;
+import project.dental_clinic_management.repository.ScheduleRepository;
 import project.dental_clinic_management.service.TimeTrackingService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/tracking")
 public class TrackingController {
     private final EmployeeRepository employeeRepository;
     private final TimeTrackingService timeTrackingService;
+    private final ScheduleRepository scheduleRepository;
+    String mess = null;
 
-    public TrackingController(EmployeeRepository employeeRepository, TimeTrackingService timeTrackingService) {
+    public TrackingController(EmployeeRepository employeeRepository, TimeTrackingService timeTrackingService, ScheduleRepository scheduleRepository) {
         this.employeeRepository = employeeRepository;
         this.timeTrackingService = timeTrackingService;
+        this.scheduleRepository = scheduleRepository;
     }
-    String mess = null;
-    // Check-in action
+
+    private boolean isValidateSchedule(Employee employee) {
+        List<Schedule> schedules = scheduleRepository.findByEmpId(employee.getEmp_id());
+        if (schedules.isEmpty()) {
+            mess = "Bạn chưa có lịch làm việc!";
+            return false;
+        }
+        if (schedules.getFirst().getDate().isAfter(LocalDate.now())) {
+            mess = "Chưa đến ngày làm việc!";
+            return false;
+        }
+        if (schedules.getLast().getDate().isBefore(LocalDate.now())) {
+            mess = "Đã hết ngày làm việc!";
+            return false;
+        }
+        if (schedules.stream().noneMatch(schedule -> schedule.getDate().isEqual(LocalDate.now()))) {
+            mess = "Hôm nay không có lịch làm việc!";
+            return false;
+        }
+        return true;
+    }
+
     @PostMapping("/checkin")
     public String checkIn(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
+        if (!isValidateSchedule(employee)) {
+            return "redirect:/tracking/attendance";
+        }
         try {
             timeTrackingService.checkIn(employee.getEmp_id());
-            mess=  "Check in thành công!";
+            mess = "Check in thành công!";
         } catch (IllegalStateException e) {
             mess = e.getMessage();
         }
         return "redirect:/tracking/attendance"; // Redirect to the attendance page
     }
 
-    // Check-out action
     @PostMapping("/checkout")
     public String checkOut(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
+        if (!isValidateSchedule(employee)) {
+            return "redirect:/tracking/attendance";
+        }
         timeTrackingService.checkOut(employee.getEmp_id());
         mess = "Check-out successful!";
         return "redirect:/tracking/attendance"; // Redirect to the attendance page
@@ -62,7 +94,7 @@ public class TrackingController {
             year = now.getYear();
         }
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
-        List<TimeTracking> attendanceRecords = timeTrackingService.getMonthlyRecords(month, year,employee.getEmp_id());
+        List<TimeTracking> attendanceRecords = timeTrackingService.getMonthlyRecords(month, year, employee.getEmp_id());
         model.addAttribute("attendances", attendanceRecords);
         model.addAttribute("selectedMonth", month);
         model.addAttribute("selectedYear", year);
@@ -73,11 +105,15 @@ public class TrackingController {
 
     // Get attendance records within a date range
     @GetMapping("/attendanceByDate")
-    public String getAttendanceByDate(@RequestParam(value = "startDate", required = false) String startDate,
-                                      @RequestParam(value = "endDate", required = false) String endDate,
+    public String getAttendanceByDate(@RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                      @RequestParam(value = "endDate", required = false) LocalDate endDate,
                                       @AuthenticationPrincipal UserDetails userDetails,
                                       Model model) {
-
+        Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
+        if (!Objects.equals(employee.getRole().getRoleName(), "Admin")) {
+            model.addAttribute("message", "Bạn không có quyền truy cập vào trang này!");
+            return "redirect:/tracking/attendance";
+        }
         List<TimeTracking> attendanceRecords;
 
         if (startDate != null && endDate != null) {
@@ -89,8 +125,7 @@ public class TrackingController {
         } else {
             attendanceRecords = timeTrackingService.getAllRecords();
         }
-
         model.addAttribute("attendances", attendanceRecords);
-        return "employee/tracking";
+        return "timeTracking/managerTimeTracking";
     }
 }

@@ -22,19 +22,17 @@
                     </h1>
 
                     <div class="date-picker-container">
-                        <form class="mb-0" method="get" th:action="@{/attendanceByDate}">
+                        <form class="mb-0" method="get" th:action="@{/tracking/attendanceByDate}">
                             <div class="row align-items-end">
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold mb-2" for="startDate">Từ ngày:</label>
                                     <input class="form-control" id="startDate" name="startDate"
-                                           required
                                            th:value="${startDate}"
                                            type="date">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold mb-2" for="endDate">Đến ngày:</label>
                                     <input class="form-control" id="endDate" name="endDate"
-                                           required
                                            th:value="${endDate}"
                                            type="date">
                                 </div>
@@ -50,14 +48,12 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <button class="btn btn-check" type="submit">
+                                    <button class="btn" type="submit">
                                         <i class="fas fa-search me-2"></i>Kiểm tra
                                     </button>
                                 </div>
                             </div>
-                            <button class="btn btn-check" type="submit">
-                                <i class="fas fa-search me-2"></i>Kiểm tra
-                            </button>
+
                         </form>
                     </div>
 
@@ -122,7 +118,7 @@
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
         const today = new Date();
-
+        const dayOfWeek = today.getDay() === 0 ? 6 : today.getDay() - 1;
         switch (this.value) {
             case 'custom':
                 startDateInput.value = '';
@@ -140,15 +136,15 @@
                 break;
             case 'thisWeek':
                 const firstDayOfWeek = new Date(today);
-                firstDayOfWeek.setDate(today.getDate() - today.getDay());
+                firstDayOfWeek.setDate(today.getDate() - dayOfWeek);
                 startDateInput.value = formatDate(firstDayOfWeek);
                 endDateInput.value = formatDate(today);
                 break;
             case 'lastWeek':
                 const lastWeekStart = new Date(today);
-                lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
-                const lastWeekEnd = new Date(today);
-                lastWeekEnd.setDate(today.getDate() - today.getDay() - 1);
+                lastWeekStart.setDate(today.getDate() - dayOfWeek - 7);
+                const lastWeekEnd = new Date(lastWeekStart);
+                lastWeekEnd.setDate(lastWeekStart.getDate() + 6);
                 startDateInput.value = formatDate(lastWeekStart);
                 endDateInput.value = formatDate(lastWeekEnd);
                 break;
