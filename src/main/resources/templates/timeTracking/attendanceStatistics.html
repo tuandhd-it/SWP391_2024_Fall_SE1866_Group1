@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Attendance Statistics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/attendanceStatistic.css}">
+    <style>
+
+    </style>
+</head>
+<body>
+<div class="container-fluid p-4">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Attendance Statistics</h2>
+        <div class="d-flex gap-3">
+            <!--            <input type="month" class="form-control" id="monthFilter">-->
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card card bg-primary text-white p-3">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6>Total Employees</h6>
+                        <h3 th:text="${employees.size()}"></h3>
+                    </div>
+                    <i class="fas fa-users fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card card bg-success text-white p-3">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6>On Time Today</h6>
+                        <h3 th:text="${onTimeToday}">130</h3>
+                    </div>
+                    <i class="fas fa-check-circle fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card card bg-warning text-white p-3">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6>Late Today</h6>
+                        <h3 th:text="${lateToday}">15</h3>
+                    </div>
+                    <i class="fas fa-clock fa-2x"></i>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card card bg-danger text-white p-3">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6>Absent Today</h6>
+                        <h3 th:text="${absentToday}">5</h3>
+                    </div>
+                    <i class="fas fa-times-circle fa-2x"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="row">
+        <div class="col-md-8">
+            <div class="chart-container">
+                <h5>Monthly Attendance Trends</h5>
+                <canvas id="attendanceChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="chart-container">
+                <h5>Today's Overview</h5>
+                <canvas id="todayPieChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/monthlyAttendanceStatistics')
+            .then(response => response.json())
+            .then(data => {
+                const labels = Object.keys(data);
+                const onTimeData = labels.map(month => data[month].onTime || 0);
+                const lateData = labels.map(month => data[month].late || 0);
+                const absentData = labels.map(month => data[month].absent || 0);
+
+                // Update line chart
+                const ctx = document.getElementById('attendanceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'On Time',
+                            data: onTimeData,
+                            borderColor: '#28a745',
+                            tension: 0.1
+                        }, {
+                            label: 'Late',
+                            data: lateData,
+                            borderColor: '#ffc107',
+                            tension: 0.1
+                        }, {
+                            label: 'Absent',
+                            data: absentData,
+                            borderColor: '#dc3545',
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+
+                // Calculate today's overview for pie chart
+                const todayData = {
+                    onTime: onTimeData[onTimeData.length - 1],
+                    late: lateData[lateData.length - 1],
+                    absent: absentData[absentData.length - 1]
+                };
+
+                // Update pie chart
+                const pieCtx = document.getElementById('todayPieChart').getContext('2d');
+                new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['On Time', 'Late', 'Absent'],
+                        datasets: [{
+                            data: [todayData.onTime, todayData.late, todayData.absent],
+                            backgroundColor: ['#28a745', '#ffc107', '#dc3545']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching monthly attendance statistics:', error));
+    });
+</script>
+</body>
+</html>

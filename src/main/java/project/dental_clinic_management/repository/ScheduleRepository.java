@@ -24,4 +24,8 @@ public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
     @Transactional
     @Query("DELETE FROM Schedule s WHERE s.date = ?1 AND s.employee.emp_id = ?2 AND s.shift = ?3")
     void deleteEmpSchedule(LocalDate date, int empId, boolean shift);
+
+    List<Schedule> findByDate(LocalDate now);
+
+    Schedule findByDateAndEmployee(LocalDate date, Employee employee);
 }

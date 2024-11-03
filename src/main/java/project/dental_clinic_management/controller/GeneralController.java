@@ -23,17 +23,19 @@ import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
-import project.dental_clinic_management.repository.EmployeeRepository;
-import project.dental_clinic_management.repository.RoleRepository;
-import project.dental_clinic_management.repository.ServiceRepository;
+import project.dental_clinic_management.repository.*;
 import project.dental_clinic_management.service.*;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -57,6 +59,10 @@ public class GeneralController {
     private ServiceRepository serviceRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private TimeTrackingRepository timeTrackingRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     //Tra ve trang login
     @GetMapping("/login")
@@ -299,5 +305,112 @@ public class GeneralController {
         model.addAttribute("services", services);
         model.addAttribute("doctors", doctors);
         return "LandingPage";
+    }
+
+    @GetMapping("attendanceStatistic")
+    public String attendanceStatistic(Model model) {
+        List<Employee> employees = employeeRepository.findAll();
+        List<TimeTracking> timeTrackings = timeTrackingRepository.findAll();
+        List<Schedule> schedules = scheduleRepository.findByDate(LocalDate.now());
+        int onTimeCount = 0;
+        int lateCount = 0;
+        int absentCount = 0;
+
+        for (TimeTracking timeTracking : timeTrackings) {
+            Employee employee = timeTracking.getEmployee();
+            LocalTime checkInTime = timeTracking.getCheckIn().toLocalTime();
+            Schedule schedule = schedules.stream().filter(s -> s.getEmployee().getEmp_id() == employee.getEmp_id()).findFirst().orElse(null);
+
+            if (schedule != null) {
+                if (!schedule.isShift()) {
+                    if (checkInTime.isBefore(LocalTime.of(7, 15))) {
+                        onTimeCount++;
+                    } else {
+                        lateCount++;
+                    }
+                } else {
+                    if (checkInTime.isBefore(LocalTime.of(13, 15))) {
+                        onTimeCount++;
+                    } else {
+                        lateCount++;
+                    }
+                }
+            }
+        }
+
+        // Find absent employees
+        List<Employee> absentEmployees = new ArrayList<>();
+        for (Employee employee : employees) {
+            boolean isAbsent = timeTrackings.stream().noneMatch(tt -> tt.getEmployee().getEmp_id() == employee.getEmp_id());
+            if (isAbsent) {
+                absentEmployees.add(employee);
+                absentCount++;
+            }
+        }
+
+
+        model.addAttribute("employees", employees);
+        model.addAttribute("onTimeToday", onTimeCount);
+        model.addAttribute("lateToday", lateCount);
+        model.addAttribute("absentToday", absentCount);
+        model.addAttribute("absentEmployees", absentEmployees);
+        return "timeTracking/attendanceStatistics";
+    }
+
+    @GetMapping("/monthlyAttendanceStatistics")
+    @ResponseBody
+    public ResponseEntity<Map<String, Map<String, Integer>>> getMonthlyAttendanceStatistics() {
+        List<TimeTracking> timeTrackings = timeTrackingRepository.findAll();
+        Map<String, Map<String, Integer>> monthlyStatistics = new HashMap<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+
+        for (TimeTracking timeTracking : timeTrackings) {
+            LocalDate date = timeTracking.getCheckIn().toLocalDate();
+            String month = date.format(formatter);
+
+            monthlyStatistics.putIfAbsent(month, new HashMap<>());
+            Map<String, Integer> stats = monthlyStatistics.get(month);
+
+            Employee employee = timeTracking.getEmployee();
+            LocalTime checkInTime = timeTracking.getCheckIn().toLocalTime();
+            Schedule schedule = scheduleRepository.findByDateAndEmployee(date, employee);
+
+            if (schedule != null) {
+                if (!schedule.isShift()) {
+                    if (checkInTime.isBefore(LocalTime.of(7, 15))) {
+                        stats.put("onTime", stats.getOrDefault("onTime", 0) + 1);
+                    } else {
+                        stats.put("late", stats.getOrDefault("late", 0) + 1);
+                    }
+                } else {
+                    if (checkInTime.isBefore(LocalTime.of(13, 15))) {
+                        stats.put("onTime", stats.getOrDefault("onTime", 0) + 1);
+                    } else {
+                        stats.put("late", stats.getOrDefault("late", 0) + 1);
+                    }
+                }
+            }
+        }
+
+        List<Employee> employees = employeeRepository.findAll();
+        for (Employee employee : employees) {
+            for (String month : monthlyStatistics.keySet()) {
+                LocalDate firstDayOfMonth = LocalDate.parse("01 " + month, DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+                LocalDate lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
+
+                boolean isAbsent = timeTrackings.stream()
+                        .noneMatch(tt -> tt.getEmployee().getEmp_id() == employee.getEmp_id() &&
+                                !tt.getCheckIn().toLocalDate().isBefore(firstDayOfMonth) &&
+                                !tt.getCheckIn().toLocalDate().isAfter(lastDayOfMonth));
+
+                if (isAbsent) {
+                    Map<String, Integer> stats = monthlyStatistics.get(month);
+                    stats.put("absent", stats.getOrDefault("absent", 0) + 1);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(monthlyStatistics);
     }
 }
