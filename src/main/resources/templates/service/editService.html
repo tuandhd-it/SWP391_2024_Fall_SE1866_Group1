@@ -176,11 +176,11 @@
             return;
         }
 
-        if (price.length < 1 || price.length > 200) {
+        if (price.length < 1 || price.length > 200 || price < 0) {
             Swal.fire({
                 icon: "error",
                 title: "Lỗi",
-                text: "Giá dịch vụ phải từ 1 đến 200 ký tự!"
+                text: "Giá dịch vụ phải nằm trong khoảng từ 0 đến 1000000000!"
             });
             return;
         }

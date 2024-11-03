@@ -70,7 +70,7 @@ public class ServiceController {
                                              @RequestParam("isActive") boolean isActive,
                                              @RequestParam("material") String material,
                                              @RequestParam("guarantee") String guarantee,
-                                             @RequestParam("quantity") String quantity,
+                                             @RequestParam("quantity") Integer quantity,
                                              @RequestParam("unit") String unit,
                                              @RequestParam("img") MultipartFile imgFile,
                                              Model model) {
