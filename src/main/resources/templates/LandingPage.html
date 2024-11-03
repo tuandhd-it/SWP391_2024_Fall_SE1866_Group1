@@ -37,8 +37,8 @@
 
 </section>
 <!-- Features section - Highlighting key features of the Dental Clinic system -->
-<section class="features">
-    <h2>Những tính năng nổi bật của Dental Clinic</h2>
+<section class="features-section">
+    <h2 class="section-title" data-aos="fade-up">Những tính năng nổi bật của Dental Clinic</h2>
     <div class="feature-list">
         <!-- Feature 1: Quản lý bệnh án điện tử -->
         <div class="feature-item">
@@ -68,7 +68,7 @@
 <section class="services-section">
     <h2 class="section-title" data-aos="fade-up">Dịch vụ nha khoa</h2>
     <div class="swiper services-swiper" data-aos="fade-up">
-        <div class="swiper-wrapper">
+        <div class="swiper-wrapper ">
             <div class="swiper-slide" th:each="service : ${services}">
                 <div class="service-card">
                     <img alt="Service Image" th:src="@{/images/{filename}(filename=${service.img})}">
@@ -93,7 +93,7 @@
                 <div class="doctor-card">
                     <img alt="Doctor Image" th:src="@{/images/{filename}(filename=${doctor.img})}">
                     <div class="card-body">
-                        <h5 th:text="${doctor.getFirst_name() + doctor.getLast_name()}">Tên bác sĩ</h5>
+                        <h5 th:text="${doctor.getFirst_name() +' '+ doctor.getLast_name()}">Tên bác sĩ</h5>
                         <p class="text-muted" th:text="${doctor.getSpecification()}">Chuyên khoa</p>
                         <p th:text="${doctor.getDescription()}">Mô tả ngắn về bác sĩ</p>
                     </div>
