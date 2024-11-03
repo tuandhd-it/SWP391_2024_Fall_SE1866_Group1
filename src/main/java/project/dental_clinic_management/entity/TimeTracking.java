@@ -6,10 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 @Entity
 @Data
@@ -22,7 +20,8 @@ public class TimeTracking {
     int timeTrackingId;
     LocalDateTime checkIn;
     LocalDateTime checkOut;
-
+    @Column(columnDefinition = "TEXT")
+    String note;
     @ManyToOne
     @JoinColumn(name="emp_id")
     public Employee employee;
@@ -50,6 +49,16 @@ public class TimeTracking {
         if (checkOut != null) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
             return checkOut.format(formatter);
+        }
+        return "";
+    }
+
+    public String getTotalWorkingTime() {
+        if (checkIn != null && checkOut != null) {
+            long diff = java.time.Duration.between(checkIn, checkOut).toMinutes();
+            long hours = diff / 60;
+            long minutes = diff % 60;
+            return hours + "h" + minutes + "m";
         }
         return "";
     }

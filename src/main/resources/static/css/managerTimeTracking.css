@@ -1,0 +1,180 @@
+:root {
+    --primary-color: #4361ee;
+    --success-color: #2ec4b6;
+    --danger-color: #e63946;
+    --bg-light: #f8f9fa;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+}
+
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.main {
+    background-color: #f5f7fa;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.page-title {
+    color: #1a237e;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    font-size: 1.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-title i {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+    border-radius: var(--radius-sm);
+}
+
+.date-picker-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.form-control {
+    border-radius: var(--radius-sm);
+    border: 2px solid #e0e0e0;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
+}
+
+.btn-check {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-check:hover {
+    background: #3651d4;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.div-table {
+    background: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.table {
+    margin-bottom: 0;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+    padding: 1rem;
+    font-weight: 600;
+    color: #424242;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.table tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    color: #424242;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table tbody tr:hover {
+    background-color: #f8faff;
+}
+
+.employee-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.employee-avatar {
+    width: 40px;
+    height: 40px;
+    background: #e3e7ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.status-checkin {
+    background-color: #ecfdf5;
+    color: #065f46;
+}
+
+.status-checkin i {
+    color: var(--success-color);
+}
+
+.status-checkout {
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+.status-checkout i {
+    color: var(--danger-color);
+}
+
+.badge.bg-primary {
+    background-color: #4361ee !important;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Custom scrollbar */
+.div-table::-webkit-scrollbar {
+    width: 6px;
+}
+
+.div-table::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.div-table::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.div-table::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}

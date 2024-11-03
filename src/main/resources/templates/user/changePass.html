@@ -29,6 +29,10 @@
             <div class="alert alert-success col-md-12" id="error-message" role="alert" th:if="${!error.equals('')}">
                 <span class="label-span" th:text="${error}" style="color: red"></span>
             </div>
+            <!-- Display success message if present -->
+            <div class="alert alert-success col-md-12" id="success-message" role="alert" th:if="${!message.equals('')}">
+                <span class="label-span" style="color: green" th:text="${message}"></span>
+            </div>
 
             <!-- Password change form -->
             <form th:action="@{/changePass}" method="post">
@@ -69,9 +73,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
         if (errorMessage) {
             setTimeout(() => {
                 errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
             }, 3000);
         }
     });

@@ -103,12 +103,13 @@ public class GeneralController {
 
 
     @GetMapping("/changePass")
-    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("error") String messageChange) {
+    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("error") String messageChange, @ModelAttribute("message") String message) {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         model.addAttribute("employee", employee);
         if (messageChange != null && !messageChange.isEmpty()) {
             model.addAttribute("error", messageChange);
+            model.addAttribute("message", message);
         }
         return "/user/changePass";
     }
@@ -125,7 +126,7 @@ public class GeneralController {
             Employee employee = receptionistService.findByUsername(username);
             if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
                 redirectAttributes.addFlashAttribute("error", "Hãy nhập đúng mật khẩu cũ");
-                return "redirect:/changePass"; // Quay lại trang đổi mật khẩu nếu sai
+                return "redirect:/changePass";
             }
             if (!newPassword.equals(confirmNewPassword)) {
                 redirectAttributes.addFlashAttribute("error", "Mật khẩu không trùng khớp");
@@ -135,12 +136,12 @@ public class GeneralController {
             employee.setPassword(passwordEncoder.encode(newPassword));
             customUserDetailService.saveEmployee(employee);
 
-            redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
+            redirectAttributes.addFlashAttribute("message", "Thay đổi mật khẩu thành công");
+            return "redirect:/changePass";
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "redirect:/changePass";
         }
-        return "redirect:/profile";
     }
 
     @GetMapping("/profile")

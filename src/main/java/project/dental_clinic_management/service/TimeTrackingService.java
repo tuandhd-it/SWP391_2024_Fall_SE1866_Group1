@@ -57,4 +57,23 @@ public class TimeTrackingService {
         LocalDate end = start.plusMonths(1).minusDays(1);
         return timeTrackingRepository.findAllByCheckInBetween(start, end, employeeId);
     }
+
+    public List<TimeTracking> getRecordsBetweenDates(String startDate, String endDate) {
+        return timeTrackingRepository.findAllByCheckInBetween(LocalDateTime.of(LocalDate.parse(startDate), LocalTime.MIN),
+                LocalDateTime.of(LocalDate.parse(endDate), LocalTime.MAX));
+    }
+
+    public List<TimeTracking> getRecordsFromStartDate(String startDate) {
+        return timeTrackingRepository.findAllByCheckInBetween(LocalDateTime.of(LocalDate.parse(startDate), LocalTime.MIN),
+                LocalDateTime.now());
+    }
+
+    public List<TimeTracking> getRecordsUntilEndDate(String endDate) {
+        return timeTrackingRepository.findAllByCheckInBetween(LocalDateTime.of(LocalDate.parse("1970-01-01"), LocalTime.MIN),
+                LocalDateTime.of(LocalDate.parse(endDate), LocalTime.MAX));
+    }
+
+    public List<TimeTracking> getAllRecords() {
+        return timeTrackingRepository.findAll();
+    }
 }

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Service</title>
+    <title>Chi Tiết Dịch Vụ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
@@ -13,66 +13,112 @@
 
 <div class="d-flex">
     <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
-    <div class="main" style="overflow-y: auto; height: calc(100vh - 60px);">
+    <div class="main">
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-        <div class="container-fluid py-4">
-            <div class="row">
-                <div class="col-md-12 profile">
-                    <h1>Chi Tiết Dịch Vụ</h1>
 
-                    <div class="card service-card">
-                        <img alt="Service image" class="card-img-top"
-                             th:src="@{/images/{filename}(filename=${service.img})}">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${service.serviceName}"></h5>
-                            <p class="card-text" th:text="${service.detail}"></p>
+        <div class="service-container">
+            <div class="page-header">
+                <h1 class="page-title">Chi Tiết Dịch Vụ</h1>
+            </div>
+
+            <div class="service-layout">
+                <div class="image-section">
+                    <img alt="Service image" class="service-image"
+                         th:src="@{/images/{filename}(filename=${service.img})}">
+                </div>
+
+                <div class="service-details">
+                    <h2 class="service-name" th:text="${service.serviceName}"></h2>
+                    <p class="service-description" th:text="${service.detail}"></p>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Mã Dịch Vụ</div>
+                                <div class="info-value" th:text="${service.serviceId}"></div>
+                            </div>
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <span>ID:</span>
-                                <span th:text="${service.serviceId}"></span>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Giá:</span>
-                                <span th:text="${service.price}"></span>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Chất liệu:</span>
-                                <span th:text="${service.material}"></span>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Bảo hành:</span>
-                                <span th:text="${service.guarantee}"></span>
-                            </li>
-                            <li class="list-group-item">
-                                <span>Trạng thái:</span>
-                                <span th:switch="${service.isActive}">
-                                    <button class="btn btn-success status-btn" th:case="${true}" type="button">
-                                        <i class="fas fa-check-circle me-1"></i> Kích hoạt
-                                    </button>
-                                    <button class="btn btn-warning status-btn" th:case="${false}" type="button">
-                                        <i class="fas fa-pause-circle me-1"></i> Tạm ngưng
-                                    </button>
-                                </span>
-                            </li>
-                        </ul>
-                        <div class="card-body card-actions text-center">
-                            <a class="card-link edit-link"
-                               th:href="@{/admin/updateService/{id}(id=${service.serviceId})}">
-                                <i class="fas fa-edit me-1"></i> Chỉnh sửa
-                            </a>
-                            <a class="card-link back-link"
-                               th:href="@{/admin/manageService}">
-                                <i class="fas fa-arrow-left me-1"></i> Quay về
-                            </a>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Giá Dịch Vụ</div>
+                                <div class="info-value"
+                                     th:text="${#numbers.formatDecimal(service.price, 0, 'COMMA', 2, 'POINT') + ' VND'}"></div>
+                            </div>
                         </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-cubes"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Số Lượng</div>
+                                <div class="info-value" th:text="${service.quantity}"></div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-ruler"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Đơn Vị</div>
+                                <div class="info-value" th:text="${service.unit}"></div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Chất Liệu</div>
+                                <div class="info-value" th:text="${service.material}"></div>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="info-content">
+                                <div class="info-label">Bảo Hành</div>
+                                <div class="info-value" th:text="${service.guarantee}"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="status-section">
+                        <span th:switch="${service.isActive}">
+                            <span class="status-badge status-active" th:case="${true}">
+                                <i class="fas fa-check-circle"></i> Đang Hoạt Động
+                            </span>
+                            <span class="status-badge status-inactive" th:case="${false}">
+                                <i class="fas fa-pause-circle"></i> Tạm Ngưng
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <a class="btn btn-custom btn-back" th:href="@{/admin/manageService}">
+                            <i class="fas fa-arrow-left"></i> Quay Lại
+                        </a>
+                        <a class="btn btn-custom btn-edit"
+                           th:href="@{/admin/updateService/{id}(id=${service.serviceId})}">
+                            <i class="fas fa-edit"></i> Chỉnh Sửa
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <script th:src="@{/js/dashboard.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

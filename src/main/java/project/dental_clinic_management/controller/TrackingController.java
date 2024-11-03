@@ -1,28 +1,20 @@
 package project.dental_clinic_management.controller;
-import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import project.dental_clinic_management.dto.request.ServiceCreateRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.Service;
 import project.dental_clinic_management.entity.TimeTracking;
 import project.dental_clinic_management.repository.EmployeeRepository;
-import project.dental_clinic_management.repository.ServiceRepository;
-import project.dental_clinic_management.service.ServiceService;
 import project.dental_clinic_management.service.TimeTrackingService;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/tracking")
@@ -76,6 +68,29 @@ public class TrackingController {
         model.addAttribute("selectedYear", year);
         model.addAttribute("message", mess);
         mess = null;
+        return "employee/tracking";
+    }
+
+    // Get attendance records within a date range
+    @GetMapping("/attendanceByDate")
+    public String getAttendanceByDate(@RequestParam(value = "startDate", required = false) String startDate,
+                                      @RequestParam(value = "endDate", required = false) String endDate,
+                                      @AuthenticationPrincipal UserDetails userDetails,
+                                      Model model) {
+
+        List<TimeTracking> attendanceRecords;
+
+        if (startDate != null && endDate != null) {
+            attendanceRecords = timeTrackingService.getRecordsBetweenDates(startDate, endDate);
+        } else if (startDate != null) {
+            attendanceRecords = timeTrackingService.getRecordsFromStartDate(startDate);
+        } else if (endDate != null) {
+            attendanceRecords = timeTrackingService.getRecordsUntilEndDate(endDate);
+        } else {
+            attendanceRecords = timeTrackingService.getAllRecords();
+        }
+
+        model.addAttribute("attendances", attendanceRecords);
         return "employee/tracking";
     }
 }

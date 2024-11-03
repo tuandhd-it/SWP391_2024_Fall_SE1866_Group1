@@ -1,82 +1,177 @@
 <!DOCTYPE html>
 <html xmlns:th="https://www.thymeleaf.org/">
 <head>
-  <meta charset="UTF-8">
-  <title>Manage Time Tracking</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
-  <style>
-    .div-table {
-      max-height: 400px; /* Chiều cao tối đa */
-      overflow-y: auto;  /* Cuộn dọc */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Quản lý chấm công</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/managerTimeTracking.css}">
 </head>
 <body>
 <div class="d-flex">
-  <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
-  <div class="main">
-    <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-md-12 profile">
-          <h1>Bảng chấm công</h1>
-          <form method="get" class="mb-3">
-            <div class="form-group">
-              <label for="date">Chọn ngày:</label>
-              <div class="row">
-                <input type="date" id="date" name="date" class="form-control col-md" required
-                       th:value="${selectedDate}"
-                >
-                <button type="submit" class="btn btn-primary col-md">Kiểm tra</button>
-              </div>
+    <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
+    <div class="main">
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
+        <div class="container-fluid py-4">
+            <div class="row">
+                <div class="col-12">
+                    <h1 class="page-title">
+                        <i class="fas fa-clock"></i>
+                        Bảng chấm công
+                    </h1>
 
+                    <div class="date-picker-container">
+                        <form class="mb-0" method="get" th:action="@{/attendanceByDate}">
+                            <div class="row align-items-end">
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold mb-2" for="startDate">Từ ngày:</label>
+                                    <input class="form-control" id="startDate" name="startDate"
+                                           required
+                                           th:value="${startDate}"
+                                           type="date">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label fw-bold mb-2" for="endDate">Đến ngày:</label>
+                                    <input class="form-control" id="endDate" name="endDate"
+                                           required
+                                           th:value="${endDate}"
+                                           type="date">
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-select" id="timeRange" name="timeRange">
+                                        <option value="custom">Tùy chọn</option>
+                                        <option value="today">Hôm nay</option>
+                                        <option value="yesterday">Hôm qua</option>
+                                        <option value="thisWeek">Tuần này</option>
+                                        <option value="lastWeek">Tuần trước</option>
+                                        <option value="thisMonth">Tháng này</option>
+                                        <option value="lastMonth">Tháng trước</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-check" type="submit">
+                                        <i class="fas fa-search me-2"></i>Kiểm tra
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="btn btn-check" type="submit">
+                                <i class="fas fa-search me-2"></i>Kiểm tra
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="div-table">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th class="text-center" scope="col">#</th>
+                                <th scope="col">Mã NV</th>
+                                <th scope="col">Họ và tên</th>
+                                <th class="text-center" scope="col">Chức vụ</th>
+                                <th class="text-center" scope="col">Giờ vào</th>
+                                <th class="text-center" scope="col">Giờ ra</th>
+                                <th class="text-center" scope="col">Tổng thời gian</th>
+                                <th class="text-center" scope="col">Ghi chú</th>
+                                <th class="text-center" scope="col">Trạng thái</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="attendance : ${attendances}">
+                                <td class="text-center" th:text="${attendance.timeTrackingId}"></td>
+                                <td th:text="${attendance.employee.getEmp_id()}"></td>
+                                <td>
+                                    <div class="employee-info">
+                                        <div class="employee-avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <span th:text="${attendance.employee.getFirst_name()} + ' ' + ${attendance.employee.getLast_name()}"></span>
+                                    </div>
+                                </td>
+                                <td class="text-center" th:text="${attendance.employee.getRole().getRoleName()}"></td>
+                                <td class="text-center" th:text="${attendance.getFormattedCheckIn()}"></td>
+                                <td class="text-center" th:text="${attendance.getFormattedCheckOut()}"></td>
+                                <td class="text-center" th:text="${attendance.getTotalWorkingTime()}"></td>
+                                <td class="text-center" th:text="${attendance.note}"></td>
+                                <td class="text-center">
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <span th:class="${attendance.checkIn == null ? 'status-badge status-checkout' : 'status-badge status-checkin'}">
+                                            <i class="fas fa-circle"></i>
+                                            <span th:text="${attendance.checkIn == null ? 'Chưa vào' : 'Đã vào'}"></span>
+                                        </span>
+                                        <span th:class="${attendance.checkOut == null ? 'status-badge status-checkout' : 'status-badge status-checkin'}">
+                                            <i class="fas fa-circle"></i>
+                                            <span th:text="${attendance.checkOut == null ? 'Chưa ra' : 'Đã ra'}"></span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-
-          </form>
-
-          <h3>Ngày kiểm tra: <span th:text="${selectedDate}"></span></h3>
-          <div class="div-table" style="width: 100%">
-            <table style="width: 100%" class="table table-hover">
-            <thead>
-            <tr>
-              <th>ID</th>
-              <th>Mã nhân viên</th>
-              <th>Tên nhân viên</th>
-              <th>Check In</th>
-              <th>Check Out</th>
-              <th>Chú thích</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="attendance : ${attendances}">
-              <td th:text="${attendance.timeTrackingId}"></td>
-              <td th:text="${attendance.employee.getEmp_id()}"></td>
-              <td th:text="${attendance.employee.getFirst_name()} + ' ' + ${attendance.employee.getLast_name()}"></td>
-              <td th:text="${attendance.getFormattedCheckIn()}"></td>
-              <td th:text="${attendance.getFormattedCheckOut()}"></td>
-              <td>
-                <p th:class="${attendance.checkIn == null ? 'text-danger' : 'text-success'}"
-                   th:text="${attendance.checkIn == null ? 'Chưa checkin' : 'Đã checkin'}"></p>
-                <p       th:class="${attendance.checkOut == null ? 'text-danger' : 'text-success'}"
-                        th:text="${attendance.checkOut == null ? 'Chưa checkout' : 'Đã checkout'}"></p>
-
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <script th:src="@{/js/dashboard.js}"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('timeRange').addEventListener('change', function () {
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+        const today = new Date();
+
+        switch (this.value) {
+            case 'custom':
+                startDateInput.value = '';
+                endDateInput.value = '';
+                break;
+            case 'today':
+                startDateInput.value = formatDate(today);
+                endDateInput.value = formatDate(today);
+                break;
+            case 'yesterday':
+                const yesterday = new Date(today);
+                yesterday.setDate(yesterday.getDate() - 1);
+                startDateInput.value = formatDate(yesterday);
+                endDateInput.value = formatDate(yesterday);
+                break;
+            case 'thisWeek':
+                const firstDayOfWeek = new Date(today);
+                firstDayOfWeek.setDate(today.getDate() - today.getDay());
+                startDateInput.value = formatDate(firstDayOfWeek);
+                endDateInput.value = formatDate(today);
+                break;
+            case 'lastWeek':
+                const lastWeekStart = new Date(today);
+                lastWeekStart.setDate(today.getDate() - today.getDay() - 7);
+                const lastWeekEnd = new Date(today);
+                lastWeekEnd.setDate(today.getDate() - today.getDay() - 1);
+                startDateInput.value = formatDate(lastWeekStart);
+                endDateInput.value = formatDate(lastWeekEnd);
+                break;
+            case 'thisMonth':
+                const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                startDateInput.value = formatDate(firstDayOfMonth);
+                endDateInput.value = formatDate(today);
+                break;
+            case 'lastMonth':
+                const firstDayOfLastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                const lastDayOfLastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                startDateInput.value = formatDate(firstDayOfLastMonth);
+                endDateInput.value = formatDate(lastDayOfLastMonth);
+                break;
+        }
+    });
+
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+</script>
 </body>
 </html>

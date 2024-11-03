@@ -9,11 +9,13 @@
     <!-- Option 1: Include in HTML -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/manageService.css}">
     <script crossorigin="anonymous"
             integrity="sha384-DGnVWbdW9QpJAz/rJHlI6lhQsRbZ7PXfpNOf4eKvcL2ojdCpb/O2IlD5afI7gk/C"
             src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
 
 </head>
 <body>
@@ -22,129 +24,102 @@
     <div class="main">
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 profile">
-                    <div class="row" style="width: 100%;">
-                        <h1 class="col-md-10">
-                            Danh sách dịch vụ
-                        </h1>
-                        <div class="col-md-2">
-                            <button class="btn btn-primary" data-bs-target="#serviceModal" data-bs-toggle="modal"
-                                    style="margin-bottom: 20px" type="button">
-                                Thêm dịch vụ
-                            </button>
-                        </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold text-primary">Danh sách dịch vụ</h6>
+                    <button class="btn btn-primary btn-sm" data-bs-target="#serviceModal" data-bs-toggle="modal">
+                        <i class="bi bi-plus-circle"></i> Thêm dịch vụ
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <form class="d-flex gap-2">
+                                <select class="form-select w-25" id="sortType" name="sort">
+                                    <option th:selected="${sort == 'idAsc'}" value="idAsc">Bộ lọc</option>
+                                    <option th:selected="${sort == 'nameAsc'}" value="nameAsc">Tên Tăng Dần</option>
+                                    <option th:selected="${sort == 'nameDesc'}" value="nameDesc">Tên Giảm Dần</option>
+                                    <option th:selected="${sort == 'priceAsc'}" value="priceAsc">Giá Tăng Dần</option>
+                                    <option th:selected="${sort == 'priceDesc'}" value="priceDesc">Giá Giảm Dần</option>
+                                </select>
 
+                                <select class="form-select w-25" id="searchType" name="searchType">
+                                    <option th:selected="${searchType == 'name'}" value="name">Tìm theo tên</option>
+                                    <option th:selected="${searchType == 'id'}" value="id">Tìm theo ID</option>
+                                </select>
+
+                                <input class="form-control" id="searchInput" name="search"
+                                       th:placeholder="${searchType == 'id'} ? 'Nhập ID dịch vụ' : 'Nhập tên dịch vụ'"
+                                       th:value="${search}" type="search">
+
+                                <button class="btn btn-outline-primary" type="submit">
+                                    <i class="bi bi-search"></i> Tìm kiếm
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                    <form class="input-group row">
-                        <!-- Sort Type Dropdown -->
-                        <div class="col-md-2">
-                            <select aria-label="Sort By" class="form-select" id="sortType" name="sort">
-                                <option th:selected="${sort == 'idAsc'}" value="idAsc">Bộ lọc</option>
-                                <option th:selected="${sort == 'nameAsc'}" value="nameAsc">Tên Tăng Dần</option>
-                                <option th:selected="${sort == 'nameDesc'}" value="nameDesc">Tên Giảm Dần</option>
-                                <option th:selected="${sort == 'priceAsc'}" value="priceAsc">Giá Tăng Dần</option>
-                                <option th:selected="${sort == 'priceDesc'}" value="priceDesc">Giá Giảm Dần</option>
-                            </select>
-                        </div>
 
-                        <!-- Search Type Dropdown -->
-                        <div class="col-md-3">
-                            <select aria-label="Search Type" class="form-select" id="searchType" name="searchType">
-                                <option th:selected="${searchType == 'name'}" value="name">Tìm kiếm theo tên</option>
-                                <option th:selected="${searchType == 'id'}" value="id">Tìm kiếm theo ID</option>
-                            </select>
-                        </div>
-
-                        <!-- Search Input -->
-                        <input aria-label="Search" class="form-control col-md-4" id="searchInput"
-                               name="search" placeholder="Nhập tên dịch vụ" th:placeholder="${searchType == 'id'} ? 'Nhập ID dịch vụ' : 'Nhập tên dịch vụ'"
-                               th:value="${search}"
-                               type="search">
-
-                        <!-- Search Button -->
-                        <button class="btn btn-outline-success col-md-3" type="submit">Tìm kiếm</button>
-                    </form>
-                    .
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover mt-3">
-                            <thead class="table-ligth">
+                        <table class="table table-bordered table-striped">
+                            <thead class="bg-light">
                             <tr>
-                                <th style="width: 10%;">ID</th>
-                                <th style="width: 35%;">Tên dịch vụ</th>
-                                <th style="width: 20%;">Giá</th>
-                                <th style="width: 20%;">Thời gian bảo hành</th>
-                                <th style="width: 20%;">Chất liệu</th>
-                                <th style="width: 20%;">Đơn vị</th>
-                                <th style="width: 20%;">Số lượng</th>
-                                <th style="width: 20%;">Trạng thái</th>
-                                <th style="width: 15%;">Tùy chỉnh</th>
+                                <th>ID</th>
+                                <th>Tên dịch vụ</th>
+                                <th>Giá</th>
+                                <th>Đơn vị</th>
+                                <th>Số lượng</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr th:each="ser : ${listService}">
                                 <td th:text="${ser.serviceId}"></td>
                                 <td th:text="${ser.serviceName}"></td>
-                                <td th:text="${#numbers.formatCurrency(ser.price)}"></td>
-                                <td th:text="${ser.guarantee}"></td>
-                                <td th:text="${ser.material}"></td>
+                                <td th:text="${#numbers.formatDecimal(ser.price, 0, 'COMMA', 2, 'POINT') + ' VND'}"></td>
                                 <td th:text="${ser.unit}"></td>
                                 <td th:text="${ser.quantity}"></td>
                                 <td>
-                                    <div style="display: flex" th:switch="${ser.isActive}">
-
-                                        <button class="btn btn-success" style="padding: 5px; margin: 5px" th:case="${true}"
-                                                th:value="${ser.serviceId}" type="button">Kích hoạt
-                                        </button>
-
-                                        <button class="btn btn-warning" style="padding: 5px;margin: 5px" th:case="${false}"
-                                                th:value="${ser.serviceId}" type="button">Tạm ngưng
-                                        </button>
+                                    <div th:switch="${ser.isActive}">
+                                        <span class="badge bg-success" th:case="${true}">Kích hoạt</span>
+                                        <span class="badge bg-warning" th:case="${false}">Tạm ngưng</span>
                                     </div>
-
                                 </td>
                                 <td>
-                  <span class="table-action-icons">
-                      <button type="button" class="btn btn-link p-0">
-                        <a th:href="@{detail/{id}(id=${ser.serviceId})}">
-                          <i class="bi bi-eye"></i>
-                        </a>
-
-                      </button>
-                      <button type="button" class="btn btn-link p-0">
-                        <a th:href="@{updateService/{id}(id=${ser.serviceId})}">
-                          <i class="bi bi-pencil-square"></i>
-                        </a>
-
-                      </button>
-                  </span>
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-info" th:href="@{detail/{id}(id=${ser.serviceId})}">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a class="btn btn-sm btn-primary"
+                                           th:href="@{updateService/{id}(id=${ser.serviceId})}">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </div>
                                 </td>
-
                             </tr>
                             </tbody>
                         </table>
                     </div>
-                    <nav aria-label="Page navigation example">
+
+                    <nav>
                         <ul class="pagination justify-content-center">
-                            <!-- Previous button -->
                             <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
                                 <a class="page-link"
-                                   tabindex="-1"
-                                   th:href="@{/admin/manageService(page=${currentPage - 1}, search=${search}, sort=${sort})}">Trước</a>
+                                   th:href="@{/admin/manageService(page=${currentPage - 1}, search=${search}, sort=${sort})}">
+                                    <i class="bi bi-chevron-left"></i>
+                                </a>
                             </li>
-
-                            <!-- Pagination Numbers -->
                             <li class="page-item" th:classappend="${currentPage == i} ? 'active'"
                                 th:each="i : ${#numbers.sequence(1, totalPages)}">
                                 <a class="page-link"
                                    th:href="@{/admin/manageService(page=${i}, search=${search}, sort=${sort})}"
-                                   th:text="${i}">1</a>
+                                   th:text="${i}"></a>
                             </li>
-
-                            <!-- Next button -->
                             <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/admin/manageService(page=${currentPage + 1}, search=${search}, sort=${sort})}">Sau</a>
+                                   th:href="@{/admin/manageService(page=${currentPage + 1}, search=${search}, sort=${sort})}">
+                                    <i class="bi bi-chevron-right"></i>
+                                </a>
                             </li>
                         </ul>
                     </nav>
@@ -153,80 +128,183 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="serviceModal" tabindex="-1" aria-labelledby="serviceModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="serviceModalLabel">Thêm dịch vụ mới</h5>
-                <button aria-label="Close" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+
+<!-- Add Service Modal -->
+<div class="modal fade" id="serviceModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white border-0 px-4 py-3">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus-circle me-2"></i>
+                    Thêm dịch vụ mới
+                </h5>
+                <button class="btn-close btn-close-white" data-bs-dismiss="modal" type="button"></button>
             </div>
+            <div class="modal-body p-4">
+                <form class="needs-validation" id="serviceForm" novalidate>
+                    <div class="row g-4">
+                        <!-- Image Upload Section -->
+                        <div class="col-12">
+                            <div class="image-upload-container border rounded-3 p-3 text-center position-relative">
+                                <input accept="image/*" class="form-control d-none" id="imageInput" name="img"
+                                       onchange="previewImage()" type="file">
+                                <div class="mb-3" id="imagePreviewContainer" style="display: none;">
+                                    <img alt="Preview" class="img-preview rounded-3 shadow-sm" id="imagePreview"
+                                         style="max-width: 200px; max-height: 200px; object-fit: cover;">
+                                </div>
+                                <label class="upload-label cursor-pointer d-flex flex-column align-items-center gap-2"
+                                       for="imageInput">
+                                    <i class="fas fa-cloud-upload-alt fs-1 text-primary"></i>
+                                    <span class="text-muted">Kéo thả hoặc click để tải ảnh lên</span>
+                                    <small class="text-muted">(Định dạng: JPG, PNG, GIF - Tối đa 5MB)</small>
+                                </label>
+                            </div>
+                        </div>
 
-            <div class="modal-body">
-                <form id="serviceForm">
-                    <div class="mb-3">
+                        <!-- Service Details -->
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input class="form-control" id="serviceName" name="serviceName" placeholder="Nhập tên dịch vụ" required
+                                       type="text">
+                                <label for="serviceName">Tên dịch vụ <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Vui lòng nhập tên dịch vụ</div>
+                            </div>
+                        </div>
 
-                        <div class="form-group">
-                            <label class="form-label" for="imageInput">Ảnh minh họa</label>
-                            <input class="form-control" id="imageInput" name="img" onchange="previewImage()"
-                                   type="file">
-                            <div id="imagePreviewContainer" style="display: none; text-align: center;">
-                                <br>
-                                <img alt="Ảnh xem trước" id="imagePreview" src="#"
-                                     style="max-width: 50%; height: auto;">
-                                <div class="form-text" id="serviceImageHelp">Ảnh dịch vụ</div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input class="form-control" id="price" min="0" name="price" placeholder="Nhập giá" required
+                                       type="number">
+                                <label for="price">Giá (VNĐ) <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Vui lòng nhập giá hợp lệ</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-floating">
+                                <textarea class="form-control" id="detail" name="detail" placeholder="Nhập mô tả" rows="3"
+                                          style="height: 100px"></textarea>
+                                <label for="detail">Mô tả chi tiết</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input class="form-control" id="material" name="material" placeholder="Nhập chất liệu"
+                                       type="text">
+                                <label for="material">Chất liệu</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input class="form-control" id="guarantee" name="guarantee" placeholder="Nhập thời gian bảo hành"
+                                       type="text">
+                                <label for="guarantee">Thời gian bảo hành</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" id="isActive" name="isActive" type="checkbox" value="1">
+                                <label class="form-check-label" for="isActive">Kích hoạt dịch vụ</label>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="serviceName">Tên dịch vụ:</label>
-                        <input class="form-control" id="serviceName" name="serviceName" type="text">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="price">Giá:</label>
-                        <input class="form-control" id="price" min="0" name="price" oninput="checkFormValidity()"
-                               required step="0.01" type="number">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="detail">Mô tả:</label>
-                        <textarea class="form-control" id="detail" name="detail" oninput="checkFormValidity()" placeholder="Hãy nhập mô tả"
-                                  rows="3"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="material">Chất liệu:</label>
-                        <input class="form-control" id="material" name="material" type="text">
-                    </div>
-                    <div class="form-group">
-                        <label for="guarantee">Bảo hành:</label>
-                        <input class="form-control" id="guarantee" name="guarantee" type="text">
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-2">Trạng thái:</div>
-                        <div class="col-sm-10">
-                            <input class="form-check-input" id="isActive" name="isActive" type="checkbox" value="1">
-                        </div>
-
-
-                    </div>
-
-                    <div class="modal-footer justify-content-center mt-3">
-                        <button class="btn btn-secondary" data-bs-dismiss="modal" type="button">Đóng</button>
-                        <button class="btn btn-primary" id="saveButton" type="submit">Lưu thay đổi</button>
+                    <div class="text-end mt-4">
+                        <button class="btn btn-light me-2" data-bs-dismiss="modal" type="button">
+                            <i class="fas fa-times me-1"></i>
+                            Hủy
+                        </button>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-save me-1"></i>
+                            Lưu dịch vụ
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<!-- Modal -->
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <script>
+    // Form validation
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+
+    // Image preview function
+    function previewImage() {
+        const input = document.getElementById('imageInput');
+        const preview = document.getElementById('imagePreview');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const uploadLabel = document.querySelector('.upload-label');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                preview.src = e.target.result;
+                previewContainer.style.display = 'block';
+                uploadLabel.style.display = 'none';
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Drag and drop functionality
+    const dropZone = document.querySelector('.image-upload-container');
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, preventDefaults, false);
+    });
+
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        dropZone.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, unhighlight, false);
+    });
+
+    function highlight(e) {
+        dropZone.classList.add('border-primary');
+    }
+
+    function unhighlight(e) {
+        dropZone.classList.remove('border-primary');
+    }
+
+    dropZone.addEventListener('drop', handleDrop, false);
+
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        document.getElementById('imageInput').files = files;
+        previewImage();
+    }
+
     document.getElementById('searchType').addEventListener('change', function () {
         const searchInput = document.getElementById('searchInput');
         if (this.value === 'id') {

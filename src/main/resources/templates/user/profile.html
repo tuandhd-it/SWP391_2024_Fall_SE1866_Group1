@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/profile.css}">
+
 </head>
 <body>
 <div class="d-flex">
@@ -32,7 +33,7 @@
                                     <div class="avatar-upload">
                                         <div class="avatar-edit">
                                             <input accept=".png, .jpg, .jpeg" id="avatarUpload" name="avatar"
-                                                   type='file'/>
+                                                   style="display: none !important" type='file'/>
                                             <label for="avatarUpload">
                                                 <i class="fas fa-camera"></i>
                                             </label>
@@ -222,8 +223,10 @@
                                                           style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.salary}"></span>
                                                     <input class="form-control" name="salary" style="display:none;"
-                                                           maxlength="50"
                                                            th:field="*{salary}"
+                                                           max="999999999"
+                                                           min="0"
+                                                           title="Lương phải là số dương và nhỏ hơn 1 tỷ"
                                                            type="number"/>
                                                 </div>
                                             </div>
