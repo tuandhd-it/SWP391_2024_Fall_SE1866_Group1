@@ -2,6 +2,7 @@ package project.dental_clinic_management.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -12,10 +13,7 @@ import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.PatientCreationRequest;
 import project.dental_clinic_management.dto.request.PatientWaitingRoomRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.Patient;
-import project.dental_clinic_management.entity.RegisterExamination;
-import project.dental_clinic_management.entity.Schedule;
+import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.service.ReceptionistService;
 
@@ -158,6 +156,46 @@ public class ReceptionistController {
             redirectAttributes.addFlashAttribute("deleteMsg", "Xoá đơn khám thành công!");
         }
         return "redirect:/recep/viewListExaminationOnline";
+    }
+
+    /**
+     * Get data and bring it to page
+     * @param userDetails
+     * @param page
+     * @param model
+     * @return path to page
+     */
+    @GetMapping("/patientList")
+    public String patientList(@AuthenticationPrincipal UserDetails userDetails,
+                              @RequestParam(value = "page", defaultValue = "1") int page,
+                              @RequestParam(value = "searchQuery", required = false) String searchQuery,
+                              Model model) {
+
+        String username = userDetails.getUsername();
+        Employee receptionist = adminService.findByUsername(username);
+
+        WaitingRoom waitingRoom = adminService.findWaitingRoomByBranchId(receptionist.getBranch().getBran_id());
+        int waitingRoomId = waitingRoom.getWaitingRoomID();
+
+        Page<PatientWaitingRoom> patientWaitingRequests;
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            // Search for patients by name in the waiting room
+            patientWaitingRequests = receptionistService.searchPatientsInWaitingRoomByNameStatusDone(page, waitingRoomId, searchQuery);
+            model.addAttribute("searchQuery", searchQuery);
+        } else {
+            // Retrieve all patients in the waiting room with pagination
+            patientWaitingRequests = receptionistService.getAllPatientWaitingRequestsInRoomIsDone(page, waitingRoomId);
+        }
+
+        // Add attributes to the model for view rendering
+        model.addAttribute("listPatient", patientWaitingRequests.getContent());
+        model.addAttribute("waitingRoomId", waitingRoomId);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", patientWaitingRequests.getTotalPages());
+        model.addAttribute("hasPrevious", patientWaitingRequests.hasPrevious());
+        model.addAttribute("hasNext", patientWaitingRequests.hasNext());
+
+        return "/employee/recepListPatient"; // Update this path as necessary for your project structure
     }
 
 }
