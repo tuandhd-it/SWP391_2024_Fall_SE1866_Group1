@@ -7,16 +7,19 @@
 /* General Styles */
 .section-title {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 0.5rem;
     color: var(--primary-color);
     font-size: 2.5rem;
     font-weight: bold;
+    /*padding-bottom: 0.5rem;*/
 }
 
 /* Carousel Styles */
 .swiper {
-    width: 100%;
-    padding: 2rem;
+    width: 90%;
+    height: 560px;
+    /*padding: 2rem;*/
+
 }
 
 .swiper-slide {
@@ -30,7 +33,7 @@
     color: var(--primary-color);
     background: white;
     width: 3rem;
-    height: 3rem;
+    height: 2rem;
     border-radius: 50%;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
@@ -99,6 +102,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     margin: 0.5rem;
     max-width: 300px;
+    max-height: 350px;
     transition: transform 0.3s ease;
 }
 
@@ -121,8 +125,10 @@
 .features-section,
 .services-section,
 .doctors-section {
-    padding: 4rem 0;
-    background-color: var(--secondary-color);
+    padding-top: 4rem ;
+    padding-bottom: 0.5rem;
+    background-color: white;
+    height: 50%;
 }
 
 .services-section {
