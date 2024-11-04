@@ -16,5 +16,7 @@ public interface PatientWaitingRoomRepository extends JpaRepository<PatientWaiti
     @Query("SELECT COUNT(p) FROM PatientWaitingRoom p WHERE p.waitingRoomId = :waitingRoom")
     int countByWaitingRoom(@Param("waitingRoom") WaitingRoom waitingRoom);
 
+    @Query("SELECT pwr FROM PatientWaitingRoom pwr WHERE pwr.waitingRoomId = :waitingRoomId AND " +
+            "(LOWER(CONCAT(pwr.patient.firstName, ' ', pwr.patient.lastName)) LIKE LOWER(CONCAT('%', :patientName, '%')))")
     List<PatientWaitingRoom> findByWaitingRoomIdAndPatientNameContainingIgnoreCase(int waitingRoomId, String patientName);
 }
