@@ -69,8 +69,25 @@ public class GeneralController {
 
     //Tra ve trang login
     @GetMapping("/login")
-    public String login() {
+    public String login(
+            @ModelAttribute("error") String error,
+            @ModelAttribute("username") String username,
+            Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if(userDetails != null) {
+            return "redirect:/homePage";
+        }
+        if (error != null && !error.isEmpty()) {
+            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng");
+        }
+        model.addAttribute("username", username);
         return "/auth/login";
+    }
+
+    @GetMapping("/loginFail")
+    public String logins(@RequestParam("username") String username, @RequestParam("error") String error ,RedirectAttributes redirectAttributes) {
+            redirectAttributes.addFlashAttribute("username", username);
+            redirectAttributes.addFlashAttribute("error", error);
+        return "redirect:/login";
     }
 
     //Lay du kieu cac role co the dang ky cho trang register

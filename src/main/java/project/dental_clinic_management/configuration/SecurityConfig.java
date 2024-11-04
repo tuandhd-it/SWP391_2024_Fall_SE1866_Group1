@@ -13,9 +13,9 @@ import project.dental_clinic_management.service.CustomUserDetailService;
 public class SecurityConfig {
 
     //Custom endpoints that can access without log in
-    private final String[] PUBLIC_ENDPOINTS = {"/login", "/register", "/css/**", "/img/**", "/js/**", "/homePage", "/nextRegister",
+    private final String[] PUBLIC_ENDPOINTS = {"/login","/loginFail" ,"/register", "/css/**", "/img/**", "/js/**", "/homePage", "/nextRegister",
             "/nextRegisterDoctor", "/registerDoctor", "/verifyEmail/**", "/forgotPassword/**", "/guestExamRegistration", "/guestExamRegistration", "/chooseDoctor"};
-    public SecurityConfig( PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService) {
+    public SecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService) {
         this.customUserDetailService=customUserDetailService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -59,6 +59,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("username")
                         .passwordParameter("password")
+                        .failureHandler(new CustomAuthenticationFailureHandler())
                         .defaultSuccessUrl("/homePage", true)
                         .permitAll()
                 ).logout(logout -> logout

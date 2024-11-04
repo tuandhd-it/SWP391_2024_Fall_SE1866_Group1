@@ -12,14 +12,14 @@
     <header th:replace="~{/layout/headerLandingPage :: header}"></header>
     <div class="mx-auto login-container mt-5">
         <h1>Đăng nhập</h1>
-        <h3 th:text="${param.error == null ? '' : 'Username or password incorrect'}" style="color: red"></h3>
+        <h3 th:text="${error == null ? '' : error}" style="color: red"></h3>
         <h3 th:text="${existed == null ? '' : existed}" style="color: red"></h3>
         <h3 th:text="${message == null ? '' : message}" style="color: green"></h3>
         <h3 th:text="${msgChangePass == null ? '' : msgChangePass}" style="color: green"></h3>
         <form class="my-3" th:action="@{/login}" method="post">
             <div class="form-group form-outline mb-4">
                 <span class="icon" id="username-icon"><i class="fa-solid fa-user"></i></span>
-                <input class="form-control" type="text" id="username-input" name="username"
+                <input class="form-control" type="text" id="username-input" name="username" th:value="${username == null ? '' : username}"
                        placeholder="Tài khoản email">
             </div>
             <div class="form-group">
