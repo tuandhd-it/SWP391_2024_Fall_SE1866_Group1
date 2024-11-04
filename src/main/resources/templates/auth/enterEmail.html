@@ -14,7 +14,7 @@
     <h3 th:text="${emailError}" style="color: gray"></h3>
     <h3 th:text="${msg}" style="color: gray"></h3>
     <form th:action="@{/forgotPassword/verify}" method="post">
-        <input type="email" class="form-control" name="email" placeholder="Email" required>
+        <input type="email" class="form-control" name="email" placeholder="Email" th:value="${email}" required>
         <input type="submit" class="btn btn-primary" name="Submit" value="Gửi">
     </form>
 </div>

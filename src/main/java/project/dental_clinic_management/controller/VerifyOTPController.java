@@ -105,7 +105,8 @@ public class VerifyOTPController {
         if (registerVerify.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("otpMsg", "The OTP has expired");
             registerOTPVerifyRepository.deleteById(registerVerify.getRvid());
-            return "/auth/login";
+            model.addAttribute("email", email);
+            return "/auth/enterVerifyOTP";
         }
 
         //Mặc định là tài khoản cần được xét duyệt để đăng nhập vào hệ thống

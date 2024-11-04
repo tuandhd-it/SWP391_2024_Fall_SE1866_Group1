@@ -36,7 +36,8 @@ public class ForgotPasswordController {
 
     //Chuyển đến trang nhập email
     @GetMapping("/enterEmail")
-    public String enterEmail() {
+    public String enterEmail(@RequestParam("email") String email, Model model) {
+        model.addAttribute("email", email);
         return "/auth/enterEmail";
     }
 
@@ -59,6 +60,7 @@ public class ForgotPasswordController {
         if(fp.getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("msg", "The OTP has expired");
             forgotPasswordRepository.deleteById(fp.getFpid());
+            model.addAttribute("email", email);
             return "/auth/enterEmail";
         }
         model.addAttribute("msg", "OTP verified");

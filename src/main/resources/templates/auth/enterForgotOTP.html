@@ -13,7 +13,7 @@
     <h3 th:text="${msg}" style="color:gray;" class="text-center mb-3"></h3>
 
         <form th:action="@{/forgotPassword/verifyOTP}" method="post">
-        <input type="number" class="form-control" name="otp" placeholder="Enter OTP" required>
+        <input type="number" class="form-control" name="otp" placeholder="Enter OTP" th:value="${otp}" required>
         <input type="hidden" name="email" th:value="${email}">
         <input type="submit" class="btn btn-primary" name="Verify OTP" value="Verify OTP">
     </form>
