@@ -191,6 +191,7 @@
     }
 
     function handleCheckIn(event) {
+        console.log(isLateCheckIn(shift));
         if (isLateCheckIn(shift)) {
             event.preventDefault();
             document.getElementById('checkType').value = 'checkin';

@@ -38,14 +38,18 @@
                                     <label class="form-label fw-bold mb-2" for="startDate">Từ ngày:</label>
                                     <input class="form-control" id="startDate" name="startDate"
                                            th:value="${startDate}"
-                                           type="date">
+                                           type="date"
+                                           max="" onchange="updateMaxEndDate()">
                                 </div>
                                 <div class="col-md-3">
                                     <label class="form-label fw-bold mb-2" for="endDate">Đến ngày:</label>
                                     <input class="form-control" id="endDate" name="endDate"
                                            th:value="${endDate}"
-                                           type="date">
+                                           type="date"
+                                           max="" onchange="updateMaxEndDate()">
                                 </div>
+
+
                                 <div class="col-md-2">
                                     <select class="form-select" id="timeRange" name="timeRange">
                                         <option value="custom">Tùy chọn</option>
@@ -71,7 +75,7 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th class="text-center" scope="col">#</th>
+                                <th class="text-center" scope="col">Ngày</th>
                                 <th scope="col">Mã NV</th>
                                 <th scope="col">Họ và tên</th>
                                 <th class="text-center" scope="col">Chức vụ</th>
@@ -84,7 +88,7 @@
                             </thead>
                             <tbody>
                             <tr th:each="attendance : ${attendances}">
-                                <td class="text-center" th:text="${attendance.timeTrackingId}"></td>
+                                <td class="text-center" th:text="${attendance.getDayFormattedCheckIn()}"></td>
                                 <td th:text="${attendance.employee.getEmp_id()}"></td>
                                 <td>
                                     <div class="employee-info">
@@ -98,7 +102,7 @@
                                 <td class="text-center" th:text="${attendance.getFormattedCheckIn()}"></td>
                                 <td class="text-center" th:text="${attendance.getFormattedCheckOut()}"></td>
                                 <td class="text-center" th:text="${attendance.getTotalWorkingTime()}"></td>
-                                <td class="text-center" th:text="${attendance.note}"></td>
+                                <td class="text-center" th:text="${attendance.note != null ? attendance.note : 'Không'}"></td>
                                 <td class="text-center">
                                     <div class="d-flex gap-2 justify-content-center">
                                         <span th:class="${attendance.checkIn == null ? 'status-badge status-checkout' : 'status-badge status-checkin'}">
@@ -124,6 +128,27 @@
 <script th:src="@{/js/dashboard.js}"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Hàm cập nhật max cho startDate và endDate
+        function updateDateFields() {
+            const today = new Date().toISOString().split("T")[0]; // Lấy ngày hiện tại
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+
+            // Đặt max cho cả startDate và endDate là ngày hiện tại
+            startDateInput.setAttribute('max', today);
+            endDateInput.setAttribute('max', today);
+
+            // Kiểm tra và điều chỉnh giá trị endDate nếu cần
+            if (startDateInput.value && new Date(startDateInput.value) > new Date(endDateInput.value)) {
+                endDateInput.value = startDateInput.value; // Đặt endDate bằng startDate nếu nó nhỏ hơn
+            }
+        }
+
+        // Gọi hàm để thiết lập max ngay khi tải trang
+        updateDateFields();
+    });
+
     document.getElementById('timeRange').addEventListener('change', function () {
         const startDateInput = document.getElementById('startDate');
         const endDateInput = document.getElementById('endDate');
