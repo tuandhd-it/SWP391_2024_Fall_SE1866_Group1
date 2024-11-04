@@ -9,7 +9,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,7 +37,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 
 @Controller
 @RequiredArgsConstructor
@@ -92,19 +90,26 @@ public class GeneralController {
 
     //Lay du kieu cac role co the dang ky cho trang register
     @GetMapping("/register")
-    public String register(Model model) {
+    public String register(Model model, @ModelAttribute("chooseRoleFirst") String chooseRoleFirst, @ModelAttribute("inputInformation") String inputInformation, @ModelAttribute("errors") String errors) {
         // Retreat role that can register
         List<Role> registerRoles = new ArrayList<>();
         registerRoles.add(roleRepository.findById(3));
         registerRoles.add(roleRepository.findById(4));
         registerRoles.add(roleRepository.findById(5));
+        model.addAttribute("chooseRoleFirst", chooseRoleFirst);
+        model.addAttribute("inputInformation", inputInformation);
         model.addAttribute("roles", registerRoles);
+        model.addAttribute("errors", errors);
         return "/auth/register";
     }
 
     //Lay du lieu cac branch cho trang nhap thong tin de dang ky
     @PostMapping("/nextRegister")
-    public String nextRegister(Model model, @RequestParam("role") String role) {
+    public String nextRegister(Model model, @RequestParam("role") String role, RedirectAttributes redirectAttributes) {
+        if(role == null || role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("chooseRoleFirst", "You must choose role first!");
+            return "redirect:/register";
+        }
         model.addAttribute("roleValue", role);
         List<Branch> branches = receptionistService.findAllBranches();
         model.addAttribute("branches", branches);
@@ -265,13 +270,14 @@ public class GeneralController {
 
     //Đăng ký khám online
     @GetMapping("/guestExamRegistration")
-    public String guestExamRegistration(Model model) {
+    public String guestExamRegistration(Model model, @ModelAttribute("errors") String errors) {
         ExamRegistrationRequest request = new ExamRegistrationRequest();
         List<Branch> branchList = receptionistService.findAllBranches();
         model.addAttribute("branchList", branchList);
         model.addAttribute("request", request);
         List<Employee> doctors = receptionistService.findAllDoctorShift();
         model.addAttribute("doctors", doctors);
+        model.addAttribute("errors", errors);
         return "/employee/guestExamRegistration";
     }
 
@@ -303,7 +309,22 @@ public class GeneralController {
     }
 
     @PostMapping("/chooseDoctor")
-    public String chooseDoctor(@ModelAttribute ExamRegistrationRequest request, Model model) {
+    public String chooseDoctor(Model model, @ModelAttribute("request") @Valid ExamRegistrationRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+
+            bindingResult.getFieldErrors().forEach(
+                    error -> errors.put(error.getField(), error.getDefaultMessage())
+            );
+
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("Tạo mới đơn đăng ký khám thất bại, lí do:\n");
+            for (String key : errors.keySet()) {
+                errorMsg.append(errors.get(key)).append("\n");
+            }
+            redirectAttributes.addFlashAttribute("errors", errorMsg);
+            return "redirect:/guestExamRegistration";
+        }
         LocalDate choosenDate = request.getExamRegisterDate();
         String branchName = request.getBranchName();
         String shiftString = request.getShift();

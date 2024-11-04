@@ -63,8 +63,8 @@ public class ReceptionistService {
         employee.setDob(request.getDob());
         employee.setGender(request.getGender());
         employee.set_active(request.isActive());
-        employee.setFirst_name(request.getFirst_name());
-        employee.setLast_name(request.getLast_name());
+        employee.setFirst_name(request.getFirstName());
+        employee.setLast_name(request.getLastName());
         employee.setEmail(request.getEmail());
         employee.setPhone(request.getPhone());
         employee.setAddress(request.getAddress());

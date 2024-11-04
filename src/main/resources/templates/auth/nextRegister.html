@@ -21,7 +21,7 @@
                         <div class="mb-3">
                             <div class="input-group">
                                 <input type="text" placeholder="Họ" class="form-control" id="firstName" aria-label="Họ"
-                                       th:field="*{first_name}" required>
+                                       th:field="*{firstName}" required>
                                 <span class="input-group-text"><img th:src="@{/img/icon1.png}" alt="Edit" class="bxs-edit"
                                                                     style="width: 20px;"></span>
                             </div>
@@ -29,7 +29,7 @@
                         <div class="mb-3">
                             <div class="input-group">
                                 <input type="text" placeholder="Tên" class="form-control" id="lastName" aria-label="Tên"
-                                       th:field="*{last_name}" required>
+                                       th:field="*{lastName}" required>
                                 <span class="input-group-text"><img th:src="@{/img/icon1.png}" alt="Edit" class="bxs-edit"
                                                                     style="width: 20px;"></span>
                             </div>
@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         <div class="mb-3">
-                            <select class="form-select" id="branch" aria-label="Branch" th:field="*{branch_name}">
+                            <select class="form-select" id="branch" aria-label="Branch" th:field="*{branch_name}" required>
                                 <option value="" selected>Chọn chi nhánh</option>
                                 <option th:each="branch : ${branches}" th:value="${branch.getBranchName()}"
                                         th:text="${branch.getBranchName()}"></option>

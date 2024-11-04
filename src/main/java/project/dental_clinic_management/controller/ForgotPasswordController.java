@@ -44,6 +44,7 @@ public class ForgotPasswordController {
     //Xác thực OTP
     @PostMapping("/verifyOTP")
     public String verifyOTP(@RequestParam("otp") Integer otp, @RequestParam("email") String email, Model model) {
+
         Employee employee = employeeRepository.findByEmail(email);
         ForgotPassword checkRightOTP = forgotPasswordRepository.findByOtp(otp);
         model.addAttribute("email", email);

@@ -1,5 +1,8 @@
 package project.dental_clinic_management.controller;
 
+import jakarta.validation.Valid;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.entity.RegisterOTPVerify;
 import project.dental_clinic_management.entity.Role;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
@@ -37,11 +42,30 @@ public class VerifyOTPController {
 
     //Xác thực email
     @PostMapping("/verify")
-    public String verifyEmail(@RequestParam("email") String email, @RequestParam("roleValue") String role, Model model, @ModelAttribute ReceptionistCreationRequest request) {
+    public String verifyEmail(@RequestParam("email") String email, @RequestParam("roleValue") String role, Model model, @ModelAttribute @Valid ReceptionistCreationRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        if(bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+
+            bindingResult.getFieldErrors().forEach(
+                    error -> errors.put(error.getField(), error.getDefaultMessage())
+            );
+
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("Tạo mới tài khoản thất bại, lí do:\n");
+            for (String key : errors.keySet()) {
+                errorMsg.append(errors.get(key)).append("\n");
+            }
+            redirectAttributes.addFlashAttribute("errors", errorMsg);
+            return "redirect:/register";
+        }
         String existed = receptionistService.checkExistedEmployee(request.getEmail(), request.getPhone());
         if (existed != null) {
             model.addAttribute("existed", existed);
             return "/auth/login";
+        }
+        if(role == null || role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("inputInformation", "You must input your information first!");
+            return "redirect:/register";
         }
 
         model.addAttribute("creationRequest", request);
@@ -77,7 +101,7 @@ public class VerifyOTPController {
 
     //Xác thực OTP
     @PostMapping("/verifyOTP")
-    public String verifyOTP(@RequestParam("otp") Integer otp, @RequestParam("email") String email, @RequestParam("roleValue") String role, @ModelAttribute("creationRequest") ReceptionistCreationRequest request, Model model) {
+    public String verifyOTP(@RequestParam("otp") Integer otp, @RequestParam("email") String email, @RequestParam("roleValue") String role, @ModelAttribute("creationRequest") ReceptionistCreationRequest request, Model model, RedirectAttributes redirectAttributes) {
         Employee employee = receptionistService.findByEmail(email);
 
         //Kiểm tra xem OTP có đúng không
@@ -91,7 +115,12 @@ public class VerifyOTPController {
             return "/auth/enterVerifyOTP";
         }
 
-        RegisterOTPVerify registerVerify = new RegisterOTPVerify();
+        if(role == null || role.isEmpty()) {
+            redirectAttributes.addFlashAttribute("inputInformation", "You must input your information first!");
+            return "redirect:/register";
+        }
+
+        RegisterOTPVerify registerVerify;
 
         //Kiểm tra xem OTP có đúng là của email đó không
         try {
