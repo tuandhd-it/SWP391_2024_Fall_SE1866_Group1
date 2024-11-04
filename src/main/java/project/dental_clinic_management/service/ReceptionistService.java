@@ -1,5 +1,9 @@
 package project.dental_clinic_management.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.PatientWaitingRoomRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
@@ -14,7 +18,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ReceptionistService {
@@ -269,6 +275,114 @@ public class ReceptionistService {
         examRegistrationRepository.save(registerExamination);
     }
 
+    /**
+     * Get all patient waiting in room
+     * @param index
+     * @param waitingRoomId
+     * @return list patient
+     */
+    public Page<PatientWaitingRoom> getAllPatientWaitingRequestsInRoomIsWaiting(int index, int waitingRoomId) {
+        Pageable pageable = PageRequest.of(index - 1, 3);
 
+        // Fetch all waiting requests for the waiting room
+        List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomId(waitingRoomId);
+
+        // Sort the waiting requests: First by urgency (true first), then by booking status (true first)
+        List<PatientWaitingRoom> filteredAndSortedRequests = waitingRequests.stream()
+                .filter(request -> "Waiting".equals(request.getStatus())) // Filter only "Waiting" patients
+                .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
+                        .thenComparing(PatientWaitingRoom::isBooked).reversed())
+                .collect(Collectors.toList());
+
+        // Use PageImpl to convert list to page
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredAndSortedRequests.size());
+
+        if (start > end) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        return new PageImpl<>(filteredAndSortedRequests.subList(start, end), pageable, filteredAndSortedRequests.size());
+    }
+
+
+    public Page<PatientWaitingRoom> searchPatientsInWaitingRoomByName(int index, int waitingRoomId, String patientName) {
+        Pageable pageable = PageRequest.of(index - 1, 3);
+
+        // Fetch all patients in the waiting room by waitingRoomId and containing patientName
+        List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomIdAndPatientNameContainingIgnoreCase(waitingRoomId, patientName);
+
+        // Filter and sort the waiting requests: Only "Waiting" status, sorted by urgency and booking status
+        List<PatientWaitingRoom> filteredAndSortedRequests = waitingRequests.stream()
+                .filter(request -> "Waiting".equals(request.getStatus())) // Filter for patients with status "Waiting"
+                .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
+                        .thenComparing(PatientWaitingRoom::isBooked).reversed())
+                .collect(Collectors.toList());
+
+        // Create a pageable subset of the results
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredAndSortedRequests.size());
+
+        if (start > end) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        return new PageImpl<>(filteredAndSortedRequests.subList(start, end), pageable, filteredAndSortedRequests.size());
+    }
+
+    /**
+     * Get all patient waiting in room
+     * @param index
+     * @param waitingRoomId
+     * @return list patient
+     */
+    public Page<PatientWaitingRoom> getAllPatientWaitingRequestsInRoomIsDone(int index, int waitingRoomId) {
+        Pageable pageable = PageRequest.of(index - 1, 3);
+
+        // Fetch all waiting requests for the waiting room
+        List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomId(waitingRoomId);
+
+        // Sort the waiting requests: First by urgency (true first), then by booking status (true first)
+        List<PatientWaitingRoom> filteredAndSortedRequests = waitingRequests.stream()
+                .filter(request -> "Waiting".equals(request.getStatus())) // Filter only "Waiting" patients
+                .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
+                        .thenComparing(PatientWaitingRoom::isBooked).reversed())
+                .collect(Collectors.toList());
+
+        // Use PageImpl to convert list to page
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredAndSortedRequests.size());
+
+        if (start > end) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        return new PageImpl<>(filteredAndSortedRequests.subList(start, end), pageable, filteredAndSortedRequests.size());
+    }
+
+
+    public Page<PatientWaitingRoom> searchPatientsInWaitingRoomByNameStatusDone(int index, int waitingRoomId, String patientName) {
+        Pageable pageable = PageRequest.of(index - 1, 3);
+
+        // Fetch all patients in the waiting room by waitingRoomId and containing patientName
+        List<PatientWaitingRoom> waitingRequests = patientWaitingRoomRepository.findByWaitingRoomIdAndPatientNameContainingIgnoreCase(waitingRoomId, patientName);
+
+        // Filter and sort the waiting requests: Only "Waiting" status, sorted by urgency and booking status
+        List<PatientWaitingRoom> filteredAndSortedRequests = waitingRequests.stream()
+                .filter(request -> "Done".equals(request.getStatus())) // Filter for patients with status "Done"
+                .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
+                        .thenComparing(PatientWaitingRoom::isBooked).reversed())
+                .collect(Collectors.toList());
+
+        // Create a pageable subset of the results
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredAndSortedRequests.size());
+
+        if (start > end) {
+            return new PageImpl<>(new ArrayList<>(), pageable, 0);
+        }
+
+        return new PageImpl<>(filteredAndSortedRequests.subList(start, end), pageable, filteredAndSortedRequests.size());
+    }
 
 }

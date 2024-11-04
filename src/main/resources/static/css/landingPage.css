@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #0066cc;
+    --primary-color: rgb(0, 188, 212);
     --secondary-color: #e6f3ff;
     --accent-color: #ff6b6b;
 }
@@ -8,7 +8,7 @@
 .section-title {
     text-align: center;
     margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    color: rgb(0, 188, 212);
     font-size: 2.5rem;
     font-weight: bold;
     /*padding-bottom: 0.5rem;*/
@@ -30,7 +30,7 @@
 
 .swiper-button-next,
 .swiper-button-prev {
-    color: var(--primary-color);
+    color: rgb(0, 188, 212);
     background: white;
     width: 3rem;
     height: 2rem;
@@ -65,7 +65,7 @@
 }
 
 .feature-card h3 {
-    color: var(--primary-color);
+    color: rgb(0, 188, 212);
     margin-bottom: 1rem;
 }
 
@@ -102,7 +102,7 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     margin: 0.5rem;
     max-width: 300px;
-    max-height: 350px;
+    max-height: 560px;
     transition: transform 0.3s ease;
 }
 
@@ -133,4 +133,40 @@
 
 .services-section {
     background-color: white;
+}
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.info-icon {
+    width: 45px;
+    height: 45px;
+    background: rgba(26, 115, 232, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: rgb(0, 188, 212);
+    flex-shrink: 0;
+}
+
+.info-content {
+    flex-grow: 1;
+}
+
+.info-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    font-weight: 500;
 }

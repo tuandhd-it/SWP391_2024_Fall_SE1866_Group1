@@ -24,8 +24,8 @@ INSERT INTO waiting_room (waiting_roomid, is_available, capacity, branch_id)
 VALUES (1, true, 10, 1);
 
 //Create data for Medicine table
-INSERT INTO Medicine (reg_number, name, unit, quantity, price, ingredients)
-VALUES (1, 'Paracetamol', 'hộp', '1000', 5000, 'Acetaminophen');
+INSERT INTO dental_clinic_management.medicine (reg_number, medicine_name, unit, quantity, price, ingredients) VALUES (4, 'Paracetamol', 'hộp', '1000', 5000, 'Acetaminophen'), (2, 'Thuoc te', 'hộp', '1000', 1000, 'abc'), (3, 'Thuoc ho', 'chai', '0', 5000, 'xyz');
+
 
 //Create data for Service
 INSERT INTO `dental_clinic_management`.`service` (`service_id`, `is_active`, `price`, `service_name`, `detail`, `img`, `quantity`, `unit`, `guarantee`, `material`) VALUES

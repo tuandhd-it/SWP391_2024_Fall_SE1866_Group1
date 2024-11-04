@@ -309,8 +309,8 @@ public class AdminController {
     public String addPatientToWaitingRoom(@ModelAttribute @Valid @RequestBody PatientWaitingRoomRequest patientWaitingRoom,
                                           @RequestParam(name = "book", defaultValue = "false") String book,
                                           @RequestParam(name = "urgent", defaultValue = "false") String urgent,
-                                            @RequestParam(name = "patientId") String patientId,
-                                            @AuthenticationPrincipal UserDetails userDetails) {
+                                          @RequestParam(name = "patientId") String patientId,
+                                          @AuthenticationPrincipal UserDetails userDetails) {
         // Lưu thông tin bệnh nhân vào phòng chờ
         boolean booked = false;
         boolean urgented = false;
