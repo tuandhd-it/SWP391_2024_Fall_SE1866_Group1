@@ -4,11 +4,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.Service;
 import project.dental_clinic_management.entity.TimeTracking;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -26,4 +25,6 @@ public interface TimeTrackingRepository extends JpaRepository<TimeTracking, Inte
 
     @Query("SELECT t FROM TimeTracking t WHERE t.employee.emp_id = ?1 AND DATE(t.checkIn) = ?2")
     List<TimeTracking> findAllByEmployeeIdAndCheckInDate(int empId, LocalDate date);
+
+    List<TimeTracking> findAllByCheckInBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

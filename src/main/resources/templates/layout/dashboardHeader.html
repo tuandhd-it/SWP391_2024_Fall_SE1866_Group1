@@ -1,9 +1,12 @@
 
 <nav th:fragment="header" class="navbar">
-    <button class="toggler-btn" type="button">
+    <button class="toggler-btn" style="position:fixed;" type="button">
         <i class="lni lni-text-align-left"></i>
     </button>
-    <a th:if="${#authorization.expression('isAuthenticated()')}" th:href="@{/logout}">
+    <a style="right: 8px ; position: absolute;"
+       th:href="@{/logout}"
+       th:if="${#authorization.expression('isAuthenticated()')}"
+    >
         <button class="login-button">Đăng xuất</button>
     </a>
 </nav>

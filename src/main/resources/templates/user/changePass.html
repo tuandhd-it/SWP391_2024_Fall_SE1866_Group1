@@ -23,37 +23,41 @@
 
         <!-- Password change form container -->
         <div class="profile border rounded shadow">
-            <h1>Change Password</h1>
+            <h1>Thay đổi mật khẩu</h1>
 
             <!-- Display error message if present -->
-            <div th:if="${!error.equals('')}" class="alert alert-success col-md-12" role="alert">
+            <div class="alert alert-success col-md-12" id="error-message" role="alert" th:if="${!error.equals('')}">
                 <span class="label-span" th:text="${error}" style="color: red"></span>
+            </div>
+            <!-- Display success message if present -->
+            <div class="alert alert-success col-md-12" id="success-message" role="alert" th:if="${!message.equals('')}">
+                <span class="label-span" style="color: green" th:text="${message}"></span>
             </div>
 
             <!-- Password change form -->
             <form th:action="@{/changePass}" method="post">
                 <!-- Current password input -->
                 <div class="form-group row">
-                    <label class="col-form-label"><b>Current Password:</b></label>
+                    <label class="col-form-label"><b>Mật khẩu hiện tại:</b></label>
                     <input class="form-control" type="password" name="currentPassword" required>
                 </div>
 
                 <!-- New password input -->
                 <div class="form-group row">
-                    <label class="col-form-label"><b>New Password:</b></label>
+                    <label class="col-form-label"><b>Mật khẩu mới:</b></label>
                     <input class="form-control" type="password" name="newPassword" required>
                 </div>
 
                 <!-- Confirm new password input -->
                 <div class="form-group row">
-                    <label class="col-form-label"><b>Confirm New Password:</b></label>
+                    <label class="col-form-label"><b>Xác nhận mật khẩu mới:</b></label>
                     <input class="form-control" type="password" name="confirmNewPassword" required>
                 </div>
 
                 <!-- Save and Cancel buttons -->
                 <div class="button-group">
-                    <button class="btn btn-primary mb-2 button-item" type="submit">Save</button>
-                    <button class="btn btn-secondary mb-2 button-item" type="reset">Cancel</button>
+                    <button class="btn btn-primary mb-2 button-item" type="submit">Lưu</button>
+                    <button class="btn btn-secondary mb-2 button-item" type="reset">Hủy</button>
                 </div>
             </form>
         </div>
@@ -65,5 +69,18 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+        if (errorMessage) {
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
 </body>
 </html>

@@ -29,7 +29,7 @@ public class TimeTrackingService {
     public List<TimeTracking> findByEmpId(int emp_id) {
         return timeTrackingRepository.findAllByEmployeeId(emp_id);
     }
-    public void checkIn(int employeeId) {
+    public void checkIn(int employeeId, String reason) {
         List<TimeTracking> existingRecords = timeTrackingRepository.findAllByEmployeeIdAndCheckInDate(employeeId, LocalDate.now());
 
         if (!existingRecords.isEmpty()) {
@@ -37,24 +37,47 @@ public class TimeTrackingService {
         }
         TimeTracking timeTracking = new TimeTracking();
         timeTracking.setCheckIn(LocalDateTime.now());
-        // Giả sử có cách để lấy employee từ employeeId
         timeTracking.setEmployee(employeeRepository.findByEmp_id(employeeId));
+        timeTracking.setNote("Check in: " + reason);
         timeTrackingRepository.save(timeTracking);
     }
 
-    public void checkOut(int employeeId) {
+    public void checkOut(int employeeId, String reason) {
         Pageable pageable = PageRequest.of(0, 1);
         List<TimeTracking> latestRecords = timeTrackingRepository.findLatestByEmployeeId(employeeId, pageable);
-        if (latestRecords != null) {
-            TimeTracking timeTracking = latestRecords.get(0);
-            timeTracking.setCheckOut(LocalDateTime.now());
-            timeTrackingRepository.save(timeTracking);
+
+        if (latestRecords == null || latestRecords.isEmpty() || latestRecords.getFirst().getCheckOut() != null) {
+            throw new IllegalStateException("Bạn đã check out hôm nay rồi.");
         }
+
+        TimeTracking timeTracking = latestRecords.getFirst();
+        timeTracking.setCheckOut(LocalDateTime.now());
+        timeTracking.setNote(timeTracking.getNote()==null?"":timeTracking.getNote() + "\nCheck out: " + reason);
+        timeTrackingRepository.save(timeTracking);
     }
 
     public List<TimeTracking> getMonthlyRecords(int month, int year,int employeeId) {
         LocalDate start = LocalDate.of(year, month, 1);
         LocalDate end = start.plusMonths(1).minusDays(1);
         return timeTrackingRepository.findAllByCheckInBetween(start, end, employeeId);
+    }
+
+    public List<TimeTracking> getRecordsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        return timeTrackingRepository.findAllByCheckInBetween(LocalDateTime.of(startDate, LocalTime.MIN),
+                LocalDateTime.of(endDate, LocalTime.MAX));
+    }
+
+    public List<TimeTracking> getRecordsFromStartDate(LocalDate startDate) {
+        return timeTrackingRepository.findAllByCheckInBetween(LocalDateTime.of(startDate, LocalTime.MIN),
+                LocalDateTime.now());
+    }
+
+    public List<TimeTracking> getRecordsUntilEndDate(LocalDate endDate) {
+        return timeTrackingRepository.findAllByCheckInBetween(LocalDateTime.of(LocalDate.parse("1970-01-01"), LocalTime.MIN),
+                LocalDateTime.of(endDate, LocalTime.MAX));
+    }
+
+    public List<TimeTracking> getAllRecords() {
+        return timeTrackingRepository.findAll();
     }
 }

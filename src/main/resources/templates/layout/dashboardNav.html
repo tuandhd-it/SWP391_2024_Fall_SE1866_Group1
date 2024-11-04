@@ -1,5 +1,5 @@
 <!-- Sidebar -->
-<aside th:fragment="sidebar" id="sidebar" class="sidebar-toggle">
+<aside class="sidebar-toggle" id="sidebar" th:fragment="sidebar">
     <div class="sidebar-logo">
         <a href="/homePage">DCMS</a>
     </div>
@@ -109,7 +109,8 @@
                     <span>Quản lý thuốc</span>
                 </a>
             </li>
-            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+            <li class="sidebar-item"
+                th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Receptionist'')')}">
                 <a th:href="@{/admin/manageService}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý dịch vụ</span>
@@ -121,7 +122,8 @@
                     <span>Quản lý chấm công</span>
                 </a>
             </li>
-            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Doctor'')')}">
+            <li class="sidebar-item"
+                th:if="${#authorization.expression('hasAnyAuthority(''Nurse'', ''Doctor'', ''Receptionist'')')}">
                 <a th:href="@{/tracking/attendance}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Chấm công</span>

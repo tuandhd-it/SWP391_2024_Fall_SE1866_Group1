@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html lang="en" xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
     <link rel="stylesheet" th:href="@{/css/profile.css}">
+
 </head>
 <body>
 <div class="d-flex">
@@ -22,7 +23,7 @@
                     <p class="mb-0">Quản lý thông tin cá nhân của bạn</p>
                 </div>
 
-                <div class="tab-content">
+                <div class="tab-content" style="max-width: 100%">
                     <div class="tab-pane fade show active" id="basic-info">
                         <div class="row" th:object="${employee}">
                             <!-- Avatar Section -->
@@ -32,14 +33,14 @@
                                     <div class="avatar-upload">
                                         <div class="avatar-edit">
                                             <input accept=".png, .jpg, .jpeg" id="avatarUpload" name="avatar"
-                                                   type='file'/>
+                                                   style="display: none !important" type='file'/>
                                             <label for="avatarUpload">
                                                 <i class="fas fa-camera"></i>
                                             </label>
                                         </div>
                                         <div class="avatar-preview">
                                             <div id="imagePreview"
-                                                 th:style="'background-image: url(/assets/image/' + ${employee.getImg()} + ');'">
+                                                 th:style="'background-image: url(/uploads/'+ ${employee.getImg()} +');'">
                                             </div>
                                         </div>
                                         <div class="avatar-buttons">
@@ -59,20 +60,27 @@
                                     <i class="fas fa-check-circle me-2"></i>
                                     <span th:text="${message}"></span>
                                 </div>
+                                <div class="alert alert-danger" id="error-message" style="display: none;"></div>
 
-                                <form method="post" th:action="@{/profile/update}">
+                                <form class="row g-3" id="FormInfo" method="post" th:action="@{/profile/update}">
                                     <div class="row">
                                         <!-- Description Section -->
-                                        <div class="profile-section" style="margin-top: 32px">
-                                            <h3 class="section-title">Mô tả</h3>
-                                            <div class="form-group">
-                                        <span class="label-span"
-                                              style="display:inline-block;"
-                                              th:text="${employee.getDescription()}"></span>
-                                                <textarea class="form-control" placeholder="Mô tả về bản thân..."
-                                                          rows="5"
-                                                          style="display: none"
-                                                          th:field="*{description}"></textarea>
+                                        <div class="col-md-12 mb-3">
+                                            <div class="profile-section" style="margin-top: 32px">
+                                                <h3 class="section-title">Mô tả</h3>
+                                                <div class="form-group">
+                                                    <span class="label-span"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
+                                                          th:text="${employee.getDescription()}"></span>
+                                                    <textarea class="form-control" maxlength="255"
+                                                              oninput="checkMaxLength(this, 'Trường nhập mô tả')"
+                                                              placeholder="Mô tả về bản thân..."
+                                                              rows="5"
+
+                                                              style="display: none"
+                                                              th:field="*{description}">
+                                                    </textarea>
+                                                </div>
                                             </div>
                                         </div>
 
@@ -80,19 +88,25 @@
                                         <div class="col-md-6 mb-3">
                                             <div class="profile-section">
                                                 <label class="section-title">Họ và tên</label>
-                                                <div class="address">
+                                                <div class="name">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.first_name} + ' ' + ${employee.last_name}"></span>
                                                     <input class="form-control" required
                                                            style="display:none; margin-bottom: 12px"
                                                            pattern="[A-Za-zÀ-ỹà-ỹ\s]+" th:field="*{first_name}"
                                                            title="Họ và tên chỉ chứa chữ cái và khoảng trắng."
+                                                           maxlength="255"
+
+                                                           oninput="checkMaxLength(this, 'Trường nhập họ')"
                                                            type="text">
                                                     <input class="form-control" th:field="*{last_name}"
                                                            type="text"
                                                            pattern="[A-Za-zÀ-ỹà-ỹ\s]+" required
                                                            style="display:none;"
+
+                                                           maxlength="255"
+                                                           oninput="checkMaxLength(this, 'Trường nhập tên')"
                                                            title="Họ và tên chỉ chứa chữ cái và khoảng trắng.">
                                                 </div>
                                             </div>
@@ -104,8 +118,9 @@
                                                 <label class="section-title">Giới tính</label> <br>
                                                 <span class="label-span"
                                                       th:text="${employee.getGender()}"
-                                                      style="display:inline-block;"></span>
-                                                <select th:field="*{gender}" class="form-control" style="display:none;"
+                                                      style="display:inline-block; word-wrap:break-word; max-width: 100%;"></span>
+                                                <select class="form-control" style="display:none;"
+                                                        th:field="*{gender}"
                                                         required>
                                                     <option value="Nam">Nam</option>
                                                     <option value="Nữ">Nữ</option>
@@ -120,11 +135,12 @@
                                                 <label class="section-title">Ngày sinh</label>
                                                 <div class="dob">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.getDob()}"
                                                     ></span>
                                                     <input class="form-control" id="dob"
-                                                           name="dob" th:value="${employee.getFormattedDob()}" type="date"
+                                                           name="dob" th:value="${employee.getFormattedDob()}"
+                                                           type="date"
                                                            style="display:none;" required>
                                                 </div>
                                             </div>
@@ -135,9 +151,12 @@
                                                 <label class="section-title">Chức vụ</label>
                                                 <div class="role">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.getRole().getRoleName()}"></span>
-                                                    <input type="text" th:field="*{role.roleName}" class="form-control"
+                                                    <input class="form-control" maxlength="255"
+                                                           th:field="*{role.roleName}"
+
+                                                           type="text"
                                                            style="display:none;" readonly>
                                                 </div>
                                             </div>
@@ -148,9 +167,10 @@
                                                 <label class="section-title">Số điện thoại</label>
                                                 <div class="phone">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.getPhone()}"></span>
                                                     <input type="tel" th:field="*{phone}" class="form-control"
+                                                           maxlength="50"
                                                            pattern="\d{10,11}" required
                                                            style="display:none;"
                                                            title="Số điện thoại phải chứa từ 10 đến 11 chữ số.">
@@ -163,10 +183,14 @@
                                                 <h3 class="section-title">Email</h3>
                                                 <div class="email">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.getEmail()}"></span>
                                                     <input type="email" th:field="*{email}" class="form-control"
-                                                           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$" required
+                                                           maxlength="255"
+                                                           oninput="checkMaxLength(this, 'Trường nhập email')"
+
+                                                           pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                                                           required
                                                            style="display:none;"
                                                            title="Email phải đúng định dạng (ví dụ: example@domain.com)">
                                                 </div>
@@ -179,9 +203,12 @@
                                                 <h3 class="section-title">Địa chỉ</h3>
                                                 <div class="address">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.getAddress()}"></span>
                                                     <input type="text" th:field="*{address}" class="form-control"
+                                                           maxlength="255"
+
+                                                           oninput="checkMaxLength(this, 'Trường nhập địa chỉ')"
                                                            style="display:none;" required>
                                                 </div>
                                             </div>
@@ -193,10 +220,13 @@
                                                 <h3 class="section-title">Thông tin lương</h3>
                                                 <div class="salary">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.salary}"></span>
                                                     <input class="form-control" name="salary" style="display:none;"
                                                            th:field="*{salary}"
+                                                           max="999999999"
+                                                           min="0"
+                                                           title="Lương phải là số dương và nhỏ hơn 1 tỷ"
                                                            type="number"/>
                                                 </div>
                                             </div>
@@ -208,10 +238,13 @@
                                                 <h3 class="section-title">Chứng chỉ</h3>
                                                 <div class="form-group">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.certification}"></span>
                                                     <input type="text"
                                                            style="display:none;" th:field="*{certification}"
+                                                           maxlength="255"
+
+                                                           oninput="checkMaxLength(this, 'Trường nhập chứng chỉ')"
                                                            class="form-control mb-2"
                                                            placeholder="Tên chứng chỉ"/>
                                                 </div>
@@ -224,9 +257,11 @@
                                                 <h3 class="section-title">Chuyên môn</h3>
                                                 <div class="form-group">
                                                     <span class="label-span"
-                                                          style="display:inline-block;"
+                                                          style="display:inline-block; word-wrap:break-word; max-width: 100%;"
                                                           th:text="${employee.specification}"></span>
                                                     <input type="text" class="form-control mb-2"
+                                                           maxlength="255"
+                                                           oninput="checkMaxLength(this, 'Trường nhập kĩ năng chuyên môn')"
                                                            th:field="*{specification}"
                                                            style="display:none;"
                                                            placeholder="Kỹ năng chuyên môn"/>
@@ -267,6 +302,55 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script th:src="@{/js/dashboard.js}"></script>
 <script>
+    function checkMaxLength(input, name) {
+        const currentLength = input.value.length;
+        const maxLength = input.getAttribute('maxlength');
+        if (currentLength >= maxLength) {
+            showError(name + ': chỉ được nhập tối đa ' + maxLength + ' kí tự.');
+            input.value = input.value.substring(0, maxLength);
+        }
+    }
+
+    function showError(message) {
+        const errorMessageDiv = document.getElementById('error-message');
+        errorMessageDiv.textContent = message;
+        errorMessageDiv.style.display = 'block';
+        setTimeout(() => {
+            errorMessageDiv.style.display = 'none';
+        }, 5000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('input[maxlength], textarea[maxlength]').forEach(input => {
+            input.addEventListener('input', () => checkMaxLength(input));
+        });
+
+        const form = document.getElementById('FormInfo');
+        if (form) {
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+                let name = '';
+                document.querySelectorAll('input[maxlength], textarea[maxlength]').forEach(input => {
+                    const maxChar = input.getAttribute('maxlength');
+
+                    if (input.value.length > maxChar) {
+                        checkMaxLength(input);
+                        name = input.getAttribute('name');
+                        isValid = false;
+                        console.log(isValid);
+                    }
+                });
+                if (!isValid) {
+                    event.preventDefault();
+                    window.scrollTo(0, 0);
+                    showError('Xin hãy đảm bảo ' + name + ' có chiều dài đúng với mức cho phép trước khi submit.');
+                }
+            });
+        } else {
+            console.warn("Form not found. Please check the form selector.");
+        }
+    });
+
     document.getElementById('avatarUpload').style.display = 'none';
 
     // Preview avatar
@@ -281,7 +365,6 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
-
     $("#avatarUpload").change(function () {
         readURL(this);
     });

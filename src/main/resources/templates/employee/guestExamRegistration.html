@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="https://www.thymeleaf.org/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,19 +13,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.21.1/bootstrap-table.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/examRegistration.css}">
     <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+
 </head>
 <body>
 
 <div class="d-flex">
-    <!-- Sidebar sẽ được thay thế từ file khác -->
     <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
-
-    <!-- Main Content -->
-    <div class="main-content" style="margin: 0; background-color: transparent; padding: 10px">
-        <!-- Header -->
-        <div class="dashboard-header">
-            <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-        </div>
+    <div class="main">
+        <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
 
         <!-- Phiếu Đăng Ký Khám -->
         <div class="registration-form shadow">
@@ -48,9 +43,9 @@
                                th:field="*{lastName}" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="email" class="form-label">Email (nếu có)</label>
+                        <label for="email" class="form-label">Email*</label>
                         <input type="email" class="form-control" id="email" placeholder="Email" th:field="*{email}"
-                               name="email">
+                               name="email" required>
                     </div>
                     <div class="col-md-6">
                         <label for="phone" class="form-label">Số điện thoại*</label>

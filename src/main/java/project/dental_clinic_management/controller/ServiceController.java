@@ -6,12 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import project.dental_clinic_management.dto.request.ServiceCreateRequest;
 import project.dental_clinic_management.entity.Service;
 import project.dental_clinic_management.repository.ServiceRepository;
 import project.dental_clinic_management.service.ServiceService;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,7 +50,7 @@ public class ServiceController {
     public ResponseEntity<String> updateService(@ModelAttribute Service service,@RequestParam("isActive") boolean isActive) {
         List<Service> exitsServiceName = serviceRepository.findServicesByServiceNameContainingIgnoreCaseAndMaterialContainingIgnoreCase(service.getServiceName(),service.getMaterial());
         // Handle the image upload
-        if(!exitsServiceName.isEmpty()) {
+        if (!exitsServiceName.isEmpty() && exitsServiceName.stream().anyMatch(s -> s.getServiceId() != service.getServiceId())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Service already exists");
         }
         try {
@@ -72,7 +70,7 @@ public class ServiceController {
                                              @RequestParam("isActive") boolean isActive,
                                              @RequestParam("material") String material,
                                              @RequestParam("guarantee") String guarantee,
-                                             @RequestParam("quantity") String quantity,
+                                             @RequestParam("quantity") Integer quantity,
                                              @RequestParam("unit") String unit,
                                              @RequestParam("img") MultipartFile imgFile,
                                              Model model) {
@@ -144,7 +142,7 @@ public class ServiceController {
                 }
 
                 // Tạo tên tệp mới với UUID
-                String newFileName = UUID.randomUUID().toString() + fileExtension;
+                String newFileName = UUID.randomUUID() + fileExtension;
 
                 // Lưu tệp với tên mới
                 imgFile.transferTo(uploadPath.resolve(newFileName).toFile());

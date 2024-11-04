@@ -27,7 +27,7 @@ public class Service {
     boolean isActive;
     String guarantee;
     String material;
-    String quantity;
+    Integer quantity;
     String unit;
 
     @OneToMany(mappedBy = "service")
@@ -37,7 +37,7 @@ public class Service {
 
     }
 
-    public Service(int serviceId, String serviceName, String detail, String img, double price, boolean isActive, String material, String guarantee, String quantity, String unit) {
+    public Service(int serviceId, String serviceName, String detail, String img, double price, boolean isActive, String material, String guarantee, Integer quantity, String unit) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
         this.detail = detail;

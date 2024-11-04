@@ -7,10 +7,11 @@ import lombok.experimental.FieldDefaults;
 import java.time.LocalDate;
 
 @Entity
-@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 public class Schedule {
 

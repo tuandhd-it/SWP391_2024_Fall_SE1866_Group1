@@ -15,13 +15,17 @@ import java.util.List;
 public interface ScheduleRepository extends JpaRepository<Schedule, Integer> {
 
     @Query("SELECT s FROM Schedule s WHERE s.employee.emp_id = ?1")
-    public List<Schedule> findByEmpId(int id);
+    List<Schedule> findByEmpId(int id);
 
     @Query("SELECT s.employee FROM Schedule s WHERE s.date = ?2 AND s.shift = ?1")
-    public List<Employee> findEmployeeByShift(boolean shift, LocalDate currentDate);
+    List<Employee> findEmployeeByShift(boolean shift, LocalDate currentDate);
 
     @Modifying
     @Transactional
     @Query("DELETE FROM Schedule s WHERE s.date = ?1 AND s.employee.emp_id = ?2 AND s.shift = ?3")
-    public void deleteEmpSchedule(LocalDate date, int empId, boolean shift);
+    void deleteEmpSchedule(LocalDate date, int empId, boolean shift);
+
+    List<Schedule> findByDate(LocalDate now);
+
+    Schedule findByDateAndEmployee(LocalDate date, Employee employee);
 }

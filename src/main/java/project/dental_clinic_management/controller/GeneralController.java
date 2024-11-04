@@ -9,6 +9,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,25 +20,25 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dental_clinic_management.dto.MailBody;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
-import project.dental_clinic_management.entity.Branch;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.RegisterExamination;
-import project.dental_clinic_management.entity.Role;
-import project.dental_clinic_management.repository.RoleRepository;
-import project.dental_clinic_management.service.CustomUserDetailService;
-import project.dental_clinic_management.service.EmailService;
-import project.dental_clinic_management.service.FileStorageService;
-import project.dental_clinic_management.service.ReceptionistService;
+import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.repository.*;
+import project.dental_clinic_management.service.*;
 
 import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 @Controller
 @RequiredArgsConstructor
@@ -55,6 +56,16 @@ public class GeneralController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private ServiceService serviceService;
+    @Autowired
+    private ServiceRepository serviceRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
+    @Autowired
+    private TimeTrackingRepository timeTrackingRepository;
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     //Tra ve trang login
     @GetMapping("/login")
@@ -98,17 +109,22 @@ public class GeneralController {
             Employee employee = receptionistService.findByUsername(userDetails.getUsername());
             model.addAttribute("employee", employee);
         }
+        List<Service> services = serviceRepository.findAll();
+        List<Employee> doctors = employeeRepository.findByRole(roleRepository.findById(3));
+        model.addAttribute("services", services);
+        model.addAttribute("doctors", doctors);
         return "LandingPage";
     }
 
 
     @GetMapping("/changePass")
-    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("error") String messageChange) {
+    public String changePass(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("error") String messageChange, @ModelAttribute("message") String message) {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
         model.addAttribute("employee", employee);
         if (messageChange != null && !messageChange.isEmpty()) {
             model.addAttribute("error", messageChange);
+            model.addAttribute("message", message);
         }
         return "/user/changePass";
     }
@@ -125,7 +141,7 @@ public class GeneralController {
             Employee employee = receptionistService.findByUsername(username);
             if (!passwordEncoder.matches(currentPassword, employee.getPassword())) {
                 redirectAttributes.addFlashAttribute("error", "Hãy nhập đúng mật khẩu cũ");
-                return "redirect:/changePass"; // Quay lại trang đổi mật khẩu nếu sai
+                return "redirect:/changePass";
             }
             if (!newPassword.equals(confirmNewPassword)) {
                 redirectAttributes.addFlashAttribute("error", "Mật khẩu không trùng khớp");
@@ -135,12 +151,12 @@ public class GeneralController {
             employee.setPassword(passwordEncoder.encode(newPassword));
             customUserDetailService.saveEmployee(employee);
 
-            redirectAttributes.addFlashAttribute("messageChange", "Thay đổi mật khẩu thành công");
+            redirectAttributes.addFlashAttribute("message", "Thay đổi mật khẩu thành công");
+            return "redirect:/changePass";
         } catch (Exception e) {
             model.addAttribute("error", "An error occurred: " + e.getMessage());
             return "redirect:/changePass";
         }
-        return "redirect:/profile";
     }
 
     @GetMapping("/profile")
@@ -168,23 +184,27 @@ public class GeneralController {
             return "/user/profile";
         }
 
-        String username = userDetails.getUsername();
-        Employee existingEmployee = customUserDetailService.findByUsername(username);
+        try {
+            String username = userDetails.getUsername();
+            Employee existingEmployee = customUserDetailService.findByUsername(username);
 
-        if (existingEmployee != null) {
-            existingEmployee.setFirst_name(employee.getFirst_name());
-            existingEmployee.setLast_name(employee.getLast_name());
-            existingEmployee.setEmail(employee.getEmail());
-            existingEmployee.setPhone(employee.getPhone());
-            existingEmployee.setDob(employee.getDob());
-            existingEmployee.setGender(employee.getGender());
-            existingEmployee.setAddress(employee.getAddress());
-            existingEmployee.setCertification(employee.getCertification());
-            existingEmployee.setSpecification(employee.getSpecification());
-            existingEmployee.setSalary(employee.getSalary());
-            existingEmployee.setDescription(employee.getDescription());
-            customUserDetailService.saveEmployee(existingEmployee);
-            redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
+            if (existingEmployee != null) {
+                existingEmployee.setFirst_name(employee.getFirst_name());
+                existingEmployee.setLast_name(employee.getLast_name());
+                existingEmployee.setEmail(employee.getEmail());
+                existingEmployee.setPhone(employee.getPhone());
+                existingEmployee.setDob(employee.getDob());
+                existingEmployee.setGender(employee.getGender());
+                existingEmployee.setAddress(employee.getAddress());
+                existingEmployee.setCertification(employee.getCertification());
+                existingEmployee.setSpecification(employee.getSpecification());
+                existingEmployee.setSalary(employee.getSalary());
+                existingEmployee.setDescription(employee.getDescription());
+                customUserDetailService.saveEmployee(existingEmployee);
+                redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!!");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Có lỗi xảy ra khi cập nhật thông tin: " + e.getMessage());
         }
 
         return "redirect:/profile";
@@ -245,6 +265,23 @@ public class GeneralController {
         receptionistService.createExamRegistration(request);
         redirectAttributes.addFlashAttribute("successMsg", "Đăng ký khám thành công");
         //Gửi mail ở đây
+        //Tạo 1 tin nhắn mail để gửi tới email user
+        MailBody mailBody = MailBody.builder()
+                .to(request.getEmail())
+                .text("Dear " + request.getFirstName() + " " + request.getLastName() + ",\n" +
+                        "\n" +
+                        "Thank you for submitting your examination registration request. We are currently reviewing your information to confirm your booking.\n" +
+                        "\n" +
+                        "Your registration is important to us, and we are committed to ensuring a smooth process. You will receive an update from us shortly with the status of your booking, or if there is any additional information needed to complete it.\n" +
+                        "\n" +
+                        "Thank you for your patience and trust in our services.\n" +
+                        "\n" +
+                        "Best regards,\n" +
+                        "DCMS Team")
+                .subject("Your Examination Registration is Under Review")
+                .build();
+
+        emailService.sendSimpleMessage(mailBody);
         return "redirect:/homePage";
     }
 
@@ -286,4 +323,111 @@ public class GeneralController {
     }
 
 
+
+    @GetMapping("attendanceStatistic")
+    public String attendanceStatistic(Model model) {
+        List<Employee> employees = employeeRepository.findAll();
+        List<TimeTracking> timeTrackings = timeTrackingRepository.findAll();
+        List<Schedule> schedules = scheduleRepository.findByDate(LocalDate.now());
+        int onTimeCount = 0;
+        int lateCount = 0;
+        int absentCount = 0;
+
+        for (TimeTracking timeTracking : timeTrackings) {
+            Employee employee = timeTracking.getEmployee();
+            LocalTime checkInTime = timeTracking.getCheckIn().toLocalTime();
+            Schedule schedule = schedules.stream().filter(s -> s.getEmployee().getEmp_id() == employee.getEmp_id()).findFirst().orElse(null);
+
+            if (schedule != null) {
+                if (!schedule.isShift()) {
+                    if (checkInTime.isBefore(LocalTime.of(7, 15))) {
+                        onTimeCount++;
+                    } else {
+                        lateCount++;
+                    }
+                } else {
+                    if (checkInTime.isBefore(LocalTime.of(13, 15))) {
+                        onTimeCount++;
+                    } else {
+                        lateCount++;
+                    }
+                }
+            }
+        }
+
+        // Find absent employees
+        List<Employee> absentEmployees = new ArrayList<>();
+        for (Employee employee : employees) {
+            boolean isAbsent = timeTrackings.stream().noneMatch(tt -> tt.getEmployee().getEmp_id() == employee.getEmp_id());
+            if (isAbsent) {
+                absentEmployees.add(employee);
+                absentCount++;
+            }
+        }
+
+
+        model.addAttribute("employees", employees);
+        model.addAttribute("onTimeToday", onTimeCount);
+        model.addAttribute("lateToday", lateCount);
+        model.addAttribute("absentToday", absentCount);
+        model.addAttribute("absentEmployees", absentEmployees);
+        return "timeTracking/attendanceStatistics";
+    }
+
+    @GetMapping("/monthlyAttendanceStatistics")
+    @ResponseBody
+    public ResponseEntity<Map<String, Map<String, Integer>>> getMonthlyAttendanceStatistics() {
+        List<TimeTracking> timeTrackings = timeTrackingRepository.findAll();
+        Map<String, Map<String, Integer>> monthlyStatistics = new HashMap<>();
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+
+        for (TimeTracking timeTracking : timeTrackings) {
+            LocalDate date = timeTracking.getCheckIn().toLocalDate();
+            String month = date.format(formatter);
+
+            monthlyStatistics.putIfAbsent(month, new HashMap<>());
+            Map<String, Integer> stats = monthlyStatistics.get(month);
+
+            Employee employee = timeTracking.getEmployee();
+            LocalTime checkInTime = timeTracking.getCheckIn().toLocalTime();
+            Schedule schedule = scheduleRepository.findByDateAndEmployee(date, employee);
+
+            if (schedule != null) {
+                if (!schedule.isShift()) {
+                    if (checkInTime.isBefore(LocalTime.of(7, 15))) {
+                        stats.put("onTime", stats.getOrDefault("onTime", 0) + 1);
+                    } else {
+                        stats.put("late", stats.getOrDefault("late", 0) + 1);
+                    }
+                } else {
+                    if (checkInTime.isBefore(LocalTime.of(13, 15))) {
+                        stats.put("onTime", stats.getOrDefault("onTime", 0) + 1);
+                    } else {
+                        stats.put("late", stats.getOrDefault("late", 0) + 1);
+                    }
+                }
+            }
+        }
+
+        List<Employee> employees = employeeRepository.findAll();
+        for (Employee employee : employees) {
+            for (String month : monthlyStatistics.keySet()) {
+                LocalDate firstDayOfMonth = LocalDate.parse("01 " + month, DateTimeFormatter.ofPattern("dd MMMM yyyy"));
+                LocalDate lastDayOfMonth = firstDayOfMonth.withDayOfMonth(firstDayOfMonth.lengthOfMonth());
+
+                boolean isAbsent = timeTrackings.stream()
+                        .noneMatch(tt -> tt.getEmployee().getEmp_id() == employee.getEmp_id() &&
+                                !tt.getCheckIn().toLocalDate().isBefore(firstDayOfMonth) &&
+                                !tt.getCheckIn().toLocalDate().isAfter(lastDayOfMonth));
+
+                if (isAbsent) {
+                    Map<String, Integer> stats = monthlyStatistics.get(month);
+                    stats.put("absent", stats.getOrDefault("absent", 0) + 1);
+                }
+            }
+        }
+
+        return ResponseEntity.ok(monthlyStatistics);
+    }
 }

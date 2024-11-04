@@ -9,9 +9,9 @@ import java.util.List;
 
 @Repository
 public interface ExamRegistrationRepository extends JpaRepository<RegisterExamination, Long> {
-    public RegisterExamination findByRegId(Long regId);
+    RegisterExamination findByRegId(Long regId);
 
     @Query("SELECT re from RegisterExamination re WHERE re.firstName LIKE %?1% OR re.lastName LIKE %?1% OR re.phone LIKE %?1% OR re.branch.branchName LIKE %?1%")
-    public List<RegisterExamination> searchRegisterExamination(String keyword);
+    List<RegisterExamination> searchRegisterExamination(String keyword);
 
 }
