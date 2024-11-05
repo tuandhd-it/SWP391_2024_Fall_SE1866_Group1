@@ -3,11 +3,15 @@ package project.dental_clinic_management.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import project.dental_clinic_management.dto.request.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.ScheduleCreationRequest;
 import project.dental_clinic_management.dto.request.ViewDoctorInfoRequest;
@@ -15,11 +19,11 @@ import project.dental_clinic_management.dto.request.ViewDoctorSpecCert;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.dto.response.BranchEmployeeResponse;
 import project.dental_clinic_management.dto.response.ScheduleEmployeeInfoResponse;
-import project.dental_clinic_management.entity.Employee;
-import project.dental_clinic_management.entity.RegisterExamination;
-import project.dental_clinic_management.entity.Schedule;
+import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.repository.MedicineRepository;
 import project.dental_clinic_management.service.ManagerService;
 import project.dental_clinic_management.service.ReceptionistService;
+import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,6 +36,9 @@ public class ManagerController {
     private final ManagerService managerService;
 
     private final ReceptionistService receptionistService;
+
+    @Autowired
+    private MedicineRepository medicineRepository;
 
     @Autowired
     public ManagerController(ManagerService managerService, ReceptionistService receptionistService) {
@@ -235,5 +242,97 @@ public class ManagerController {
         managerService.deleteScheduleByEmpIdAndScheduleId(empId, date, shift);
         redirectAttributes.addFlashAttribute("falseMsg", "Xoá lịch làm việc thành công!");
         return "redirect:/manager/scheduleList";
+        }
+
+    //Quản lý thuốc
+
+    @GetMapping("/manageMedicine")
+    public String getAllMedicines(Model model) {
+        List<Medicine> list = managerService.getAllMedicines();
+        model.addAttribute("medicines", list);
+        return "/medicine/manageMedicine";
+    }
+    //Thêm thuốc
+    @GetMapping("/addMedicine")
+    public String showAddMedicineForm(Model model) {
+        model.addAttribute("importMedicine", new MedicineImportRequest());
+        return "medicine/manageMedicine";
+    }
+    @PostMapping("/medicineImport")
+    public String importMedicine(@ModelAttribute("importMedicine") MedicineImportRequest request, RedirectAttributes redirectAttributes) {
+        try {
+            managerService.importMedicine(request); // Gọi service để thêm thuốc
+            redirectAttributes.addFlashAttribute("successAdding", "Nhập thuốc thành công");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorAdding", "Lỗi khi nhập thuốc: " + e.getMessage());
+        }
+        return "redirect:/manager/manageMedicine";
+    }
+
+    @GetMapping("/medicines")
+    public String listMedicines(@RequestParam(defaultValue = "0") int page, Model model) {
+        int pageSize = 6; // Set the page size to 6
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Medicine> medicinePage = medicineRepository.findAll(pageable);
+        model.addAttribute("medicinePage", medicinePage);
+        return "medicine/manageMedicine";
+    }
+    //update medicine
+    @PostMapping("/updateMedicine")
+    public String updateMedicine(
+            @ModelAttribute("medicine") Medicine updatedMedicine,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            if (updatedMedicine.getRegNumber()>0) {
+                managerService.updateMedicine(updatedMedicine);
+                redirectAttributes.addFlashAttribute("successMessage", "Cập nhật thuốc thành công!");
+            } else {
+                throw new RuntimeException("Số đăng ký thuốc không hợp lệ!");
+            }
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Cập nhật thất bại: " + e.getMessage());
+        }
+
+        return "redirect:/manager/manageMedicine";
+    }
+    @GetMapping("/searchMedicine")
+    public String searchMedicine(@RequestParam("name") String name, Model model) {
+        List<Medicine> medicines = managerService.searchMedicineByName(name);
+        model.addAttribute("medicines", medicines);
+        return "medicine/manageMedicine";
+    }
+    @GetMapping("/sortMedicine")
+    public String sortMedicine(@RequestParam(name = "sortPrice") String sortPrice,
+                               Model model) {
+        List<Medicine> medicines;
+
+        // Kiểm tra người dùng muốn lọc theo giá tăng hoặc giảm
+        if ("asc".equals(sortPrice)) {
+            medicines = managerService.findAllByOrderByPriceAsc();
+        } else if ("desc".equals(sortPrice)) {
+            medicines = managerService.findAllByOrderByPriceDesc();
+        } else {
+            // Nếu giá trị không hợp lệ, có thể trả về lỗi hoặc xử lý như mong muốn
+            throw new IllegalArgumentException("Invalid sort option");
+        }
+
+        model.addAttribute("medicines", medicines);
+        return "medicine/manageMedicine";
+    }
+
+    @GetMapping("/medicineHistory")
+    public String getAllMedicineImports(Model model) {
+        List<MedicineImport> medicineImports = managerService.getAllMedicineImports();
+        model.addAttribute("medicineImports", medicineImports);
+        return "medicine/medicineHistory";
+    }
+    @GetMapping("/manageEquipment")
+    public String getAllEquipments(Model model) {
+        List<Equipment> list = managerService.getAllEquipments();
+        model.addAttribute("equipments", list);
+        return "/equipment/manageEquipment";
     }
 }
+

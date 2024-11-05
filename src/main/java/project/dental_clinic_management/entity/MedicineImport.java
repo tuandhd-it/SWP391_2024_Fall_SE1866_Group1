@@ -1,52 +1,34 @@
 package project.dental_clinic_management.entity;
+
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 @Entity
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-
 public class MedicineImport {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int medImportId;
+    int medImportId; // Thêm trường này làm khóa chính cho MedicineImport
 
     @ManyToOne
-    @JoinColumn(name = "regNumber", nullable = false)
-    private Medicine medicine;
+    @JoinColumn(name = "reg_number")
+    Medicine medicine;
 
     @ManyToOne
-    @JoinColumn(name = "empId")
-    private Employee employee;
+    @JoinColumn(name = "emp_id")
+    Employee employee;
 
     @ManyToOne
-    @JoinColumn(name = "branchId")
-    private Branch branch;
+    @JoinColumn(name = "bran_id")
+    Branch branch;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    Date date;
-
-    String quantity;
-    double price;
-    String note;
-    double totalPrice;
-
-    public MedicineImport(Medicine medicine, Employee employee, Branch branch, Date date, String quantity, double price, String note, double totalPrice) {
-        this.medicine = medicine;
-        this.employee = employee;
-        this.branch = branch;
-        this.date = date;
-        this.quantity = quantity;
-        this.price = price;
-        this.note = note;
-        this.totalPrice = totalPrice;
-    }
+    LocalDate date;
 }
