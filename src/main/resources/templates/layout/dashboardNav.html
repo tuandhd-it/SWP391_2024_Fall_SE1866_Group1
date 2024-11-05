@@ -103,10 +103,16 @@
                     <span>Quản lý Bệnh Nhân</span>
                 </a>
             </li>
-            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-                <a th:href="@{/admin/manageMedicine}" class="sidebar-link">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
+                <a th:href="@{/manager/manageMedicine}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý thuốc</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
+                <a th:href="@{/manager/manageEquipment}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý thiết bị</span>
                 </a>
             </li>
             <li class="sidebar-item"

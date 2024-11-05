@@ -2,12 +2,17 @@ package project.dental_clinic_management.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import project.dental_clinic_management.dto.MailBody;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,6 +37,15 @@ public class ManagerService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private MedicineRepository medicineRepository;
+
+    @Autowired
+    private MedicineImportRepository medicineImportRepository;
+
+    @Autowired
+    private EquipmentRepository equipmentRepository;
 
     //Create Schedule
     public void createSchedule(ScheduleCreationRequest request) {
@@ -156,5 +170,89 @@ public class ManagerService {
         scheduleRepository.deleteEmpSchedule(scheduleDate, empId, shift);
     }
 
+    //List medicine
+    public List<Medicine> getAllMedicines() {
+        return medicineRepository.findAll();
+    }
+    public void importMedicine(MedicineImportRequest request) {
+        List<Medicine> existingMedicines = medicineRepository.findByMedicineNameContaining(request.getMedicineName());
+        Medicine medicine;
 
+        if (!existingMedicines.isEmpty()) {
+            // Retrieve the first medicine if it exists
+            medicine = existingMedicines.get(0);
+        } else {
+            // Save the new medicine if it does not exist
+            medicine = new Medicine(
+                    request.getMedicineName(),
+                    request.getQuantity(),
+                    request.getUnit(),
+                    request.getPrice(),
+                    request.getIngredients()
+            );
+            medicine = medicineRepository.save(medicine);
+        }
+
+        // Retrieve current employee information from the logged-in account
+        Employee currentEmployee = getCurrentEmployee();
+
+        // Create a MedicineImport record with import information
+        MedicineImport medicineImport = new MedicineImport();
+        medicineImport.setMedicine(medicine);
+        medicineImport.setEmployee(currentEmployee);
+        medicineImport.setBranch(currentEmployee.getBranch());
+        medicineImport.setDate(LocalDate.now());
+
+        medicineImportRepository.save(medicineImport);
+    }
+    public Employee getCurrentEmployee() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomEmployeeDetails customEmployeeDetails = (CustomEmployeeDetails) authentication.getPrincipal();
+        return customEmployeeDetails.getEmployee();
+    }
+
+    public List<Medicine> findAllByOrderByPriceAsc() {
+        return medicineRepository.findAllByOrderByPriceAsc();
+    }
+
+    public List<Medicine> findAllByOrderByPriceDesc() {
+        return medicineRepository.findAllByOrderByPriceDesc();
+    }
+
+    public List<MedicineImport> getAllMedicineImports() {
+        return medicineImportRepository.findAll();
+    }
+
+    //update medicine
+
+    public void updateMedicine(Medicine updatedMedicine) {
+
+        Medicine existingMedicine = medicineRepository.findById(updatedMedicine.getRegNumber())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thuốc để cập nhật"));
+
+        // Cập nhật các thông tin của thuốc
+        existingMedicine.setMedicineName(updatedMedicine.getMedicineName());
+        existingMedicine.setQuantity(updatedMedicine.getQuantity());
+        existingMedicine.setUnit(updatedMedicine.getUnit());
+        existingMedicine.setPrice(updatedMedicine.getPrice());
+        existingMedicine.setIngredients(updatedMedicine.getIngredients());
+
+        // Lưu lại thông tin thuốc sau khi cập nhật
+        medicineRepository.save(existingMedicine);
+    }
+
+    public void addMedicineToPrescription(Medicine medicine) {
+        medicineRepository.save(medicine);
+    }
+    public ManagerService(MedicineRepository medicineRepository) {
+        this.medicineRepository = medicineRepository;
+    }
+    //search medicine
+    public List<Medicine> searchMedicineByName(String name) {
+        return medicineRepository.findByMedicineNameContaining(name);
+    }
+    //List equipment
+    public List<Equipment> getAllEquipments() {
+        return equipmentRepository.findAll();
+    }
 }

@@ -4,11 +4,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import project.dental_clinic_management.entity.Employee;
+import project.dental_clinic_management.entity.Medicine;
 import project.dental_clinic_management.entity.Role;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
@@ -39,4 +42,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
 
     List<Employee> findByRole(Role byId);
+
+//    @Query("SELECT e FROM Employee e WHERE e.emp_id = :id")
+//    Optional<Employee> findById(@Param("id") Integer empId);
 }

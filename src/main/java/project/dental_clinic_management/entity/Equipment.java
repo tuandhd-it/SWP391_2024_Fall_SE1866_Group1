@@ -5,29 +5,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Entity
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class Medicine {
+public class Equipment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int regNumber;
-    String medicineName;
+    int equipmentId;
+    String equipmentName;
     String quantity;
     String unit;
-    double price;
-    String ingredients;
 
-    // Constructors
+    public Equipment(String equipmentName, String quantity, String unit) {
 
-    public Medicine(String medicineName, String quantity, String unit, double price, String ingredients) {
-        this.medicineName = medicineName;
+        this.equipmentName = equipmentName;
         this.quantity = quantity;
         this.unit = unit;
-        this.price = price;
-        this.ingredients = ingredients;
     }
-
-
 }

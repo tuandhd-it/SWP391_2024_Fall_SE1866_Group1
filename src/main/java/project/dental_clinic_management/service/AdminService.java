@@ -36,8 +36,6 @@ public class AdminService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private MedicineRepository medicineRepository;
-    @Autowired
     private PatientRepository patientRepository;
 
 
@@ -452,10 +450,6 @@ public class AdminService {
             }
             employeeRepository.delete(employee);
         }
-    }
-
-    public List<Medicine> getAllMedicines() {
-        return medicineRepository.findAll();
     }
 
     //Get All Patient
