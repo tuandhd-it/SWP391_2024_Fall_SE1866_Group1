@@ -28,7 +28,7 @@ body {
 }
 
 .profile-header h1 {
-    color: var(--primary-color);
+    color: #4abcd5;
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
@@ -50,7 +50,7 @@ body {
     border-radius: 50%;
     overflow: hidden;
     margin: 0 auto;
-    border: 3px solid var(--primary-color);
+    border: 3px solid #4abcd5;
     box-shadow: 0 0 20px rgba(67, 97, 238, 0.15);
 }
 
@@ -76,7 +76,7 @@ body {
 .avatar-edit label {
     width: 40px;
     height: 40px;
-    background: var(--primary-color);
+    background: #4abcd5;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -88,12 +88,12 @@ body {
 }
 
 .avatar-edit label:hover {
-    background: var(--secondary-color);
+    background: #4abcd5;
     transform: translateY(-2px);
 }
 
 .btn-upload-avatar {
-    background: var(--primary-color);
+    background: #4abcd5;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -105,7 +105,7 @@ body {
 }
 
 .btn-upload-avatar:hover {
-    background: var(--secondary-color);
+    background: #4abcd5;
     color: white;
     transform: translateY(-2px);
 }
@@ -121,7 +121,7 @@ body {
 
 .profile-section:hover {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    border-color: var(--primary-color);
+    border-color: #4abcd5;
 }
 
 .section-title {
@@ -147,7 +147,7 @@ body {
 }
 
 .form-control:focus {
-    border-color: var(--primary-color);
+    border-color: #4abcd5;
     box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
 }
 
@@ -157,26 +157,27 @@ body {
     border-radius: 8px;
     font-weight: 600;
     transition: all 0.3s ease;
+
 }
 
 .btn-edit {
-    background: var(--primary-color);
+    background: #4abcd5;
     color: white;
 }
 
 .btn-edit:hover {
-    background: var(--secondary-color);
+    background: #4abcd5;
     color: white;
     transform: translateY(-2px);
 }
 
 .btn-save {
-    background: var(--success-color);
+    background: #4abcd5;
     color: white;
 }
 
 .btn-save:hover {
-    background: #25a599;
+    background: #4abcd5;
     color: white;
     transform: translateY(-2px);
 }
@@ -198,6 +199,10 @@ body {
     padding: 1rem;
     margin-bottom: 1.5rem;
     border: none;
+}
+.btn-primary {
+    background-color: #4abcd5; /* Primary button color */
+
 }
 
 .alert-success {
