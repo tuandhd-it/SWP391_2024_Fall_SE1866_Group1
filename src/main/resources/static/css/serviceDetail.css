@@ -43,16 +43,16 @@ body {
     display: inline-block;
 }
 
-.page-title::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 0;
-    width: 60px;
-    height: 4px;
-    background: var(--primary-color);
-    border-radius: 2px;
-}
+/*.page-title::after {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    bottom: -10px;*/
+/*    left: 0;*/
+/*    width: 60px;*/
+/*    height: 4px;*/
+/*    background: var(--primary-color);*/
+/*    border-radius: 2px;*/
+/*}*/
 
 .service-layout {
     display: grid;
@@ -125,7 +125,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
-    color: var(--primary-color);
+    color: #4abcd5;
     flex-shrink: 0;
 }
 
@@ -194,12 +194,12 @@ body {
 }
 
 .btn-edit {
-    background-color: var(--primary-color);
+    background-color: #4abcd5;
     color: white;
 }
 
 .btn-edit:hover {
-    background-color: #1557b0;
+    background-color: #4abcd5;
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(26, 115, 232, 0.3);
 }

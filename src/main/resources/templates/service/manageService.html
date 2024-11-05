@@ -25,17 +25,17 @@
         <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
         <div class="container-fluid">
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Danh sách dịch vụ</h6>
-                    <button class="btn btn-primary btn-sm" data-bs-target="#serviceModal" data-bs-toggle="modal">
+                <div class="card-header py-3 d-flex align-items-center">
+                    <h6 class="text-center flex-grow-1" style="margin-bottom: 0;">Danh sách dịch vụ</h6>
+                    <button class="btn btn-add btn-sm" data-bs-target="#serviceModal" data-bs-toggle="modal">
                         <i class="bi bi-plus-circle"></i> Thêm dịch vụ
                     </button>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-md-8">
+                        <div class="col-md-12   ">
                             <form class="d-flex gap-2">
-                                <select class="form-select w-25" id="sortType" name="sort">
+                                <select class="form-select w-25" id="sortType" style="height: 50px" name="sort">
                                     <option th:selected="${sort == 'idAsc'}" value="idAsc">Bộ lọc</option>
                                     <option th:selected="${sort == 'nameAsc'}" value="nameAsc">Tên Tăng Dần</option>
                                     <option th:selected="${sort == 'nameDesc'}" value="nameDesc">Tên Giảm Dần</option>
@@ -43,16 +43,16 @@
                                     <option th:selected="${sort == 'priceDesc'}" value="priceDesc">Giá Giảm Dần</option>
                                 </select>
 
-                                <select class="form-select w-25" id="searchType" name="searchType">
+                                <select class="form-select w-25" id="searchType" style="height: 50px"  name="searchType">
                                     <option th:selected="${searchType == 'name'}" value="name">Tìm theo tên</option>
                                     <option th:selected="${searchType == 'id'}" value="id">Tìm theo ID</option>
                                 </select>
 
-                                <input class="form-control" id="searchInput" name="search"
+                                <input class="form-control w-70" style="height: 50px" id="searchInput" name="search"
                                        th:placeholder="${searchType == 'id'} ? 'Nhập ID dịch vụ' : 'Nhập tên dịch vụ'"
                                        th:value="${search}" type="search">
 
-                                <button class="btn btn-outline-primary" type="submit">
+                                <button class="btn btn-search w-25" style="height: 50px" type="submit">
                                     <i class="bi bi-search"></i> Tìm kiếm
                                 </button>
                             </form>
@@ -87,10 +87,10 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a class="btn btn-sm btn-info" th:href="@{detail/{id}(id=${ser.serviceId})}">
+                                        <a class="btn btn-sm btn-detail" th:href="@{detail/{id}(id=${ser.serviceId})}">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a class="btn btn-sm btn-primary"
+                                        <a class="btn btn-sm btn-edit"
                                            th:if="${#authorization.expression('hasAuthority(''Admin'')')}"
                                            th:href="@{updateService/{id}(id=${ser.serviceId})}">
                                             <i class="bi bi-pencil"></i>
@@ -244,7 +244,7 @@
                             <i class="fas fa-times me-1"></i>
                             Hủy
                         </button>
-                        <button class="btn btn-primary" type="submit">
+                        <button class="btn btn-save" type="submit">
                             <i class="fas fa-save me-1"></i>
                             Lưu dịch vụ
                         </button>
