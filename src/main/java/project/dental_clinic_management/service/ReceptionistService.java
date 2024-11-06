@@ -461,11 +461,11 @@ public class ReceptionistService {
     }
 
     public Record findRecordByPatientId(int patientId) {
-        return recordRepository.findByPatientId(patientId);
+        return recordRepository.findByPatient_PatientId(patientId);
     }
 
     public List<RecordService> findRecordServicesByRecordId(long id) {
-        return recordServiceRepository.findRecordServicesByRecordId(id);
+        return recordServiceRepository.findRecordServicesByRecord_RecordId(id);
     }
 
     public List<RecordMedicine> findRecordMedicinesByRecordId(long id) {
@@ -486,7 +486,7 @@ public class ReceptionistService {
     }
 
     public Record getRecordByID(long id) {
-        return recordRepository.findByRecordId(id);
+        return recordRepository.findRecordByRecordId(id);
     }
 
     public Invoice createInvoice(String uuid, String date, String totalAmount, String recordId, String paymentMethod){
