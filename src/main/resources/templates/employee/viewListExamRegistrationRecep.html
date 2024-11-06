@@ -26,19 +26,19 @@
         <div id="rejectMsg" th:if="${rejectMsg}" class="alert alert-danger">
             <p th:text="${rejectMsg}"></p>
         </div>
-        <div id="detailsContainer" style="background-color: #00BCD4">
+        <div id="detailsContainer">
             <!-- Danh Sách Đăng Ký Khám -->
-            <div class="registration-form">
+            <div class="registration-form" style="background-color: #00BCD4; color: white">
                 <h2>Danh Sách Đăng Ký Khám</h2>
             </div>
 
             <!-- Form tìm kiếm -->
             <div class="d-flex justify-content-end align-items-center mb-3" style="margin-top: 20px">
                 <!-- Form tìm kiếm -->
-                <form id="approvalForm" th:action="@{/manager/search}" method="get" class="me-2">
+                <form id="approvalForm" th:action="@{/recep/searchAcceptedExamination}" method="get" class="me-2">
                     <div class="input-group">
-                        <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm đơn khám"
-                               th:value="${keyword}">
+                        <input type="text" class="form-control" name="keyword" placeholder="Tìm kiếm đơn khám theo số điện thoại"
+                               th:value="${keyword}" style="width: 340px">
                         <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                     </div>
                 </form>
@@ -178,14 +178,12 @@
 
             <!-- Điều hướng phân trang -->
             <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                <ul class="pagination justify-content-center" style="margin-top: 20px">
+                    <li class="page-item" th:classappend="${currentPage <= 1 ? 'disabled' : ''}">
+                        <a th:href="@{'?pageNo='+${currentPage - 1} +'&keyword='+${keyword}}" class="page-link">Previous</a>
                     </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    <li th:if="${totalPage > 0}" th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item" th:classappend="${currentPage == i ? 'active' : ''}"><a th:href="@{'?pageNo='+${i}+'&keyword='+${keyword}}" class="page-link" th:text="${i}"></a></li>
+                    <li class="page-item" th:classappend="${currentPage >= totalPage ? 'disabled' : ''}"><a th:href="@{'?pageNo='+${currentPage + 1} +'&keyword='+${keyword}}" class="page-link">Next</a></li>
                 </ul>
             </nav>
         </div>

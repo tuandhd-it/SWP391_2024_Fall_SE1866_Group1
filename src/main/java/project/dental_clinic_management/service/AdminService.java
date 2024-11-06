@@ -431,6 +431,13 @@ public class AdminService {
         return employeeRepository.searchInactiveEmployee(keyword);
     }
 
+    //Phan trang seacrh các tài khoản chưa được phê duyệt
+    public Page<Employee> searchPageInactiveAccount(String keyword, int pageNo) {
+
+        Pageable pageable = PageRequest.of(pageNo - 1, 4);
+        return employeeRepository.searchPageInactiveEmployee(keyword, pageable);
+    }
+
     //Accept tài khoản
     public void acceptAccount(List<Integer> empIdList) {
         for (Integer empId : empIdList) {
@@ -525,6 +532,12 @@ public class AdminService {
 
     public Patient findPatientById(int id) {
         return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid Patient ID"));
+    }
+
+    //Phan trang manage register account
+    public Page<Employee> getAllPageInActiveAccount(int pageNo){
+        Pageable pageable = PageRequest.of(pageNo - 1, 4);
+        return employeeRepository.findAllInactive(pageable);
     }
 
 }

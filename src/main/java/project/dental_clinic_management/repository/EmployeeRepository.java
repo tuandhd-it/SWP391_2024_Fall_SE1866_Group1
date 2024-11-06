@@ -1,6 +1,8 @@
 package project.dental_clinic_management.repository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -22,7 +24,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query("update Employee e set e.password = ?2 where e.email = ?1")
     void updatePassword(String email, String newPassword);
 
-    @Query("SELECT e from Employee e WHERE (e.is_active = false) AND (e.first_name LIKE %?1% OR e.last_name LIKE %?1% OR LOWER(e.email) = LOWER(?1) OR e.phone LIKE %?1% OR e.address LIKE %?1%)")
+    @Query("SELECT e from Employee e WHERE (e.is_active = false) AND e.email LIKE %?1%")
     List<Employee> searchInactiveEmployee(String keyword);
 
     @Query("SELECT e FROM Employee e WHERE e.first_name LIKE %?1% OR e.last_name LIKE %?1% OR e.phone LIKE %?1% OR LOWER(e.email) = LOWER(?1)")
@@ -36,6 +38,12 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Modifying
     @Query("update Employee e set e.password = ?2 where e.emp_id = ?1")
     void updatePassword(int empId, String newPassword);
+
+    @Query("SELECT e from Employee e WHERE e.is_active = false")
+    Page<Employee> findAllInactive(Pageable pageable);
+
+    @Query("SELECT e from Employee e WHERE (e.is_active = false) AND e.email LIKE %?1%")
+    Page<Employee> searchPageInactiveEmployee(String keyword, Pageable pageable);
 
 
     List<Employee> findByRole(Role byId);

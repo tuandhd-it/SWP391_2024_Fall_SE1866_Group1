@@ -5,7 +5,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
-import project.dental_clinic_management.dto.request.PatientWaitingRoomRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
@@ -149,10 +148,23 @@ public class ReceptionistService {
         return exams;
     }
 
+    //Phan trang danh sách đăng ký khám thuộc chi nhánh của receptionist
+    public Page<ViewExamRegistrationRequest> findAllPageBranchExam(Employee receptionist, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 6);
+        List<ViewExamRegistrationRequest> exams = findAllBranchExam(receptionist);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), exams.size());
+
+        List<ViewExamRegistrationRequest> pagedExams = exams.subList(start, end);
+
+        return new PageImpl<>(pagedExams, pageable, exams.size());
+    }
+
     //Tìm tất cả danh sách đăng ký khám thuộc chi nhánh đã được phê duyệt của receptionist
-    public List<ViewExamRegistrationRequest> findAllBranchExamAccept(Employee receptionist) {
+    public Page<ViewExamRegistrationRequest> findAllPageBranchExamAccept(Employee receptionist, int pageNo) {
         List<ViewExamRegistrationRequest> exams = new ArrayList<>();
         List<RegisterExamination> registerExaminations = examRegistrationRepository.findAll();
+        Pageable pageable = PageRequest.of(pageNo - 1, 6);
         for (RegisterExamination registerExamination : registerExaminations) {
             if(registerExamination.getBranch().equals(receptionist.getBranch()) && registerExamination.isAccept() && !registerExamination.isInWaitingRoom()) {
                 exams.add(ViewExamRegistrationRequest.builder()
@@ -164,7 +176,12 @@ public class ReceptionistService {
                         .build());
             }
         }
-        return exams;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), exams.size());
+
+        List<ViewExamRegistrationRequest> pagedExams = exams.subList(start, end);
+
+        return new PageImpl<>(pagedExams, pageable, exams.size());
     }
 
     //Tìm thông tin khám bệnh qua regId
@@ -205,9 +222,10 @@ public class ReceptionistService {
     }
 
     //Search list examination registration
-    public List<ViewExamRegistrationRequest> searchAllExamRegistration(String keyword) {
-        List<RegisterExamination> list = examRegistrationRepository.searchRegisterExamination(keyword);
+    public Page<ViewExamRegistrationRequest> searchAllPageExamRegistrationAccepted(String keyword, int pageNo) {
+        List<RegisterExamination> list = examRegistrationRepository.searchRegisterExaminationNotInWaitingRoom(keyword);
         List<ViewExamRegistrationRequest> viewRequestList = new ArrayList<>();
+        Pageable pageable = PageRequest.of(pageNo - 1, 6);
 
         for(RegisterExamination registerExamination : list) {
             viewRequestList.add(ViewExamRegistrationRequest.builder()
@@ -225,7 +243,42 @@ public class ReceptionistService {
                     .note(registerExamination.getNote())
                     .build());
         }
-        return viewRequestList;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), viewRequestList.size());
+
+        List<ViewExamRegistrationRequest> pagedExams = viewRequestList.subList(start, end);
+
+        return new PageImpl<>(pagedExams, pageable, viewRequestList.size());
+    }
+
+    //Phan trang search list examination registration cho duyet
+    public Page<ViewExamRegistrationRequest> searchAllPagePendingExamRegistration(String keyword, int pageNo) {
+        List<RegisterExamination> list = examRegistrationRepository.searchPagePendingRegisterExamination(keyword);
+        List<ViewExamRegistrationRequest> viewRequestList = new ArrayList<>();
+        Pageable pageable = PageRequest.of(pageNo - 1, 6);
+
+        for(RegisterExamination registerExamination : list) {
+            viewRequestList.add(ViewExamRegistrationRequest.builder()
+                    .examId(registerExamination.getRegId())
+                    .firstName(registerExamination.getFirstName())
+                    .lastName(registerExamination.getLastName())
+                    .email(registerExamination.getEmail())
+                    .phone(registerExamination.getPhone())
+                    .reason(registerExamination.getReason())
+                    .dob(registerExamination.getDob())
+                    .gender(registerExamination.getGender())
+                    .examRegisterDate(registerExamination.getExamRegisterDate())
+                    .doctorName(registerExamination.getEmployee().getFirst_name() + " " + registerExamination.getEmployee().getLast_name())
+                    .branchName(registerExamination.getBranch().getBranchName())
+                    .note(registerExamination.getNote())
+                    .build());
+        }
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), viewRequestList.size());
+
+        List<ViewExamRegistrationRequest> pagedExams = viewRequestList.subList(start, end);
+
+        return new PageImpl<>(pagedExams, pageable, viewRequestList.size());
     }
 
     //Tìm tất cả bác sĩ có ca trong ngày
@@ -267,6 +320,12 @@ public class ReceptionistService {
     //Tìm tất cả lịch làm việc theo empId
     public List<Schedule> getSchedulesByEmployeeId(int employeeId) {
         return scheduleRepository.findByEmpId(employeeId);
+    }
+
+    //Phan trang lịch làm việc theo empId
+    public Page<Schedule> getPageSchedulesByEmployeeId(int employeeId, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo - 1, 14);
+        return scheduleRepository.findPageByEmpId(employeeId, pageable);
     }
 
     //Update trang thái của đơn (vào phòng chờ ?)

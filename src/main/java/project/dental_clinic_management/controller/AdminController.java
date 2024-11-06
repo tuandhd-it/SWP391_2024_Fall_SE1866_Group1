@@ -456,20 +456,24 @@ public class AdminController {
 
     //Hiển thị tài khoản được đăng ký cần xét duyệt
     @GetMapping("/manageRegisterAccount")
-    public String manageRegisterAccount(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        List<Employee> list = adminService.findAllInactiveAccount();
+    public String manageRegisterAccount(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
+
+        Page<Employee> list =  adminService.getAllPageInActiveAccount(pageNo);
         model.addAttribute("employees", list);
+        model.addAttribute("totalPage", list.getTotalPages());
+        model.addAttribute("currentPage", pageNo);
         return "/employee/manageRegisterAccount";
     }
 
     //Hiển thị danh sách các tài khoản chưa được cấp phép sử dụng hệ thống
     @GetMapping("/searchInactiveAccount")
-    public String searchInactiveAccount(@RequestParam("keyword") String keyword, Model model) {
+    public String searchInactiveAccount(@RequestParam("keyword") String keyword, Model model, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
 
-        List<Employee> employees = adminService.searchInactiveAccount(keyword);
+        Page<Employee> employees = adminService.searchPageInactiveAccount(keyword, pageNo);
 
         model.addAttribute("employees", employees);
-
+        model.addAttribute("totalPage", employees.getTotalPages());
+        model.addAttribute("currentPage", pageNo);
         model.addAttribute("keyword", keyword);
 
         return "/employee/manageRegisterAccount";

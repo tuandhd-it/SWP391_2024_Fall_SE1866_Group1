@@ -3,6 +3,7 @@ package project.dental_clinic_management.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -145,14 +146,16 @@ public class ManagerController {
     }
 
     @GetMapping("/viewRegistration")
-    public String viewRegistration(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String viewRegistration(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
         String username = userDetails.getUsername();
         Employee receptionist = receptionistService.findByUsername(username);
-        List<ViewExamRegistrationRequest> list = receptionistService.findAllBranchExam(receptionist);
+        Page<ViewExamRegistrationRequest> list = receptionistService.findAllPageBranchExam(receptionist, pageNo);
 
         // Thêm danh sách vào model để hiển thị trong view
         model.addAttribute("examList", list);
         model.addAttribute("keyword", "");
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPage", list.getTotalPages());
 
         return "/employee/viewListExamRegistration";
     }
@@ -219,11 +222,14 @@ public class ManagerController {
                 .build();
     }
 
-    @GetMapping("/search")
-    public String search(Model model, @RequestParam("keyword") String keyword) {
-        List<ViewExamRegistrationRequest> requestList = receptionistService.searchAllExamRegistration(keyword);
+    //
+    @GetMapping("/searchExaminationPending")
+    public String searchExaminationPending(Model model, @RequestParam("keyword") String keyword, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
+        Page<ViewExamRegistrationRequest> requestList = receptionistService.searchAllPagePendingExamRegistration(keyword, pageNo);
         model.addAttribute("examList", requestList);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("totalPage", requestList.getTotalPages());
+        model.addAttribute("currentPage", pageNo);
         return "/employee/viewListExamRegistration";
     }
 

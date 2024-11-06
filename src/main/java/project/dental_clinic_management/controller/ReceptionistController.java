@@ -67,38 +67,45 @@ public class ReceptionistController {
                 .build();
     }
 
-    @GetMapping("/search")
-    public String search(Model model, @RequestParam("keyword") String keyword) {
-        List<ViewExamRegistrationRequest> requestList = receptionistService.searchAllExamRegistration(keyword);
+    @GetMapping("/searchAcceptedExamination")
+    public String searchAcceptedExamination(Model model, @RequestParam("keyword") String keyword, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
+        Page<ViewExamRegistrationRequest> requestList = receptionistService.searchAllPageExamRegistrationAccepted(keyword, pageNo);
         model.addAttribute("examList", requestList);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPage", requestList.getTotalPages());
         return "/employee/viewListExamRegistrationRecep";
     }
 
     //Hiển thị lịch làm việc cá nhân
     @GetMapping("/myScheduleList")
-    public String myScheduleList(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String myScheduleList(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
-        List<Schedule> schedules = receptionistService.getSchedulesByEmployeeId(employee.getEmp_id());
+        Page<Schedule> schedules = receptionistService.getPageSchedulesByEmployeeId(employee.getEmp_id(), pageNo);
         if (schedules == null || schedules.isEmpty()) {
             model.addAttribute("notFoundMsg", "This employee do not have any work schedules");
+            model.addAttribute("totalPage", 0);
         } else {
             model.addAttribute("schedules", schedules);
+            model.addAttribute("totalPage", schedules.getTotalPages());
         }
+        model.addAttribute("currentPage", pageNo);
         return "/employee/myScheduleList";
     }
 
     //Thêm bệnh nhân vào phòng chờ từ đơn khám online
     @GetMapping("/viewListExaminationOnline")
     public String viewListExaminationOnline(Model model, @AuthenticationPrincipal UserDetails userDetails, @ModelAttribute("acceptMsg") String acceptMsg,
-                                            @ModelAttribute("deleteMsg") String deleteMsg) {
+                                            @ModelAttribute("deleteMsg") String deleteMsg, @RequestParam(name = "pageNo", defaultValue = "1") int pageNo) {
         String username = userDetails.getUsername();
         Employee employee = receptionistService.findByUsername(username);
-        List<ViewExamRegistrationRequest> viewExamRegistrationRequestList = receptionistService.findAllBranchExamAccept(employee);
+        Page<ViewExamRegistrationRequest> viewExamRegistrationRequestList = receptionistService.findAllPageBranchExamAccept(employee, pageNo);
         model.addAttribute("examList", viewExamRegistrationRequestList);
         model.addAttribute("acceptMsg", acceptMsg);
         model.addAttribute("rejectMsg", deleteMsg);
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPage", viewExamRegistrationRequestList.getTotalPages());
 
         return "/employee/viewListExamRegistrationRecep";
     }
