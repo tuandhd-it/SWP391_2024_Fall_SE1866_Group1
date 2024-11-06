@@ -68,6 +68,9 @@ public class SecurityConfig {
                         .logoutUrl("/logout") // URL cho logout
                         .logoutSuccessUrl("/login?logout") // URL chuyển hướng sau khi logout
                         .permitAll() // Cho phép tất cả người dùng đăng xuất
+                )
+                .exceptionHandling(exception -> exception
+                        .accessDeniedPage("/errorPage") // Trang lỗi tùy chỉnh
                 );
 
 

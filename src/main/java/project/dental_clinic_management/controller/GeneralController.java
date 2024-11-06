@@ -468,4 +468,9 @@ public class GeneralController {
 
         return ResponseEntity.ok(monthlyStatistics);
     }
+
+    @GetMapping("/errorPage")
+    public String errorPage() {
+        return "errorPage";
+    }
 }
