@@ -76,7 +76,7 @@
                             <tr th:each="ser : ${listService}">
                                 <td th:text="${ser.serviceId}"></td>
                                 <td th:text="${ser.serviceName}"></td>
-                                <td th:text="${#numbers.formatDecimal(ser.price, 0, 'COMMA', 2, 'POINT') + ' VND'}"></td>
+                                <td th:text="${#numbers.formatDecimal(ser.price, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
                                 <td th:text="${ser.unit}"></td>
                                 <td th:text="${ser.quantity}"></td>
                                 <td>
