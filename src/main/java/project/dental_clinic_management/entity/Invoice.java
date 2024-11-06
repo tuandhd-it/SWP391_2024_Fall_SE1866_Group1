@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -15,8 +16,7 @@ import java.time.LocalDate;
 public class Invoice {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int invoiceId;
+    UUID invoiceId;
     double totalBill;
     LocalDate invoiceDate;
     String paymentMethod;

@@ -66,6 +66,12 @@
 <!--                    <span>Tạo đơn đăng ký khám</span>-->
 <!--                </a>-->
 <!--            </li>-->
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Receptionist'')')}">
+                <a th:href="@{/recep/patientList}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Danh sách bệnh nhân</span>
+                </a>
+            </li>
             <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
                 <a th:href="@{/admin/manageEmp}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
@@ -103,10 +109,16 @@
                     <span>Quản lý Bệnh Nhân</span>
                 </a>
             </li>
-            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
-                <a th:href="@{/admin/manageMedicine}" class="sidebar-link">
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
+                <a th:href="@{/manager/manageMedicine}" class="sidebar-link">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý thuốc</span>
+                </a>
+            </li>
+            <li class="sidebar-item" th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
+                <a th:href="@{/manager/manageEquipment}" class="sidebar-link">
+                    <i class="lni lni-popup"></i>
+                    <span>Quản lý thiết bị</span>
                 </a>
             </li>
             <li class="sidebar-item"

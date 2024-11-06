@@ -22,7 +22,7 @@ body {
 }
 
 .page-title {
-    color: #1a237e;
+    color: #4abcd5;
     margin-bottom: 1.5rem;
     font-weight: 700;
     font-size: 1.75rem;
@@ -32,7 +32,7 @@ body {
 }
 
 .page-title i {
-    background: var(--primary-color);
+    background: #4abcd5;
     color: white;
     padding: 0.75rem;
     border-radius: var(--radius-sm);
@@ -55,12 +55,12 @@ body {
 }
 
 .form-control:focus {
-    border-color: var(--primary-color);
+    border-color: #4abcd5;
     box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
 }
 
 .btn-check {
-    background: var(--primary-color);
+    background: #4abcd5;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -70,7 +70,7 @@ body {
 }
 
 .btn-check:hover {
-    background: #3651d4;
+    background: #4abcd5;
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
 }
@@ -124,7 +124,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-color);
+    color: #4abcd5;
 }
 
 .status-badge {
@@ -156,7 +156,7 @@ body {
 }
 
 .badge.bg-primary {
-    background-color: #4361ee !important;
+    background-color: #4abcd5 !important;
     padding: 0.75rem 1rem;
     font-size: 0.9rem;
 }
@@ -177,4 +177,14 @@ body {
 
 .div-table::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
+}
+.search{
+    background-color: #4abcd5;
+    color: white;
+    border: white;
+}
+.search:hover {
+    color: #4abcd5;
+    border-color: #4abcd5;
+    background-color: white;
 }

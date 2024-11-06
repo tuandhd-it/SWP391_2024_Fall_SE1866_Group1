@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.entity.Record;
+import project.dental_clinic_management.entity.RecordService;
 import project.dental_clinic_management.repository.*;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,11 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +48,16 @@ public class ReceptionistService {
 
     @Autowired
     private PatientWaitingRoomRepository patientWaitingRoomRepository;
+    @Autowired
+    private RecordRepository recordRepository;
+    @Autowired
+    private RecordServiceRepository recordServiceRepository;
+    @Autowired
+    private MedicineRepository medicineRepository;
+    @Autowired
+    private RecordMedicineRepository recordMedicineRepository;
+    @Autowired
+    private InvoiceRepository invoiceRepository;
 
 
     public Employee findByUsername(String username) {
@@ -444,6 +458,61 @@ public class ReceptionistService {
         }
 
         return new PageImpl<>(filteredAndSortedRequests.subList(start, end), pageable, filteredAndSortedRequests.size());
+    }
+
+    public Record findRecordByPatientId(int patientId) {
+        return recordRepository.findByPatientId(patientId);
+    }
+
+    public List<RecordService> findRecordServicesByRecordId(long id) {
+        return recordServiceRepository.findRecordServicesByRecordId(id);
+    }
+
+    public List<RecordMedicine> findRecordMedicinesByRecordId(long id) {
+        return recordMedicineRepository.findRecordMedicinesByRecordId(id);
+    }
+
+    public double totalAmout(List<RecordService> recordServices, List<RecordMedicine> recordMedicines) {
+        double totalAmout = 0.0;
+        for (RecordService recordService : recordServices) {
+            totalAmout += recordService.getService().getPrice();
+        }
+
+        for (RecordMedicine recordMedicine : recordMedicines) {
+            totalAmout += recordMedicine.getRegNumber().getPrice() * recordMedicine.getQuantity();
+        }
+
+        return totalAmout;
+    }
+
+    public Record getRecordByID(long id) {
+        return recordRepository.findByRecordId(id);
+    }
+
+    public Invoice createInvoice(String uuid, String date, String totalAmount, String recordId, String paymentMethod){
+        UUID invoiceUuid = UUID.fromString(uuid);
+
+        // Chuyển đổi chuỗi ngày thành LocalDate
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // hoặc định dạng ngày của bạn
+        LocalDate invoiceDate = LocalDate.parse(date, formatter);
+
+        // Chuyển đổi chuỗi tổng tiền thành double
+        double invoiceTotalAmount = Double.parseDouble(totalAmount);
+
+        // Chuyển đổi recordId thành một số kiểu dữ liệu khác nếu cần
+        int invoiceRecordId = Integer.parseInt(recordId);
+
+        Record record = getRecordByID(invoiceRecordId);
+
+        // Tạo đối tượng `Invoice` mới với các giá trị đã chuyển đổi
+        Invoice invoice = new Invoice();
+        invoice.setInvoiceId(invoiceUuid);
+        invoice.setInvoiceDate(invoiceDate);
+        invoice.setTotalBill(invoiceTotalAmount);
+        invoice.setRecord(record);
+        invoice.setPaymentMethod(paymentMethod);
+
+        return invoiceRepository.save(invoice);
     }
 
 }

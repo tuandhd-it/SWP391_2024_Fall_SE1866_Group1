@@ -14,7 +14,7 @@ public class SecurityConfig {
 
     //Custom endpoints that can access without log in
     private final String[] PUBLIC_ENDPOINTS = {"/login","/loginFail" ,"/register", "/css/**", "/img/**", "/js/**", "/homePage", "/nextRegister",
-            "/nextRegisterDoctor", "/registerDoctor", "/verifyEmail/**", "/forgotPassword/**", "/guestExamRegistration", "/guestExamRegistration", "/chooseDoctor"};
+            "/nextRegisterDoctor", "/registerDoctor", "/verifyEmail/**", "/forgotPassword/**", "/guestExamRegistration", "/guestExamRegistration", "/chooseDoctor", "/uploads/**"};
     public SecurityConfig(PasswordEncoder passwordEncoder, CustomUserDetailService customUserDetailService) {
         this.customUserDetailService=customUserDetailService;
         this.passwordEncoder = passwordEncoder;
@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+
                         .requestMatchers("/admin/manageRegisterAccount").hasAnyAuthority("Admin", "Manager")
                         .requestMatchers("/admin/acceptAccount").hasAnyAuthority("Admin", "Manager")
                         .requestMatchers("/admin/manageService").hasAnyAuthority("Receptionist", "Admin")
@@ -68,6 +69,8 @@ public class SecurityConfig {
                         .logoutSuccessUrl("/login?logout") // URL chuyển hướng sau khi logout
                         .permitAll() // Cho phép tất cả người dùng đăng xuất
                 );
+
+
 
         return http.build();
     }

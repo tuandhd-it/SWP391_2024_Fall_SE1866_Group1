@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import project.dental_clinic_management.repository.RecordRepository;
 import project.dental_clinic_management.entity.Record;
 
+import java.util.List;
+
 @Service
 public class RecordService {
 
@@ -15,6 +17,10 @@ public class RecordService {
 
     public Page<Record> getAllRecordsByPatientID(int patientID, int page, int size) {
         return recordRepository.getRecordByPatient_PatientId(patientID, PageRequest.of(page, size));
+    }
+
+    public List<Record> getAllRecordsByPatientID(int patientID) {
+        return recordRepository.getRecordByPatient_PatientId(patientID);
     }
 
 }

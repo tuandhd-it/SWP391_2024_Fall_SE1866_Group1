@@ -40,3 +40,37 @@ INSERT INTO `dental_clinic_management`.`service` (`service_id`, `is_active`, `pr
 (9, 0, 6000000, 'Dán sứ Veneers', 'Dán sứ Veneers là một giải pháp thẩm mỹ hiệu quả giúp cải thiện hình dáng, màu sắc và kích thước của răng. Quy trình này bao gồm việc gắn mặt dán sứ lên bề mặt răng, mang lại nụ cười tự nhiên, rạng rỡ.', '94bf0279-440e-48bb-89c0-300f6aed39d7.jpg', NULL, NULL, '2 năm', 'Dịch vụ dán sứ Veneers sử dụng mặt dán sứ cao cấp, mỏng nhẹ, được chế tác chính xác để tạo hình dáng và màu sắc tự nhiên, giúp cải thiện vẻ đẹp của răng.'),
 (10, 1, 1500000, 'Điều trị tủy răng cửa', 'Điều trị tủy răng cửa là quá trình loại bỏ tủy răng bị viêm nhiễm hoặc tổn thương, sau đó làm sạch, khử trùng và trám bít ống tủy để bảo vệ răng. Phương pháp này giúp bảo tồn răng thật, ngăn ngừa biến chứng và giảm đau nhức.', '1907c857-79c1-448a-b35d-03f8529c23d5.jpg', NULL, NULL, '1 năm', 'Sử dụng các vật liệu trám bít ống tủy chuyên dụng và an toàn, giúp bảo vệ răng sau khi điều trị, đồng thời duy trì chức năng và thẩm mỹ.');
 
+
+//Create data for time tracking
+INSERT INTO `time_tracking` (`time_tracking_id`, `check_in`, `check_out`, `emp_id`, `note`)
+VALUES
+(40, '2024-10-15 09:00:00.000000', NULL, 3, NULL),
+(41, '2024-10-01 08:00:00.000000', '2024-10-01 20:00:00.000000', 2, NULL),
+(42, '2024-10-02 08:00:00.000000', '2024-10-02 20:00:00.000000', 2, NULL),
+(43, '2024-10-03 08:00:00.000000', '2024-10-03 20:00:00.000000', 2, NULL),
+(44, '2024-10-04 08:00:00.000000', '2024-10-04 20:00:00.000000', 2, NULL),
+(45, '2024-10-05 08:00:00.000000', '2024-10-05 20:00:00.000000', 2, NULL),
+(46, '2024-10-06 08:00:00.000000', '2024-10-06 20:00:00.000000', 2, NULL),
+(47, '2024-10-07 08:00:00.000000', '2024-10-07 20:00:00.000000', 2, NULL),
+(48, '2024-10-08 08:00:00.000000', '2024-10-08 20:00:00.000000', 2, NULL),
+(49, '2024-10-09 08:00:00.000000', '2024-10-09 20:00:00.000000', 2, NULL),
+(50, '2024-10-10 08:00:00.000000', '2024-10-10 20:00:00.000000', 2, NULL),
+(51, '2024-10-11 08:00:00.000000', '2024-10-11 20:00:00.000000', 2, NULL),
+(52, '2024-10-12 08:00:00.000000', '2024-10-12 20:00:00.000000', 2, NULL),
+(53, '2024-10-13 08:00:00.000000', '2024-10-13 20:00:00.000000', 2, NULL),
+(54, '2024-10-14 08:00:00.000000', '2024-10-14 20:00:00.000000', 2, NULL),
+(55, '2024-10-15 08:00:00.000000', '2024-10-15 20:00:00.000000', 2, NULL),
+(60, '2024-10-16 03:00:30.539575', '2024-10-16 03:01:01.923330', 3, NULL),
+(72, '2024-11-03 17:18:24.146733', '2024-11-03 19:01:08.531385', 4, 'Check in: huhu\nCheck out: null'),
+(77, '2024-11-04 08:29:03.900843', '2024-11-04 11:40:04.032312', 6, 'Check in: null\nCheck out: không');
+
+
+
+INSERT INTO `employee` (`address`, `description`, `dob`, `email`, `first_name`, `gender`, `img`, `is_active`, `last_name`, `password`, `phone`, `salary`, `bran_id`, `branch_managed_emp_id`, `role_id`, `branch_managed_bran_id`, `certification`, `specification`)
+VALUES
+('Hà Nội', 'Nurse', NULL, 'nurse@gmail.com', 'Y', NULL, '', b'1', 'Tá', '$2a$10$6RUK7w18LMwXFPYKY0RPPuXeE.iJhZz5L2qdd22gJOuD7FB5LsmuC', '0987654321', 4500, 3, NULL, 4, NULL, NULL, NULL),
+('Ha Nội', 'Bác sĩ tại bệnh viện Xanhpon. 6 năm kinh nghiệm tại các phòng khám lớn.', '1989-07-12', 'doctor@gmail.com', 'Lưu', 'Nữ', 'd1c21f5a-9209-459e-a21a-fbcc8406f943_luu-hong-hanh-300x300.png', b'1', 'Hồng Hạnh', '$2a$10$SGzFYESbkB1z4FAfksrFtO9R8jjLULM20KYFUqG6tfi1thJ2OgQPK', '0984763836', 123, 2, NULL, 3, NULL, 'Tốt nghiệp Đại học Y', 'Nắn chỉnh răng'),
+('hà nội', 'receptionist', '2003-09-09', 'receptionist@gmail.com', 'Lễ', 'Nam', '308e38d1-ed95-48d8-aaa5-d2362c0dc16c_dong-phuc-le-tan-nha-khoa.jpeg', b'1', 'Tân', '$2b$12$EIHLAyrnP6CBjR9cjGaZW.6.NKdkZrKjEIVdgHShTPMGfT48Q3Z8m', '0836880711', 1, 2, NULL, 5, NULL, NULL, NULL),
+('hà nội', 'Bác sĩ chuyên khoa Răng Hàm Mặt, 4 năm kinh nghiệm tại các phòng khám lớn', NULL, 'doctor1@gmail.com', 'Phạm', 'Nam', 'a1acca01-772c-43de-a6d7-47db68ba178f_pham-dinh-duc-2.png', b'1', 'Đình Đức', '$2a$10$gozMI9OS6kMLukBxf/EixeBREdA73tQ8CBvy4lwtAfwTT4GRYkRQi', '0987654123', 3, 2, NULL, 3, NULL, 'Tốt nghiệp Đại học Y', 'Nha khoa thẩm mỹ'),
+('test manager', 'manager', '2023-12-12', 'manage@gmail.com', 'Quản', NULL, 'manage', b'1', 'Lý', '$2a$10$ZUnBf0zqtg9sjeKC/fG4juaNEjQpcGipE2r1J2UMRuCORTxUZN6iy', '987654356', 1234543, 2, NULL, 2, 2, NULL, NULL),
+('hà nội', '4 năm kinh nghiệm tại các phòng khám lớn', '2024-10-30', 'doctor2@gmail.com', 'Lã', 'Nữ', '71d05b64-1e5d-4c91-8be9-3e6198d49b01_la-trinh-dieu-lan-300x300.png', b'1', 'Trịnh Diệu Lan', '$2a$10$gozMI9OS6kMLukBxf/EixeBREdA73tQ8CBvy4lwtAfwTT4GRYkRQi', '0987654123', 111111111, 2, NULL, 3, NULL, 'Tốt nghiệp nha khoa tại Trung Quốc', 'Nha khoa tổng quát');

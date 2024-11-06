@@ -14,10 +14,13 @@ import project.dental_clinic_management.dto.request.PatientCreationRequest;
 import project.dental_clinic_management.dto.request.PatientWaitingRoomRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.entity.Record;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.service.ReceptionistService;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/recep")
@@ -203,6 +206,57 @@ public class ReceptionistController {
         model.addAttribute("hasNext", patientWaitingRequests.hasNext());
 
         return "/employee/recepListPatient"; // Update this path as necessary for your project structure
+    }
+
+    @GetMapping("/recep/patientPayment")
+    public String processPatientPayment(@RequestParam("id") int patientId, Model model) {
+        Patient patient = receptionistService.findPatientById(patientId);
+        Record record = receptionistService.findRecordByPatientId(patientId);
+        List<RecordService> recordServices = receptionistService.findRecordServicesByRecordId(record.getRecordId());
+        List<RecordMedicine> recordMedicines = receptionistService.findRecordMedicinesByRecordId(record.getRecordId());
+
+        LocalDate date = LocalDate.now();
+
+        UUID uuid = UUID.randomUUID();
+
+        double total = receptionistService.totalAmout(recordServices, recordMedicines);
+
+        model.addAttribute("patient", patient);
+        model.addAttribute("recordServices", recordServices);
+        model.addAttribute("recordMedicines", recordMedicines);
+        model.addAttribute("record", record);
+        model.addAttribute("invoice", new Invoice());
+        model.addAttribute("date", date);
+        model.addAttribute("uuid", uuid);
+        model.addAttribute("totalAmount", total);
+
+        model.addAttribute("successMessage", model.asMap().get("successMessage"));
+        model.addAttribute("errorMessage", model.asMap().get("errorMessage"));
+        return "/Invoice/billingInvoice";
+    }
+
+    @PostMapping("/payment/submit")
+    public String handlePayment(
+            @RequestParam(name = "uuid") String uuid,
+            @RequestParam(name = "patientId") int patientId, // Thay đổi từ String sang int
+            @RequestParam(name = "date") String date,
+            @RequestParam(name = "totalAmount") String totalAmount,
+            @RequestParam(name = "recordId") String recordId,
+            @RequestParam(name = "paymentMethod") String paymentMethod,
+            RedirectAttributes redirectAttributes) {
+
+        // Tạo hóa đơn và kiểm tra kết quả
+        Invoice invoice = receptionistService.createInvoice(uuid, date, totalAmount, recordId, paymentMethod);
+
+        if (invoice != null) {
+            // Nếu thành công, định tuyến đến trang mới
+            redirectAttributes.addFlashAttribute("successMessage", "Hóa đơn đã được tạo thành công");
+            return "redirect:/recep/patientPayment?id=" + patientId; // Định tuyến tới trang khác
+        } else {
+            // Nếu không thành công, thông báo lỗi và quay lại trang cũ
+            redirectAttributes.addFlashAttribute("errorMessage", "Có lỗi xảy ra khi tạo hóa đơn. Vui lòng thử lại.");
+            return "redirect:/recep/patientPayment?id=" + patientId; // Trở lại trang thanh toán với ID bệnh nhân
+        }
     }
 
 }
