@@ -52,7 +52,9 @@
                     <td th:text="${patient.getNote()}"></td>
                     <td th:text="${patient.isUrgency() ? 'Ưu tiên' : 'Không'}"></td>
                     <td th:text="${patient.isBooked() ? 'Đã đặt trước' : 'Không'}"></td>
-                    <td><button class="btn btn-success">Thanh toán</button></td>
+                    <td><a th:href="@{/recep/patientPayment(id=${patient.getPatient().getPatientId()})}" class="btn btn-success">
+                        Thanh toán
+                    </a></td>
                 </tr>
                 </tbody>
             </table>
