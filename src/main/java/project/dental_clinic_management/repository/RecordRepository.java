@@ -13,7 +13,6 @@ import java.util.List;
 public interface RecordRepository extends JpaRepository<Record, Integer> {
     Page<Record> getRecordByPatient_PatientId(int patientId, Pageable pageable);
     List<Record> getRecordByPatient_PatientId(int patientId);
-    Record findByPatientId(int patientId);
-
-    Record findByRecordId(long recordId);
+    Record findByPatient_PatientId(int patientId);
+    Record findRecordByRecordId(long recordId);
 }

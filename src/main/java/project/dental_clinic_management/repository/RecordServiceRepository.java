@@ -13,5 +13,5 @@ import java.util.List;
 
 @Repository
 public interface RecordServiceRepository extends JpaRepository<RecordService, Integer> {
-    List<RecordService> findRecordServicesByRecordId(long id);
+    List<RecordService> findRecordServicesByRecord_RecordId(long id);
 }
