@@ -50,4 +50,6 @@ public class ReceptionistCreationRequest {
     Role role;
     String img;
     String description;
+    String certification;
+    String specification;
 }

@@ -1,25 +1,22 @@
 package project.dental_clinic_management.controller;
 
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import project.dental_clinic_management.dto.MailBody;
+import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
 import project.dental_clinic_management.entity.Employee;
 import project.dental_clinic_management.entity.RegisterOTPVerify;
 import project.dental_clinic_management.entity.Role;
 import project.dental_clinic_management.repository.RegisterOTPVerifyRepository;
 import project.dental_clinic_management.service.EmailService;
 import project.dental_clinic_management.service.ReceptionistService;
-import project.dental_clinic_management.dto.MailBody;
-import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 @RequestMapping("/verifyEmail")
@@ -43,7 +40,7 @@ public class VerifyOTPController {
     //Xác thực email
     @PostMapping("/verify")
     public String verifyEmail(@RequestParam("email") String email, @RequestParam("roleValue") String role, Model model, @ModelAttribute @Valid ReceptionistCreationRequest request, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if(bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
 
             bindingResult.getFieldErrors().forEach(
@@ -63,7 +60,7 @@ public class VerifyOTPController {
             model.addAttribute("existed", existed);
             return "/auth/login";
         }
-        if(role == null || role.isEmpty()) {
+        if (role == null || role.isEmpty()) {
             redirectAttributes.addFlashAttribute("inputInformation", "You must input your information first!");
             return "redirect:/register";
         }
@@ -85,13 +82,18 @@ public class VerifyOTPController {
                 .to(email)
                 .text("Dear,\n\n" +
                         "We received a request to verify your account.\nTo proceed, please use the " +
-                        "following One-Time Password (OTP):\n\nOTP Code: " + otp+"\n\nThis code is valid for the next 1 minutes. \n" +
+                        "following One-Time Password (OTP):\n\nOTP Code: " + otp + "\n\nThis code is valid for the next 1 minutes. \n" +
                         "Please enter the code in the required field to complete your request.\n\nBest regards,\nDCMS Team :)")
                 .subject("Your single-use code for DCMS")
                 .build();
 
         emailService.sendSimpleMessage(mailBody);
+        RegisterOTPVerify registerOTPVerify = registerOTPVerifyRepository.findByEmail(email);
+        if (registerOTPVerify != null) {
+            registerOTPVerifyRepository.delete(registerOTPVerify);
+        }
         registerOTPVerifyRepository.save(rv);
+
 
         model.addAttribute("email", email);
         model.addAttribute("msg", "OTP has sent to email for verification");
@@ -115,25 +117,28 @@ public class VerifyOTPController {
             return "/auth/enterVerifyOTP";
         }
 
-        if(role == null || role.isEmpty()) {
+        if (role == null || role.isEmpty()) {
             redirectAttributes.addFlashAttribute("inputInformation", "You must input your information first!");
             return "redirect:/register";
         }
 
-        RegisterOTPVerify registerVerify;
+        List<RegisterOTPVerify> registerVerify;
 
         //Kiểm tra xem OTP có đúng là của email đó không
         try {
-            registerVerify = registerOTPVerifyRepository.findByOTPAndEmail(otp, email).orElseThrow(() -> new RuntimeException("This OTP is not for this email"));
+            registerVerify = registerOTPVerifyRepository.findByOTPAndEmail(otp, email);
+            if (registerVerify.isEmpty()) {
+                throw new RuntimeException("This OTP is not for this email!");
+            }
         } catch (RuntimeException e) {
             model.addAttribute("otpMsg", e.getMessage());
             return "/auth/login";
         }
 
         //Kiểm tra xem OTP đã hết hạn chưa
-        if (registerVerify.getExpirationTime().before(Date.from(Instant.now()))) {
+        if (registerVerify.getFirst().getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("otpMsg", "The OTP has expired");
-            registerOTPVerifyRepository.deleteById(registerVerify.getRvid());
+            registerOTPVerifyRepository.deleteById(registerVerify.getFirst().getRvid());
             model.addAttribute("email", email);
             return "/auth/enterVerifyOTP";
         }
@@ -146,7 +151,7 @@ public class VerifyOTPController {
         receptionistService.createReceptionist(request);
         model.addAttribute("message", "Registered successfully");
         model.addAttribute("otpMsg", "OTP verified");
-        registerOTPVerifyRepository.deleteById(registerVerify.getRvid());
+        registerOTPVerifyRepository.deleteById(registerVerify.getFirst().getRvid());
 
         // Xóa khỏi session sau khi đã sử dụng
         model.asMap().remove("creationRequest");

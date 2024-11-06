@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 @Controller
@@ -36,8 +37,7 @@ public class ForgotPasswordController {
 
     //Chuyển đến trang nhập email
     @GetMapping("/enterEmail")
-    public String enterEmail(@RequestParam("email") String email, Model model) {
-        model.addAttribute("email", email);
+    public String enterEmail(Model model) {
         return "/auth/enterEmail";
     }
 
@@ -57,15 +57,15 @@ public class ForgotPasswordController {
         }
 
         //Kiểm tra xem OTP đã hết hạn chưa
-        ForgotPassword fp = forgotPasswordRepository.findByEmployeeAndOtp(employee, otp);
-        if(fp.getExpirationTime().before(Date.from(Instant.now()))) {
+        List<ForgotPassword> fp = forgotPasswordRepository.findByEmployeeAndOtp(employee, otp);
+        if(fp.getFirst().getExpirationTime().before(Date.from(Instant.now()))) {
             model.addAttribute("msg", "The OTP has expired");
-            forgotPasswordRepository.deleteById(fp.getFpid());
+            forgotPasswordRepository.deleteById(fp.getFirst().getFpid());
             model.addAttribute("email", email);
             return "/auth/enterEmail";
         }
         model.addAttribute("msg", "OTP verified");
-        forgotPasswordRepository.deleteById(fp.getFpid());
+        forgotPasswordRepository.deleteById(fp.getFirst().getFpid());
         return "/auth/newPassword";
     }
 
@@ -76,6 +76,7 @@ public class ForgotPasswordController {
 
         if(employee == null) {
             model.addAttribute("emailError", "This email does not exist");
+            model.addAttribute("email", email);
             return "/auth/enterEmail";
         }
 
@@ -100,6 +101,10 @@ public class ForgotPasswordController {
                 .build();
 
         emailService.sendSimpleMessage(mailBody);
+        ForgotPassword forgotPassword = forgotPasswordRepository.findByEmail(email);
+        if (forgotPassword != null) {
+            forgotPasswordRepository.delete(forgotPassword);
+        }
         forgotPasswordRepository.save(fp);
         model.addAttribute("email", email);
         model.addAttribute("msg", "OTP has sent to email for verification");

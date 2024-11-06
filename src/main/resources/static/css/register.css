@@ -23,15 +23,14 @@ body, html {
     justify-content: center;
     align-items: center;
 }
-/*body {*/
-/*    margin: 0;*/
-/*    padding: 0;*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    height: 100vh;*/
-/*    width: 100vw;*/
-/*}*/
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f3f4f6; /* Optional: background color for better contrast */
+}
 .container {
     text-align: center;
     margin: 100px auto;
@@ -118,12 +117,10 @@ body {
     background-color: #f8f9fa; /* Light background color */
 }
 .container {
-    max-width: 400px; /* Limit the width of the form */
-    margin-top: 100px; /* Center vertically */
     padding: 20px; /* Padding inside the container */
     border: 1px solid #ced4da; /* Light border */
     border-radius: 5px; /* Rounded corners */
-    background-color: white; /* White background for the form */
+    background-color: aliceblue; /* White background for the form */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
     font-family: "Arial";
     height: 350px;
@@ -153,17 +150,6 @@ input[type="email"], input[type="submit"] {
 body {
     background-color: #f8f9fa; /* Light background color */
 }
-.container {
-    max-width: 400px; /* Limit the width of the form */
-    margin-top: 100px; /* Center vertically */
-    padding: 20px; /* Padding inside the container */
-    border: 1px solid #ced4da; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    background-color: white; /* White background for the form */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-    height: 350px;
-    font-family: "Arial";
-}
 h1 {
     font-size: 20px; /* Heading size */
     margin-bottom: 10px; /* Space below the heading */
@@ -184,17 +170,6 @@ h3{
 /* enterVerifyOTP CSS */
 body {
     background-color: #f8f9fa; /* Light background color */
-}
-.container {
-    max-width: 400px; /* Limit the width of the form */
-    margin-top: 100px; /* Center vertically */
-    padding: 20px; /* Padding inside the container */
-    border: 1px solid #ced4da; /* Light border */
-    border-radius: 5px; /* Rounded corners */
-    background-color: white; /* White background for the form */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Light shadow */
-    height: 350px;
-
 }
 h1 {
     font-size: 24px; /* Heading size */
