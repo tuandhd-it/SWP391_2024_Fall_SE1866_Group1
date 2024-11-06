@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,6 +18,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Record;
 import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.repository.EmployeeRepository;
+import project.dental_clinic_management.repository.MedicineRepository;
 import project.dental_clinic_management.service.RecordService;
 import project.dental_clinic_management.service.*;
 
@@ -55,7 +59,10 @@ public class AdminController {
     private RecordService recordService;
     @Autowired
     private ReceptionistService receptionistService;
-
+    @Autowired
+    private MedicineRepository medicineRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
 
     /**
@@ -389,10 +396,34 @@ public class AdminController {
         Page<Record> records = recordService.getAllRecordsByPatientID(id,page,size);
         model.addAttribute("records",records);
         model.addAttribute("totalRecord", records.getTotalElements());
+        model.addAttribute("patientId",id);
         model.addAttribute("start", page * size + 1);
         model.addAttribute("end", Math.min((page + 1) * size, (int)records.getTotalElements()));
         return "/patient/manageRecord";
     }
+
+    @GetMapping("/newRecord/{patientId}")
+    public String createNewRecord(@PathVariable("patientId") Integer patientId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        String email;
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails) principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+
+        // Lấy đối tượng User từ userRepository
+        Employee doctor = employeeRepository.findByEmail(email);
+        model.addAttribute("doctor", doctor);
+        model.addAttribute("patientId", patientId);
+        List<Medicine> medicines = medicineRepository.findAll();
+        model.addAttribute("medicines", medicines);
+        model.addAttribute("newRecord", new RecordCreationRequest());
+        return "patient/createRecord";
+    }
+
 
 
     @GetMapping("employeesDetails/{id}")

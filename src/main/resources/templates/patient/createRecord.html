@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <title>JSP Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            padding: 100px 0;
+            background: #ecf0f4;
+            width: 100%;
+            height: 100%;
+            font-size: 18px;
+            line-height: 1.5;
+            font-family: 'Roboto', sans-serif;
+            color: #222;
+        }
+
+        .container {
+            max-width: 1230px;
+            width: 100%;
+        }
+
+        h1 {
+            font-weight: 700;
+            font-size: 45px;
+            font-family: 'Roboto';
+        }
+
+        .header {
+            background-color: white !important;
+            margin-bottom: 80px;
+        }
+
+        #description {
+            font-size: 24px;
+        }
+
+        .form-wrap {
+            background: rgba(255, 255, 255, 1);
+            width: 100%;
+            max-width: 850px;
+            padding: 50px;
+            margin: 0 auto;
+            position: relative;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-wrap:before {
+            content: "";
+            width: 90%;
+            height: calc(100% + 60px);
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            position: absolute;
+            top: -30px;
+            background: black;
+            z-index: -1;
+            opacity: 0.8;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+            -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group > label {
+            display: block;
+            font-size: 18px;
+            color: #000;
+        }
+
+        .custom-control-label {
+            color: #000;
+            font-size: 16px;
+        }
+
+        .form-control {
+            height: 50px;
+            background: #ecf0f4;
+            border-color: transparent;
+            padding: 0 15px;
+            font-size: 16px;
+            -webkit-transition: all 0.3s ease-in-out;
+            -moz-transition: all 0.3s ease-in-out;
+            -o-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .form-control:focus {
+            border-color: #00bcd9;
+            -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+        }
+
+        textarea.form-control {
+            height: 160px;
+            padding-top: 15px;
+            resize: none;
+        }
+
+        .btn {
+            padding: .657rem .75rem;
+            font-size: 18px;
+            letter-spacing: 0.050em;
+            -webkit-transition: all 0.3s ease-in-out;
+            -moz-transition: all 0.3s ease-in-out;
+            -o-transition: all 0.3s ease-in-out;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        .btn-dark:hover {
+            color: #00bcd9;
+            background-color: #ffffff;
+            border-color: #00bcd9;
+            -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+        }
+
+        .btn-dark:focus, .btn-dark.focus {
+            color: #00bcd9;
+            background-color: #ffffff;
+            border-color: #00bcd9;
+            -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+        }
+
+        .btn-dark:not(:disabled):not(.disabled):active, .btn-dark:not(:disabled):not(.disabled).active,
+        .show > .btn-dark.dropdown-toggle {
+            color: #00bcd9;
+            background-color: #ffffff;
+            border-color: #00bcd9;
+        }
+
+        .btn-dark:not(:disabled):not(.disabled):active:focus, .btn-dark:not(:disabled):not(.disabled).active:focus,
+        .show > .btn-dark.dropdown-toggle:focus {
+            -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+        }
+    </style>
+</head>
+<body style="font-family: Roboto!important">
+<div class="container" style="margin-bottom: 100px">
+    <header class="header">
+        <h1 class="text-center text-dark" id="title" style="font-family: Roboto">Thêm Đơn Thuốc</h1>
+
+    </header>
+    <div class="form-wrap">
+        <form th:action="@{/admin/createRecord}" id="survey-form" th:method="post" th:object="${newRecord}">
+            <div class="row">
+                <h4 class="text-dark pb-4" style="font-family: Roboto"><b>Thông tin bệnh nhân</b></h4>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="patientName">Tên bệnh nhân</label>
+                        <input class="form-control" id="patientName" name="patientName" placeholder="Tên bệnh nhân"
+                               required type="text">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="age">Tuổi</label>
+                        <input class="form-control" id="age" max="99" min="10" name="age" placeholder="18"
+                               type="number">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="height">Chiều cao(cm)</label>
+                        <input class="form-control" id="height" max="300" min="100" name="height" placeholder="160"
+                               type="number">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="weight">Cân nặng <small>(kg)</small></label>
+                        <input class="form-control" id="weight" max="200" min="30" name="weight" placeholder="60kg"
+                               type="number">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="diagnose">Chuẩn đoán</label>
+                        <input class="form-control" id="diagnose" name="diagnose" placeholder="Chuẩn đoán bệnh.."
+                               required type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="medicalHistory">Tiền sử bệnh</label>
+                        <input class="form-control" id="medicalHistory" name="medicalHistory" placeholder="Tiền sử sức khỏe.."
+                               required type="text">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="createDate">Ngày tạo đơn</label>
+                        <input class="form-control" id="createDate" name="createDate" placeholder="Ngày tạo đơn"
+                               readonly type="date">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label >Tên bác sĩ</label>
+<!--                        <input class="form-control" id="doctorName" placeholder="Tên Bác Sĩ.."-->
+<!--                               th:value="${doctor.getFirst_name() + ' ' + doctor.getLast_name()}"-->
+<!--                               th:field="${doctorId}"-->
+<!--                               type="text" readonly>-->
+                    </div>
+                </div>
+            </div>
+            <div class=" row input d-flex align-items-center">
+                <h4 class="text-dark py-5" style="font-family: Roboto"><b>Thông tin Đơn Thuốc</b></h4>
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="text-align: center">Thuốc</th>
+                        <th style="text-align: center">Ghi chú</th>
+                    </tr>
+                    </thead>
+                    <tbody id="medicine-rows">
+                        <td style="border-bottom: none" class="col-md-6">
+                            <select id="dropdown" th:field="*{medicineIds}" class="form-control" required multiple>
+                                <option th:each="i : ${medicines}"
+                                        th:value="${i.getRegNumber()}"
+                                        th:text="${i.getMedicineName()}"></option>
+                            </select>
+                        </td>
+                        <td style="border-bottom: none" class="col-md-6">
+                            <input type="text" class="form-control" th:field="*{medicineNotes[${medicineCount}]}">
+                        </td>
+                        <td style="border-bottom: none;">
+                            <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
+                        </td>
+                    </tbody>
+                    <tr>
+                        <td style="border-bottom: none;text-align: center">
+                            <button class="btn btn-sm btn-dark mt-2 " id="add-ingredient-btn" style="font-size: 14px"
+                                    type="button">Thêm Thuốc
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 pt-5">
+                    <div class="form-group">
+                        <label for="Note">Ghi chú</label>
+                        <textarea class="form-control" id="Note" name="Note"
+                                  placeholder="Ghi chú thông tin đơn thuốc..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row d-flex align-items-center">
+                <div class="col-md-12 text-center">
+                    <button class="btn btn-dark btn-block save-btn" id="submit" type="submit">Thêm Mới</button>
+                    <a class="btn btn-dark" href="showPres"><i class="fa-solid fa-arrow-left"
+                                                               style="font-size: 13px"></i>&nbsp; Quay lại</a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let medicineCount = 0; // Counter to track the number of medicine inputs
+
+    document.getElementById('add-ingredient-btn').addEventListener('click', function () {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td style="border-bottom: none" class="col-md-6">
+                <select id="dropdown" th:field="*{medicineIds}" class="form-control" required multiple>
+                    <option th:each="i : ${medicines}"
+                    th:value="${i.getRegNumber()}"
+                    th:text="${i.getMedicineName()}"></option>
+                </select>
+            </td>
+            <td style="border-bottom: none" class="col-md-6">
+                <input type="text" class="form-control" th:field="*{medicineNotes[${medicineCount}]}">
+            </td>
+            <td style="border-bottom: none;">
+                <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
+            </td>
+        `;
+        // Append to the table's tbody
+        document.querySelector('#medicine-rows').appendChild(newRow);
+
+        // Increment the counter
+        medicineCount++;
+
+        // Add delete event to the new row's delete button
+        addDeleteEvent(newRow.querySelector('.delete-btn'));
+    });
+
+    function addDeleteEvent(button) {
+        button.addEventListener('click', function () {
+            const row = button.closest('tr');
+            row.remove();
+            medicineCount--; // Decrement counter when a row is removed
+        });
+    }
+
+    document.querySelectorAll('.delete-btn').forEach(function (button) {
+        addDeleteEvent(button);
+    });
+
+    document.querySelector('.save-btn').addEventListener('click', function (event) {
+        if (hasDuplicateMedNames()) {
+            event.preventDefault();
+            alert('Vui lòng điền hết các trường và chắc chắn Thành Phần thuốc không được lặp lại');
+        }
+    });
+
+    function hasDuplicateMedNames() {
+        const medNames = document.querySelectorAll('select[name="medicineIds"]');
+        const values = [];
+        for (let i = 0; i < medNames.length; i++) {
+            if (values.includes(medNames[i].value)) {
+                return true;
+            }
+            values.push(medNames[i].value);
+        }
+        return false;
+    }
+    /*]]>*/
+</script>
+</body>
+</html>
