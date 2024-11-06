@@ -251,16 +251,22 @@ public class AdminController {
     }
 
     @GetMapping("/managePatient")
-    public String getAllPatient(@RequestParam(defaultValue = "0") int page,
-                                @RequestParam(defaultValue = "5") int size,Model model, @RequestParam(value = "errors", required = false) String errors) {
-            Page<Patient> list = adminService.getPatientPaging(page,size);
-            model.addAttribute("patients", list);
-            model.addAttribute("editPatient",new PatientUpdateRequest());
-            model.addAttribute("newPatient", new PatientCreationRequest());
-            model.addAttribute("totalPatient", list.getTotalElements());
-            model.addAttribute("start", page * size + 1);
-            model.addAttribute("end", Math.min((page + 1) * size, (int)list.getTotalElements()));
-            model.addAttribute("errors", errors);
+    public String getAllPatient(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
+
+        // Retrieve paginated list of patients
+        Page<Patient> list = adminService.getPatientPaging(page, size);
+
+        // Add attributes to the model for use in the view
+        model.addAttribute("patients", list);
+        model.addAttribute("editPatient", new PatientUpdateRequest());
+        model.addAttribute("newPatient", new PatientCreationRequest());
+        model.addAttribute("totalPatient", list.getTotalElements());
+        model.addAttribute("start", page * size + 1);
+        model.addAttribute("end", Math.min((page + 1) * size, (int) list.getTotalElements()));
+
         return "/patient/managePatient";
     }
 
@@ -274,23 +280,28 @@ public class AdminController {
             );
 
             StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("Tạo mới bệnh nhân thất bại").append("<br>");
 
             for (String key : errors.keySet()) {
-                errorMsg.append("Tạo mới bệnh nhân Thất Bại: ").append(key).append(", lí do: ").append(errors.get(key)).append("\n");
+                errorMsg.append(key).append(": ").append(errors.get(key)).append("<br>");;
             }
             model.addAttribute("errors", errorMsg);
-            List<Patient> list = adminService.getAllPatient();
+            int page=0,size=5;
+            Page<Patient> list = adminService.getPatientPaging(page,size);
             model.addAttribute("patients", list);
             model.addAttribute("editPatient",new PatientUpdateRequest());
             model.addAttribute("newPatient", patientRequest);
-            return "/patient/managePatient";
+            model.addAttribute("totalPatient", list.getTotalElements());
+            model.addAttribute("start", 1);
+            model.addAttribute("end", Math.min((page + 1) * size, (int)list.getTotalElements()));
+            return "patient/managePatient";
         }else{
-        Patient patient = adminService.createPatient(patientRequest);
-        model.addAttribute("errors", "Thêm mới Bệnh Nhân Thành Công!");
-        PatientWaitingRoomRequest patientWaitingRoom = new PatientWaitingRoomRequest();
-        patientWaitingRoom.setPatient(patient);
-        model.addAttribute("patientWaitingRoom", patientWaitingRoom);
-        return "/branch/addPatientWaitingRoom";
+            Patient patient = adminService.createPatient(patientRequest);
+            model.addAttribute("errors", "Thêm mới Bệnh Nhân Thành Công!");
+            PatientWaitingRoomRequest patientWaitingRoom = new PatientWaitingRoomRequest();
+            patientWaitingRoom.setPatient(patient);
+            model.addAttribute("patientWaitingRoom", patientWaitingRoom);
+            return "/branch/addPatientWaitingRoom";
         }
     }
 
@@ -329,8 +340,44 @@ public class AdminController {
     }
 
     @PostMapping("/editPatient")
-    public String editPatient(@ModelAttribute PatientUpdateRequest patientRequest) {
-        adminService.updatePatient(patientRequest.getPatientId(), patientRequest); // Update branch
+    public String editPatient(
+            @ModelAttribute @Valid PatientUpdateRequest patientRequest,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(
+                    error -> errors.put(error.getField(), error.getDefaultMessage())
+            );
+
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("Cập nhật bệnh nhân thất bại").append("<br>");
+
+            for (String key : errors.keySet()) {
+                errorMsg.append(key).append(": ").append(errors.get(key)).append("<br>");
+            }
+
+            redirectAttributes.addFlashAttribute("errors", errorMsg.toString());
+        } else {
+            redirectAttributes.addFlashAttribute("errors", "Cập nhật Bệnh Nhân Thành Công!");
+            adminService.updatePatient(patientRequest.getPatientId(), patientRequest);
+        }
+
+        return "redirect:/admin/managePatient";
+    }
+
+
+    @GetMapping("/deletePatient/{id}")
+    public String deletePatient(@PathVariable Integer id,
+                                RedirectAttributes redirectAttributes) {
+        List<Record> records = recordService.getAllRecordsByPatientID(id);
+        if(records.isEmpty()){
+            adminService.deletePatientById(id);
+            redirectAttributes.addFlashAttribute("errors", "Xóa bệnh nhân thành công!");
+        }else{
+            redirectAttributes.addFlashAttribute("errors", "Thất bại!<br>Không thể xóa bệnh nhân đã có lịch sử thăm khám!");
+        }
         return "redirect:/admin/managePatient";
     }
 

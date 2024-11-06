@@ -457,6 +457,15 @@ public class AdminService {
         return patientRepository.findAll();
     }
 
+    public boolean deletePatientById(int id){
+        try{
+            patientRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Page<Patient> getPatientPaging(int page, int size){
         return patientRepository.findAll(PageRequest.of(page, size));
     }
