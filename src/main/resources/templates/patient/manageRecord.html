@@ -52,6 +52,7 @@
                 <tbody>
                     <tr th:each="record, stat : ${records}">
                         <td th:text="${stat.index + 1}"></td>
+                        <td th:text="${record.getRecordId()}">
                         <td th:text="${record.getReason()}"></td>
                         <td th:text="${record.getDiagnose()}"></td>
                         <td th:text="${record.getEmployee().getFirst_name()+' '+record.getEmployee().getLast_name()}"></td>
@@ -90,6 +91,30 @@
     </div>
 </div>
 </div>
+<!--Error Messages Notification-->
+<div class="toast-container top-0 end-0 p-3">
+    <div id="error-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+         th:if="${errors != null}">
+        <div class="toast-header">
+            <strong class="me-auto" style="color: red">Thông Báo!</strong>
+            <small>1s ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <p th:utext="${errors}"></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = document.getElementById('error-toast');
+        if (errorToast) {
+            var toast = new bootstrap.Toast(errorToast);
+            toast.show();
+        }
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var deleteButtons = document.querySelectorAll('.delete-btn');
