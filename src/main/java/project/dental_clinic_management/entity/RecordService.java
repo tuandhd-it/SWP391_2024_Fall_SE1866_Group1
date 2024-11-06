@@ -8,29 +8,23 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
+@NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class RecordService {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int service_id;
+    int record_service_id;
     String note;
 
     @ManyToOne
-    @JoinColumn(name = "service_id", insertable = false, updatable = false)
+    @JoinColumn(name = "service_id")
     Service service;
 
     @ManyToOne
     @JoinColumn (name = "recordID")
-    private Record record;
-
-    public RecordService() {
-
-    }
-    public RecordService(String note, Record record) {
-        this.note = note;
-        this.record = record;
-    }
+    Record record;
 
 
 }
