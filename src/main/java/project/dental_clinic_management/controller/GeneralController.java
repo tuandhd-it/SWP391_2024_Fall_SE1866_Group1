@@ -270,8 +270,10 @@ public class GeneralController {
 
     //Đăng ký khám online
     @GetMapping("/guestExamRegistration")
-    public String guestExamRegistration(Model model, @ModelAttribute("errors") String errors) {
-        ExamRegistrationRequest request = new ExamRegistrationRequest();
+    public String guestExamRegistration(Model model, @ModelAttribute("errors") String errors, @ModelAttribute("request") ExamRegistrationRequest request) {
+        if (request == null) {
+            request = new ExamRegistrationRequest();
+        }
         List<Branch> branchList = receptionistService.findAllBranches();
         model.addAttribute("branchList", branchList);
         model.addAttribute("request", request);
@@ -323,6 +325,7 @@ public class GeneralController {
                 errorMsg.append(errors.get(key)).append("\n");
             }
             redirectAttributes.addFlashAttribute("errors", errorMsg);
+            redirectAttributes.addFlashAttribute("request", request);
             return "redirect:/guestExamRegistration";
         }
         LocalDate choosenDate = request.getExamRegisterDate();
