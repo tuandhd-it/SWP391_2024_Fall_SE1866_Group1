@@ -16,13 +16,16 @@ public class Equipment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int equipmentId;
     String equipmentName;
-    String quantity;
+    int quantity;
     String unit;
+    double price;
+    String note;
 
-    public Equipment(String equipmentName, String quantity, String unit) {
-
+    public Equipment(String equipmentName, Integer quantity, String unit, double price, String note) {
         this.equipmentName = equipmentName;
         this.quantity = quantity;
         this.unit = unit;
+        this.price = price;
+        this.note = note;
     }
 }

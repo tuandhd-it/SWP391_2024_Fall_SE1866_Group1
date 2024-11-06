@@ -16,9 +16,9 @@ public class MedicineImport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int medImportId; // Thêm trường này làm khóa chính cho MedicineImport
+    int medImportId;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "reg_number")
     Medicine medicine;
 
@@ -31,4 +31,5 @@ public class MedicineImport {
     Branch branch;
 
     LocalDate date;
+    double totalPrice;
 }

@@ -333,13 +333,66 @@ public class ManagerController {
     public String getAllMedicineImports(Model model) {
         List<MedicineImport> medicineImports = managerService.getAllMedicineImports();
         model.addAttribute("medicineImports", medicineImports);
-        return "medicine/medicineHistory";
+        return "/medicine/medicineHistory";
     }
+
     @GetMapping("/manageEquipment")
     public String getAllEquipments(Model model) {
         List<Equipment> list = managerService.getAllEquipments();
         model.addAttribute("equipments", list);
         return "/equipment/manageEquipment";
     }
+
+    @GetMapping("/addEquipment")
+    public String showAddEquipmentForm(Model model) {
+        model.addAttribute("importMedicine", new MedicineImportRequest());
+        return "medicine/manageMedicine";
+    }
+
+    @PostMapping("/equipmentImport")
+    public String importEquipment(@ModelAttribute("importEquipment") EquipmentImportRequest request, RedirectAttributes redirectAttributes) {
+        try {
+            managerService.importEquipment(request); // Gọi service để thêm thuốc
+            redirectAttributes.addFlashAttribute("successAddingEquipment", "Nhập thết bị thành công");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorAddingEquipment", "Lỗi khi nhập thiết bị: " + e.getMessage());
+        }
+        return "redirect:/manager/manageEquipment";
+    }
+
+    @PostMapping("/updateEquipment")
+    public String updateEquipment(
+            @ModelAttribute("equipment") Equipment updatedEquipment,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            if (updatedEquipment.getEquipmentId()>0) {
+                managerService.updateEquipment(updatedEquipment);
+                redirectAttributes.addFlashAttribute("successUpdateEquipment", "Cập nhật thuốc thành công!");
+            } else {
+                throw new RuntimeException("Số đăng ký thiết bị không hợp lệ!");
+            }
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorUpdateEquipment", "Cập nhật thất bại: " + e.getMessage());
+        }
+
+        return "redirect:/manager/manageEquipment";
+    }
+
+    @GetMapping("/searchEquipment")
+    public String searchEquipment(@RequestParam("name") String name, Model model) {
+        List<Equipment> equipments = managerService.searchEquipmentByName(name);
+        model.addAttribute("equipments", equipments);
+        return "equipment/manageEquipment";
+    }
+
+    @GetMapping("/equipmentHistory")
+    public String getAllEquipmentImports(Model model) {
+        List<EquipmentImport> equipmentImports = managerService.getAllEquipmentImports();
+        model.addAttribute("equipmentImports", equipmentImports);
+        return "/equipment/equipmentHistory";
+    }
+
 }
 

@@ -15,11 +15,10 @@ import java.util.List;
 public class MedicineImportRequest {
         int regNumber;
         String medicineName;
-        String quantity;
+        int quantity;
         String unit;
         double price;
         String ingredients;
         LocalDate date;
-
 }
 

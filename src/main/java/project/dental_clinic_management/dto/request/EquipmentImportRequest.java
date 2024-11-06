@@ -10,9 +10,8 @@ import lombok.experimental.FieldDefaults;
 public class EquipmentImportRequest {
     int equipmentId;
     String equipmentName;
-    String quantity;
+    int quantity;
     String unit;
-    double totalPrice;
-    int emp_id;
-    int bran_id;
+    double price;
+    String note;
 }

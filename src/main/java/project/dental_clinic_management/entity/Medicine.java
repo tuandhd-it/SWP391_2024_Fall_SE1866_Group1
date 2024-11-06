@@ -14,14 +14,14 @@ public class Medicine {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int regNumber;
     String medicineName;
-    String quantity;
+    int quantity;
     String unit;
     double price;
     String ingredients;
 
     // Constructors
 
-    public Medicine(String medicineName, String quantity, String unit, double price, String ingredients) {
+    public Medicine(String medicineName, Integer quantity, String unit, double price, String ingredients) {
         this.medicineName = medicineName;
         this.quantity = quantity;
         this.unit = unit;

@@ -8,11 +8,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EquipmentUpdateRequest {
-    int equipImportId;
+    int equipmentId;
     String equipmentName;
-    String quantity;
+    int quantity;
     String unit;
     double price;
-    int emp_id;
-    int bran_id;
+    String note;
 }

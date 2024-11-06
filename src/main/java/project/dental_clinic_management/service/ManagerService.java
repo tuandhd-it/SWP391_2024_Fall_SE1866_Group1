@@ -47,6 +47,9 @@ public class ManagerService {
     @Autowired
     private EquipmentRepository equipmentRepository;
 
+    @Autowired
+    private EquipmentImportRepository equipmentImportRepository;
+
     //Create Schedule
     public void createSchedule(ScheduleCreationRequest request) {
         scheduleRepository.save(Schedule.builder()
@@ -199,6 +202,7 @@ public class ManagerService {
         // Create a MedicineImport record with import information
         MedicineImport medicineImport = new MedicineImport();
         medicineImport.setMedicine(medicine);
+        medicineImport.setTotalPrice(medicine.getQuantity() * medicine.getPrice());
         medicineImport.setEmployee(currentEmployee);
         medicineImport.setBranch(currentEmployee.getBranch());
         medicineImport.setDate(LocalDate.now());
@@ -241,9 +245,7 @@ public class ManagerService {
         medicineRepository.save(existingMedicine);
     }
 
-    public void addMedicineToPrescription(Medicine medicine) {
-        medicineRepository.save(medicine);
-    }
+
     public ManagerService(MedicineRepository medicineRepository) {
         this.medicineRepository = medicineRepository;
     }
@@ -255,4 +257,63 @@ public class ManagerService {
     public List<Equipment> getAllEquipments() {
         return equipmentRepository.findAll();
     }
+
+    public void importEquipment(EquipmentImportRequest request) {
+        List<Equipment> existingEquipments = equipmentRepository.findByEquipmentNameContaining(request.getEquipmentName());
+        Equipment equipment;
+
+        if (!existingEquipments.isEmpty()) {
+            // Retrieve the first equipment if it exists
+            equipment = existingEquipments.get(0);
+        } else {
+            // Save the new equipment if it does not exist
+            equipment = new Equipment(
+                    request.getEquipmentName(),
+                    request.getQuantity(),
+                    request.getUnit(),
+                    request.getPrice(),
+                    request.getNote()
+            );
+            equipment = equipmentRepository.save(equipment);
+        }
+
+        // Retrieve current employee information from the logged-in account
+        Employee currentEmployee = getCurrentEmployee();
+
+        // Create a equipmentImport record with import information
+        EquipmentImport equipmentImport = new EquipmentImport();
+        equipmentImport.setEquipment(equipment);
+        equipmentImport.setTotalPrice(equipment.getQuantity() * equipment.getPrice());
+        equipmentImport.setEmployee(currentEmployee);
+        equipmentImport.setBranch(currentEmployee.getBranch());
+        equipmentImport.setDate(LocalDate.now());
+
+        equipmentImportRepository.save(equipmentImport);
+    }
+
+    public List<EquipmentImport> getAllEquipmentImports() {
+        return equipmentImportRepository.findAll();
+    }
+
+    public void updateEquipment(Equipment updatedEquipment) {
+
+        Equipment existingEquipment = equipmentRepository.findById(updatedEquipment.getEquipmentId())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy thuốc để cập nhật"));
+
+        // Cập nhật các thông tin của equipment
+        existingEquipment.setEquipmentName(updatedEquipment.getEquipmentName());
+        existingEquipment.setQuantity(updatedEquipment.getQuantity());
+        existingEquipment.setUnit(updatedEquipment.getUnit());
+        existingEquipment.setPrice(updatedEquipment.getPrice());
+        existingEquipment.setNote(updatedEquipment.getNote());
+
+        // Lưu lại thông tin equipment sau khi cập nhật
+        equipmentRepository.save(existingEquipment);
+    }
+
+    //search equipment
+    public List<Equipment> searchEquipmentByName(String name) {
+        return equipmentRepository.findByEquipmentNameContaining(name);
+    }
+
 }

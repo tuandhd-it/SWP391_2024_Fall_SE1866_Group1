@@ -60,8 +60,8 @@ public class Employee {
     @OneToMany (mappedBy = "employee")
     private List<Record> records;
 
-    @OneToMany (mappedBy = "employee")
-    private List<EquipmentImportBill> equipmentImportBills;
+//    @OneToMany (mappedBy = "employee")
+//    private List<EquipmentImportBill> equipmentImportBills;
 
     @OneToMany (mappedBy = "employee")
     private List<Invoice> invoices;

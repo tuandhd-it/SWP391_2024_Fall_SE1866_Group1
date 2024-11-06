@@ -31,8 +31,8 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<Record> records;
 
-    @OneToMany (mappedBy = "branch")
-    private List<EquipmentImportBill> equipmentImportBills;
+//    @OneToMany (mappedBy = "branch")
+//    private List<EquipmentImportBill> equipmentImportBills;
 
     @OneToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "emp_id", insertable = false, updatable = false)

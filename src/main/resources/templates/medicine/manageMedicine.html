@@ -92,9 +92,6 @@
                                             th:data-medicine-ingredients="${medicine.ingredients}">
                                         <i class="fa-solid fa-pen" title="Chỉnh sửa"></i>
                                     </button>
-                                    <a th:action="@{/static}">
-                                        <i class="fa-solid fa-trash ms-1" style="color: red" title="Xóa"></i>
-                                    </a>
                                 </span>
                                 </td>
                             </tr>
@@ -224,7 +221,53 @@
         });
     });
 
+    function checkFormValidity() {
+        const serviceName = document.getElementById('medicineName').value.trim();
+        const price = document.getElementById('price').value.trim();
+        const unit = document.getElementById('unit').value.trim();
+        const ingredients = document.getElementById('ingredients').value.trim();
 
+        // Kiểm tra tất cả các trường xem có được nhập đầy đủ không
+        if (serviceName && price && ingredients) {
+            document.getElementById('saveButton').disabled = false; // Enable nút lưu
+        } else {
+            document.getElementById('saveButton').disabled = true; // Disable nút lưu
+        }
+    }
+    // if (medicineName.length < 1 || medicineName.length > 200) {
+    //     Swal.fire({
+    //         icon: "error",
+    //         title: "Lỗi",
+    //         text: "Tên thuốc phải từ 1 đến 200 ký tự!"
+    //     });
+    //     return;
+    // }
+    // if (price.length < 1 || price.length > 9 || price < 0) {
+    //     Swal.fire({
+    //         icon: "error",
+    //         title: "Lỗi",
+    //         text: "Giá thuốc phải nằm trong khoảng 0 đến 1.000.000.000"
+    //     });
+    //     return;
+    // }
+    //
+    // if (quantity.length < 1 || quantity.length > 9 || quantity < 0) {
+    //     Swal.fire({
+    //         icon: "error",
+    //         title: "Lỗi",
+    //         text: "Số lượng thuốc phải nằm trong khoảng 0 đến 1.000.000.000"
+    //     });
+    //     return;
+    // }
+    //
+    // if (ingredients.length < 1 || ingredients.length > 1000) {
+    //     Swal.fire({
+    //         icon: "error",
+    //         title: "Lỗi",
+    //         text: "Thành phần thuốc phải từ 1 đến 1000 ký tự!"
+    //     });
+    //     return;
+    // }
 </script>
 </body>
 </html>
