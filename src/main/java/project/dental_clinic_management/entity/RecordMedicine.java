@@ -10,21 +10,22 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class RecordMedicine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int reMedicineId;
+    int record_medicine_id;
     int quantity;
     double price;
     String note;
 
     @ManyToOne
-    @JoinColumn(name = "medicine_id", insertable = false, updatable = false)
+    @JoinColumn(name = "medicine_id")
     Medicine regNumber;
 
     @ManyToOne
     @JoinColumn (name = "recordID")
-    Record record;
+    Record recordId;
 
 }

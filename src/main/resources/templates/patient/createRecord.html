@@ -29,7 +29,6 @@
         }
 
         .header {
-            background-color: white !important;
             margin-bottom: 80px;
         }
 
@@ -166,18 +165,18 @@
         <form th:action="@{/admin/createRecord}" id="survey-form" th:method="post" th:object="${newRecord}">
             <div class="row">
                 <h4 class="text-dark pb-4" style="font-family: Roboto"><b>Thông tin bệnh nhân</b></h4>
+                <input style="display: none;" th:field="${patient.patientId}">
                 <div class="col-md-6">
+
                     <div class="form-group">
-                        <label for="patientName">Tên bệnh nhân</label>
-                        <input class="form-control" id="patientName" name="patientName" placeholder="Tên bệnh nhân"
-                               required type="text">
+                        <label for="patientName">Tên bệnh nhân:</label>
+                        <input id="patientName"  class="form-control" th:value="${patient.getFirstName() +' '+ patient.getLastName()}">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="age">Tuổi</label>
-                        <input class="form-control" id="age" max="99" min="10" name="age" placeholder="18"
-                               type="number">
+                        <label for="year">Năm Sinh:</label>
+                        <input id="year" class="form-control" th:value="${#temporals.format(patient.dob, 'yyyy')}" readonly>
                     </div>
                 </div>
             </div>
@@ -185,25 +184,16 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="height">Chiều cao(cm)</label>
-                        <input class="form-control" id="height" max="300" min="100" name="height" placeholder="160"
-                               type="number">
+                        <label for="address">Địa chỉ</label>
+                        <input class="form-control" id="address" th:value="${patient.getAddress()}"
+                               type="text">
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="weight">Cân nặng <small>(kg)</small></label>
-                        <input class="form-control" id="weight" max="200" min="30" name="weight" placeholder="60kg"
-                               type="number">
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label for="diagnose">Chuẩn đoán</label>
-                        <input class="form-control" id="diagnose" name="diagnose" placeholder="Chuẩn đoán bệnh.."
-                               required type="text">
+                        <label for="phone">Điện thoại:</label>
+                        <input class="form-control" id="phone" th:value="${patient.getPhone()}"
+                               type="number" readonly>
                     </div>
                 </div>
             </div>
@@ -211,52 +201,82 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="medicalHistory">Tiền sử bệnh</label>
-                        <input class="form-control" id="medicalHistory" name="medicalHistory" placeholder="Tiền sử sức khỏe.."
-                               required type="text">
+                        <textarea style="height: 100px" class="form-control" id="medicalHistory" th:value="${patient.medicalHistory}"
+                                  readonly type="text" placeholder="Bệnh nhân không có tiền sử bệnh"></textarea>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group">
-                        <label for="createDate">Ngày tạo đơn</label>
-                        <input class="form-control" id="createDate" name="createDate" placeholder="Ngày tạo đơn"
-                               readonly type="date">
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label >Tên bác sĩ</label>
-<!--                        <input class="form-control" id="doctorName" placeholder="Tên Bác Sĩ.."-->
-<!--                               th:value="${doctor.getFirst_name() + ' ' + doctor.getLast_name()}"-->
-<!--                               th:field="${doctorId}"-->
-<!--                               type="text" readonly>-->
+                        <label for="reason">Lý do khám:</label>
+                        <input class="form-control" id="reason" th:field="*{reason}"
+                               required type="text" placeholder="Lý do Khám Bệnh">
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="diagnose">Chuẩn đoán</label>
+                        <input class="form-control" id="diagnose" th:field="*{diagnose}"
+                               required type="text" placeholder="Chuẩn đoán nguyên nhân">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="createDate">Ngày tạo đơn</label>
+                        <input class="form-control" id="createDate" name="createDate" placeholder="Ngày tạo đơn" readonly type="date" th:field="*{date}">
+                    </div>
+                </div>
+                <input style="display:none;"
+                       th:field="*{doctorId}">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="doctorName">Tên bác sĩ</label>
+                        <div class="input-group">
+                            <input class="form-control" id="doctorName"
+                                   th:value="${doctor.first_name + ' ' + doctor.last_name}" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class=" row input d-flex align-items-center">
                 <h4 class="text-dark py-5" style="font-family: Roboto"><b>Thông tin Đơn Thuốc</b></h4>
                 <table>
                     <thead>
                     <tr>
                         <th style="text-align: center">Thuốc</th>
+                        <th style="text-align: center">Số lượng</th>
                         <th style="text-align: center">Ghi chú</th>
                     </tr>
                     </thead>
-                    <tbody id="medicine-rows">
-                        <td style="border-bottom: none" class="col-md-6">
-                            <select id="dropdown" th:field="*{medicineIds}" class="form-control" required multiple>
-                                <option th:each="i : ${medicines}"
-                                        th:value="${i.getRegNumber()}"
-                                        th:text="${i.getMedicineName()}"></option>
-                            </select>
-                        </td>
-                        <td style="border-bottom: none" class="col-md-6">
-                            <input type="text" class="form-control" th:field="*{medicineNotes[${medicineCount}]}">
-                        </td>
-                        <td style="border-bottom: none;">
-                            <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
-                        </td>
+                    <tbody id="medicine-rows">          <td style="border-bottom: none" class="col-md-4">
+                        <!-- Select to get id of the medicine -->
+                        <select id="medicine-select-0" th:field="*{medicines[__${0}__].id}" class="form-control" required>
+                            <option th:each="i : ${medicines}"
+                                    th:value="${i.getRegNumber()}"
+                                    th:text="${i.getMedicineName()}"></option>
+                        </select>
+                    </td>
+
+                    <td style="border-bottom: none" class="col-md-2">
+                        <!-- Input to get quantity -->
+                        <input type="number" id="quantity-${medicineCount}" th:field="*{medicines[__${0}__].quantity}" class="form-control" required>
+                    </td>
+
+                    <td style="border-bottom: none" class="col-md-6">
+                        <!-- Input to get note -->
+                        <input type="text" id="note-${medicineCount}" th:field="*{medicines[__${0}__].note}" class="form-control" required>
+                    </td>
+
+
                     </tbody>
                     <tr>
                         <td style="border-bottom: none;text-align: center">
@@ -268,48 +288,117 @@
                 </table>
             </div>
 
+            <div class=" row input d-flex align-items-center">
+                <h4 class="text-dark py-5" style="font-family: Roboto"><b>Thông tin Dịch Vụ</b></h4>
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="text-align: center">Dịch vụ</th>
+                        <th style="text-align: center">Ghi chú</th>
+                    </tr>
+                    </thead>
+                    <tbody id="service-rows">
+                        <select id="service-select-0" th:field="*{services[__${0}__].id}" class="form-control" required>
+                            <option th:each="i : ${services}"
+                                    th:value="${i.getServiceId()}"
+                                    th:text="${i.getServiceName()}"></option>
+                        </select>
+                        </td>
+
+                        <td style="border-bottom: none" class="col-md-6">
+                            <!-- Input to get note -->
+                            <input type="text" id="note-0" th:field="*{services[__${0}__].note}" class="form-control" required>
+                        </td>
+                    </tbody>
+                    <tr>
+                        <td style="border-bottom: none;text-align: center">
+                            <button class="btn btn-sm btn-dark mt-2 " id="add-service-btn" style="font-size: 14px"
+                                    type="button">Thêm dịch vụ
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+
             <div class="row">
                 <div class="col-md-12 pt-5">
                     <div class="form-group">
                         <label for="Note">Ghi chú</label>
-                        <textarea class="form-control" id="Note" name="Note"
-                                  placeholder="Ghi chú thông tin đơn thuốc..."></textarea>
+                        <textarea class="form-control" id="Note"
+                                  placeholder="Ghi chú thông tin đơn thuốc..."
+                        th:field="*{note}"></textarea>
                     </div>
                 </div>
             </div>
 
+            <div class="row">
+                <div class="col-md-12 pt-2 pb-5">
+                    <input style="display:none;" th:field="*{branch_id}" th:value="${doctor.getBranch().getBran_id()}">
+                    <b><span th:text="${doctor.getBranch().getBranchName()}"></span></b>
+                    <span th:text="' - ' + ${doctor.getBranch().getBranch_address()}"></span>
+                </div>
+            </div>
+
             <div class="row d-flex align-items-center">
-                <div class="col-md-12 text-center">
-                    <button class="btn btn-dark btn-block save-btn" id="submit" type="submit">Thêm Mới</button>
+                <div class="d-flex text-center">
                     <a class="btn btn-dark" href="showPres"><i class="fa-solid fa-arrow-left"
-                                                               style="font-size: 13px"></i>&nbsp; Quay lại</a>
+                                                               style="font-size: 13px"></i> Quay lại </a>
+                    <button style="margin-left: auto" class="btn btn-dark btn-block save-btn" id="submit" type="submit">Thêm Mới</button>
                 </div>
             </div>
 
         </form>
     </div>
 </div>
+<!--Error Messages Notification-->
+<div class="toast-container top-0 end-0 p-3">
+    <div id="error-toast" class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+                     th:if="${errors != null}">
+        <div class="toast-header">
+            <strong class="me-auto" style="color: red">Thông Báo!</strong>
+            <small>1s ago</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            <p th:utext="${errors}"></p>
+        </div>
+    </div>
+</div>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    let medicineCount = 0; // Counter to track the number of medicine inputs
+    let medicineCount = 1; // Counter to track the number of medicine inputs
+
+    // Convert the Java list to a JavaScript object
+    const medicines = /*[[${medicines}]]*/ [];
 
     document.getElementById('add-ingredient-btn').addEventListener('click', function () {
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
-            <td style="border-bottom: none" class="col-md-6">
-                <select id="dropdown" th:field="*{medicineIds}" class="form-control" required multiple>
-                    <option th:each="i : ${medicines}"
-                    th:value="${i.getRegNumber()}"
-                    th:text="${i.getMedicineName()}"></option>
+            <td style="border-bottom: none" class="col-md-4">
+                <!-- Select to get id of the medicine -->
+                <select id="medicine-select-${medicineCount}" name="medicines[${medicineCount}].id" class="form-control" required>
+                    ${
+            medicines.map(medicine => `
+                            <option value="${medicine.regNumber}">
+                                ${medicine.medicineName}
+                            </option>
+                        `).join('')
+        }
                 </select>
             </td>
-            <td style="border-bottom: none" class="col-md-6">
-                <input type="text" class="form-control" th:field="*{medicineNotes[${medicineCount}]}">
+
+            <td style="border-bottom: none" class="col-md-2">
+                <!-- Input to get quantity -->
+                <input type="number" id="quantity-${medicineCount}" name="medicines[${medicineCount}].quantity" class="form-control" required>
             </td>
-            <td style="border-bottom: none;">
-                <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
+
+            <td style="border-bottom: none" class="col-md-6">
+                <!-- Input to get note -->
+                <input type="text" id="note-${medicineCount}" name="medicines[${medicineCount}].note" class="form-control" required>
             </td>
         `;
+
         // Append to the table's tbody
         document.querySelector('#medicine-rows').appendChild(newRow);
 
@@ -340,17 +429,129 @@
     });
 
     function hasDuplicateMedNames() {
-        const medNames = document.querySelectorAll('select[name="medicineIds"]');
+        // Select all <select> elements whose name contains "medicine-select"
+        const medNames = document.querySelectorAll('select[id*="medicine-select"]');
         const values = [];
+
         for (let i = 0; i < medNames.length; i++) {
+            // Check if the current value already exists in the array
             if (values.includes(medNames[i].value)) {
                 return true;
             }
             values.push(medNames[i].value);
         }
+
         return false;
     }
+
     /*]]>*/
 </script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    let serviceCount = 0; // Counter to track the number of service inputs
+
+    // Convert the Java list to a JavaScript object
+    const services = /*[[${services}]]*/ []; // Assuming services data is provided from Java backend
+
+    // Add event listener to the "Thêm dịch vụ" button
+    document.getElementById('add-service-btn').addEventListener('click', function () {
+
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td style="border-bottom: none" class="col-md-6">
+                <!-- Select to get id of the service -->
+                <select id="service-select-${serviceCount}" name="services[${serviceCount}].id" class="form-control" required>
+                    ${
+            services.map(service => `
+                            <option value="${service.serviceId}">
+                                ${service.serviceName}
+                            </option>
+                        `).join('')
+        }
+                </select>
+            </td>
+
+            <td style="border-bottom: none" class="col-md-6">
+                <!-- Input to get note -->
+                <input type="text" id="note-${serviceCount}" name="services[${serviceCount}].note" class="form-control" required>
+            </td>
+
+            <td style="border-bottom: none;">
+                <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
+            </td>
+        `;
+
+        // Append the new row to the table body
+        document.querySelector('#service-rows').appendChild(newRow);
+
+        // Increment the counter
+        serviceCount++;
+
+        // Add delete event to the new row's delete button
+        addDeleteEvent(newRow.querySelector('.delete-btn'));
+    });
+
+    // Function to add delete functionality to a row
+    function addDeleteEvent(button) {
+        button.addEventListener('click', function () {
+            const row = button.closest('tr');
+            row.remove();
+            serviceCount--; // Decrement counter when a row is removed
+        });
+    }
+
+    // Initial delete event listener for any pre-existing delete buttons
+    document.querySelectorAll('.delete-btn').forEach(function (button) {
+        addDeleteEvent(button);
+    });
+
+    // Add save functionality and check for duplicate service selection
+    document.querySelector('.save-btn').addEventListener('click', function (event) {
+        if (hasDuplicateServiceSelections()) {
+            event.preventDefault();
+            alert('Vui lòng chắc chắn rằng các dịch vụ không bị trùng lặp');
+        }
+    });
+
+    // Function to check for duplicate service selections
+    function hasDuplicateServiceSelections() {
+        const serviceSelections = document.querySelectorAll('select[id*="service-select"]');
+        const selectedValues = [];
+
+        for (let i = 0; i < serviceSelections.length; i++) {
+            const selectedValue = serviceSelections[i].value;
+            // Check if the current value already exists in the array
+            if (selectedValues.includes(selectedValue)) {
+                return true;
+            }
+            selectedValues.push(selectedValue);
+        }
+
+        return false;
+    }
+
+    /*]]>*/
+</script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    // Get the current date in yyyy-MM-dd format
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    // Set the value of the input field to the current date
+    document.getElementById('createDate').value = currentDate;
+    /*]]>*/
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errorToast = document.getElementById('error-toast');
+        if (errorToast) {
+            var toast = new bootstrap.Toast(errorToast);
+            toast.show();
+        }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+        crossorigin="anonymous"></script>
 </body>
 </html>

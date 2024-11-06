@@ -20,10 +20,12 @@ import project.dental_clinic_management.entity.Record;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.EmployeeRepository;
 import project.dental_clinic_management.repository.MedicineRepository;
+import project.dental_clinic_management.repository.ServiceRepository;
 import project.dental_clinic_management.service.RecordService;
 import project.dental_clinic_management.service.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,6 +65,10 @@ public class AdminController {
     private MedicineRepository medicineRepository;
     @Autowired
     private EmployeeRepository employeeRepository;
+    @Autowired
+    private CustomUserDetailService customUserDetailService;
+    @Autowired
+    private ServiceRepository serviceRepository;
 
 
     /**
@@ -403,25 +409,58 @@ public class AdminController {
     }
 
     @GetMapping("/newRecord/{patientId}")
-    public String createNewRecord(@PathVariable("patientId") Integer patientId, Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-
-        String email;
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails) principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-
-        // Lấy đối tượng User từ userRepository
-        Employee doctor = employeeRepository.findByEmail(email);
-        model.addAttribute("doctor", doctor);
-        model.addAttribute("patientId", patientId);
+    public String createNewRecord(@PathVariable("patientId") Integer patientId, @AuthenticationPrincipal UserDetails userDetails,Model model) {
+        String username = userDetails.getUsername();
+        Employee employee = customUserDetailService.findByUsername(username);
+        model.addAttribute("doctor", employee);
+        Patient patient = adminService.getPatient(patientId);
+        model.addAttribute("patient", patient);
         List<Medicine> medicines = medicineRepository.findAll();
         model.addAttribute("medicines", medicines);
-        model.addAttribute("newRecord", new RecordCreationRequest());
+        List<Service> servicesList = serviceRepository.findAll();
+        List<PassDataServiceDTO>  services = new ArrayList<>();
+        for (Service s:servicesList){
+            services.add(new PassDataServiceDTO(s.getServiceId(),s.getServiceName(),s.getPrice()));
+        }
+        model.addAttribute("services", services);
+        if(model.getAttribute("newRecord")==null){
+            RecordCreationRequest newRecord = new RecordCreationRequest();
+            for (int i=0;i<=10;i++){
+                newRecord.addService(new ServiceRecordDTO());
+                newRecord.addMedicine(new MedicineRecordDTO());
+            }
+            newRecord.setBranch_id(employee.getBranch().getBran_id());
+            newRecord.setDoctorId(employee.getEmp_id());
+            model.addAttribute("newRecord", newRecord);
+        }
         return "patient/createRecord";
+    }
+
+    @PostMapping("/createRecord")
+    public String createRecord(@ModelAttribute @Valid RecordCreationRequest newRecord,
+                               BindingResult bindingResult,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+        int patientId = newRecord.getPatientId();
+        if(bindingResult.hasErrors()){
+            Map<String, String> errors = new HashMap<>();
+            bindingResult.getFieldErrors().forEach(
+                    error -> errors.put(error.getField(), error.getDefaultMessage())
+            );
+
+            StringBuilder errorMsg = new StringBuilder();
+            errorMsg.append("<b>Tạo hồ sơ thất bại</b>").append("<br><br>");
+
+            for (String key : errors.keySet()) {
+                errorMsg.append("<b>"+key+"</b>").append(": ").append(errors.get(key)).append("<br>");
+            }
+            redirectAttributes.addFlashAttribute("newRecord",newRecord);
+            redirectAttributes.addFlashAttribute("errors", errorMsg.toString());
+            return "redirect:/admin/newRecord/"+patientId;
+        }
+        recordService.addRecord(newRecord);
+        redirectAttributes.addFlashAttribute("errors", "Tạo hồ sơ bệnh nhân thành công!<b>");
+        return "redirect:/admin/listRecord/"+patientId;
     }
 
 

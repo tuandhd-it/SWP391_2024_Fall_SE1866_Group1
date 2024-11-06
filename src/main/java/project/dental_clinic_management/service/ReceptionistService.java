@@ -8,6 +8,7 @@ import project.dental_clinic_management.dto.request.ExamRegistrationRequest;
 import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.entity.Record;
+import project.dental_clinic_management.entity.RecordMedicine;
 import project.dental_clinic_management.entity.RecordService;
 import project.dental_clinic_management.repository.*;
 import project.dental_clinic_management.dto.request.ReceptionistCreationRequest;
@@ -469,7 +470,7 @@ public class ReceptionistService {
     }
 
     public List<RecordMedicine> findRecordMedicinesByRecordId(long id) {
-        return recordMedicineRepository.findRecordMedicinesByRecordId(id);
+        return recordMedicineRepository.findRecordMedicinesByRecordId_RecordId(id);
     }
 
     public double totalAmout(List<RecordService> recordServices, List<RecordMedicine> recordMedicines) {
