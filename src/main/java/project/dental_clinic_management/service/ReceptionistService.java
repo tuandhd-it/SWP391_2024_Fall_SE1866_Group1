@@ -78,6 +78,8 @@ public class ReceptionistService {
         employee.setDescription(request.getDescription());
         employee.setBranch(branch);
         employee.setRole(request.getRole());
+        employee.setCertification(request.getCertification());
+        employee.setSpecification(request.getSpecification());
         employeeRepository.save(employee);
     }
 

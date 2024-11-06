@@ -219,6 +219,8 @@ public class ManagerController {
                 .cert(employee.getCertification())
                 .doctorName(employee.getFirst_name() + " " + employee.getLast_name())
                 .img(employee.getImg())
+                .cert(employee.getCertification())
+                .spec(employee.getSpecification())
                 .build();
     }
 

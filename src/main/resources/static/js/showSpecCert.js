@@ -13,8 +13,8 @@ function showSpecCert(button) {
 
             if (response) {
                 // Gán thông tin vào các phần tử trong modal
-                $('#spec').text(response.spec || 'Chưa có');
-                $('#cert').text(response.cert || 'Chưa có');
+                $('#spec').attr('href', response.spec || '#').text(response.spec ? 'Xem chuyên ngành' : 'Chưa có');
+                $('#cert').attr('href', response.cert || '#').text(response.cert ? 'Xem chứng chỉ' : 'Chưa có');
 
                 const imgElement = document.querySelector('.user-icon');
                 if (response.img) {
