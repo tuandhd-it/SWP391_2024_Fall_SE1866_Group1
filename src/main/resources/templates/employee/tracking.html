@@ -148,7 +148,8 @@
                     <input type="hidden" id="checkType" name="checkType">
                     <div class="mb-3">
                         <label for="reason" class="form-label">Lý do <span id="reasonName"></span></label>
-                        <textarea class="form-control" id="reason" name="reason" rows="3" required></textarea>
+                        <textarea class="form-control" maxlength="255" oninput="checkMaxLength(this, 'Trường nhập lý do')"
+                                  id="reason" name="reason" rows="3" required></textarea>
                     </div>
                 </form>
             </div>
@@ -167,6 +168,13 @@
     const reasonName = document.getElementById('reasonName');
     const shift = document.getElementById('shift').value;
 
+    function checkMaxLength(input, name) {
+        const maxLength = input.getAttribute('maxlength');
+        if (input.value.length > maxLength) {
+            showError(`${name}: chỉ được nhập tối đa ${maxLength} kí tự.`);
+            input.value = input.value.slice(0, maxLength);
+        }
+    }
     function isLateCheckIn(shift) {
         const now = new Date();
         const startTime = new Date();

@@ -17,11 +17,11 @@ import java.time.LocalDate;
 public class PatientCreationRequest {
     @NotNull
     @NotBlank
-    @Length (min = 1, max = 45)
+    @Length (min = 2, max = 45,message = "Tên phải từ 2-45 ký tự")
     String firstName;
     @NotNull
     @NotBlank
-    @Length (min = 1, max = 45)
+    @Length (min = 2, max = 45,message = "Tên phải từ 2-45 ký tự")
     String lastName;
     @NotNull
     String gender;
@@ -33,12 +33,12 @@ public class PatientCreationRequest {
     String address;
     @NotNull
     @NotBlank
-    @Length (min = 10, max = 15)
+    @Length (min = 10, max = 11, message = "SĐT phải đủ 10-11 số")
     String phone;
     @NotNull
     @NotBlank
-    @Length (min = 10, max = 225)
-    @Email(message = "Sai dinh dang email")
+    @Length (min = 10, max = 100, message = "Email phải từ 10 đến 100 ký tự")
+    @Email(message = "Sai định dạng Email")
     String email;
     @Length (max = 225)
     String medicalHistory;

@@ -1,5 +1,6 @@
 package project.dental_clinic_management.entity;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,6 +9,7 @@ import java.util.Collection;
 //Custom user details to check authority
 public class CustomEmployeeDetails implements UserDetails {
 
+    @Getter
     private Employee employee;
     private Collection<? extends GrantedAuthority> authorities;
 

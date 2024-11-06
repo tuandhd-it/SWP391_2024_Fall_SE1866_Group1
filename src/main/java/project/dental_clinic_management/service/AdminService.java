@@ -36,8 +36,6 @@ public class AdminService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private MedicineRepository medicineRepository;
-    @Autowired
     private PatientRepository patientRepository;
 
 
@@ -454,13 +452,18 @@ public class AdminService {
         }
     }
 
-    public List<Medicine> getAllMedicines() {
-        return medicineRepository.findAll();
-    }
-
     //Get All Patient
     public List<Patient> getAllPatient(){
         return patientRepository.findAll();
+    }
+
+    public boolean deletePatientById(int id){
+        try{
+            patientRepository.deleteById(id);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Page<Patient> getPatientPaging(int page, int size){
