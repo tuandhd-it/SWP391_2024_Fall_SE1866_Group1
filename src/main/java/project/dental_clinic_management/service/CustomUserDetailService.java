@@ -58,8 +58,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
     public void updateEmployee(EmployeeUpdateRequest employeeUpdateRequest) {
         // Tìm Employee theo emp_id (nếu bạn có ý định cập nhật theo id, nếu không bạn có thể dùng username)
-        Employee employee = employeeRepository.findById(employeeUpdateRequest.getEmp_id())
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+        Employee employee = employeeRepository.findById(employeeUpdateRequest.getEmp_id());
 
         // Cập nhật thông tin của Employee từ EmployeeUpdateRequest
         employee.setFirst_name(employeeUpdateRequest.getFirst_name());

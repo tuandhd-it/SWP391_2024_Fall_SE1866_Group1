@@ -167,23 +167,15 @@ public class ManagerController {
     }
 
     @PostMapping("/acceptExamination")
-    public String acceptExamination(@RequestParam List<Long> exam_id, Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam("action") String action) {
+    public String acceptExamination(@RequestParam List<Long> exam_id, Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam("action") String action, RedirectAttributes redirectAttributes) {
         if (action.equalsIgnoreCase("accept")) {
             managerService.acceptExamination(exam_id);
-            model.addAttribute("acceptMsg", "Phê duyệt thành công!");
-            //Gửi mail ở đây
+            redirectAttributes.addFlashAttribute("acceptMsg", "Phê duyệt thành công!");
         } else {
             managerService.rejectExamination(exam_id);
-            model.addAttribute("rejectMsg", "Từ chối đơn khám thành công!");
-            //Gửi mail ở đây
+            redirectAttributes.addFlashAttribute("rejectMsg", "Từ chối đơn khám thành công!");
         }
-
-        String username = userDetails.getUsername();
-        Employee manager = receptionistService.findByUsername(username);
-        List<ViewExamRegistrationRequest> list = receptionistService.findAllBranchExam(manager);
-
-        model.addAttribute("examList", list);
-        return "/employee/viewListExamRegistration";
+        return "redirect:/manager/viewRegistration";
     }
 
     @GetMapping("/getExamDetails")

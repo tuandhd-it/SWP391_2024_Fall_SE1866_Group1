@@ -46,7 +46,7 @@
                         </a>
                     </li>
                     <li class="sidebar-item"
-                        th:if="${#authorization.expression('hasAnyAuthority(''Admin'', ''Manager'')')}">
+                        th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
                         <a th:href="@{/admin/manageRegisterAccount}" class="sidebar-link">
                             <i class="lni lni-popup"></i>
                             <span>Đăng ký nhân viên</span>

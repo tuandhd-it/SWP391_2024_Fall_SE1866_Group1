@@ -268,7 +268,7 @@ public class AdminService {
 
     //Find employee by Id
     public Employee getEmployeeById(int id) {
-        return employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Employee not found"));
+        return employeeRepository.findById(id);
     }
 
     //Change password employee

@@ -600,18 +600,16 @@ public class AdminController {
 
     //Phê duyệt tài khoản
     @PostMapping("/acceptAccount")
-    public String acceptAccount(@RequestParam List<Integer> emp_id, Model model, @RequestParam("action") String action) {
+    public String acceptAccount(@RequestParam List<Integer> emp_id, @RequestParam("action") String action, RedirectAttributes redirectAttributes) {
         if(action.equalsIgnoreCase("accept")) {
             adminService.acceptAccount(emp_id);
-            model.addAttribute("acceptMsg", "Accounts accepted!");
+            redirectAttributes.addFlashAttribute("acceptMsg", "Accounts accepted!");
         } else if (action.equalsIgnoreCase("reject")) {
             adminService.rejectAccount(emp_id);
-            model.addAttribute("rejectMsg", "Accounts rejected!");
+            redirectAttributes.addFlashAttribute("rejectMsg", "Accounts rejected!");
         }
-        List<Employee> list = adminService.findAllInactiveAccount();
-        model.addAttribute("employees", list);
 
-        return "/employee/manageRegisterAccount";
+        return "redirect:/admin/manageRegisterAccount";
     }
     @GetMapping("/manageService")
     public String serviceList(Model model,@RequestParam(value = "page", defaultValue = "1")int page,
