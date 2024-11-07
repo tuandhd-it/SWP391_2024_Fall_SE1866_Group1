@@ -103,7 +103,7 @@
         <div class="swiper-wrapper">
             <div class="swiper-slide" th:each="doctor : ${doctors}">
                 <div class="doctor-card">
-                    <img alt="Doctor Image" th:src="${doctor.getImg()}">
+                    <img alt="Doctor Image" th:src="@{/uploads/{filename}(filename=${doctor.img})}">
                     <div class="card-body">
                         <h5 th:text="${doctor.getFirst_name() +' '+ doctor.getLast_name()}">Tên bác sĩ</h5>
                         <p class="text-muted" th:text="${doctor.getDescription()}">Mô tả ngắn về bác sĩ</p>
