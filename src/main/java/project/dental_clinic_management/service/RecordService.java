@@ -40,6 +40,10 @@ public class RecordService {
         return recordRepository.getRecordByPatient_PatientId(patientID);
     }
 
+    public Record getRecordById(long id){
+        return recordRepository.findRecordByRecordId(id);
+    }
+
     public void addRecord(RecordCreationRequest recordRequest) {
         Record record = Record.builder()
                 .recordDate(recordRequest.getDate())

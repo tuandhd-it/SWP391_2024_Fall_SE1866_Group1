@@ -18,9 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.Record;
 import project.dental_clinic_management.entity.*;
-import project.dental_clinic_management.repository.EmployeeRepository;
-import project.dental_clinic_management.repository.MedicineRepository;
-import project.dental_clinic_management.repository.ServiceRepository;
+import project.dental_clinic_management.repository.*;
 import project.dental_clinic_management.service.RecordService;
 import project.dental_clinic_management.service.*;
 
@@ -69,6 +67,10 @@ public class AdminController {
     private CustomUserDetailService customUserDetailService;
     @Autowired
     private ServiceRepository serviceRepository;
+    @Autowired
+    private RecordServiceRepository recordServiceRepository;
+    @Autowired
+    private RecordMedicineRepository recordMedicineRepository;
 
 
     /**
@@ -461,6 +463,17 @@ public class AdminController {
         recordService.addRecord(newRecord);
         redirectAttributes.addFlashAttribute("errors", "Tạo hồ sơ bệnh nhân thành công!<b>");
         return "redirect:/admin/listRecord/"+patientId;
+    }
+
+    @GetMapping("recordDetails/{id}")
+    public String getRecordDetails(@PathVariable("id") Long recordId, Model model ){
+        Record record = recordService.getRecordById(recordId);
+        List<project.dental_clinic_management.entity.RecordService> recordServices = recordServiceRepository.findRecordServicesByRecord_RecordId(recordId);
+        List<RecordMedicine> recordMedicines = recordMedicineRepository.findRecordMedicinesByRecordId_RecordId(recordId);
+        model.addAttribute("record",record);
+        model.addAttribute("services",recordServices);
+        model.addAttribute("medicines",recordMedicines);
+        return "patient/recordDetails";
     }
 
 

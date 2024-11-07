@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Chi tiết Đơn Khám</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+  <style>
+    body{
+      padding: 100px 0;
+      background: #ecf0f4;
+      width: 100%;
+      height: 100%;
+      font-size: 18px;
+      line-height: 1.5;
+      font-family: 'Roboto', sans-serif;
+      color: #222;
+    }
+    .container{
+      max-width: 1230px;
+      width: 100%;
+    }
+
+    h1{
+      font-weight: 700;
+      font-size: 45px;
+      font-family: 'Roboto';
+    }
+
+    .header{
+      margin-bottom: 80px;
+    }
+    #description{
+      font-size: 24px;
+    }
+
+    .form-wrap{
+      background: rgba(255,255,255,1);
+      width: 100%;
+      max-width: 850px;
+      padding: 50px;
+      margin: 0 auto;
+      position: relative;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+      box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+    }
+    .form-wrap:before{
+      content: "";
+      width: 90%;
+      height: calc(100% + 60px);
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      position: absolute;
+      top: -30px;
+      background: black;
+      z-index: -1;
+      opacity: 0.8;
+      -webkit-border-radius: 10px;
+      -moz-border-radius: 10px;
+      border-radius: 10px;
+      -webkit-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+      -moz-box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+      box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.15);
+    }
+    .form-group{
+      margin-bottom: 25px;
+    }
+    .form-group > label{
+      display: block;
+      font-size: 18px;
+      color: #000;
+    }
+    .custom-control-label{
+      color: #000;
+      font-size: 16px;
+    }
+    .form-control hidden input{
+      height: 50px;
+      background: #ecf0f4;
+      border-color: transparent;
+      padding: 0 15px;
+      font-size: 16px;
+      -webkit-transition: all 0.3s ease-in-out;
+      -moz-transition: all 0.3s ease-in-out;
+      -o-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+    .form-control hidden input:focus{
+      border-color: #00bcd9;
+      -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+    }
+    textarea.form-control hidden input{
+      height: 160px;
+      padding-top: 15px;
+      resize: none;
+    }
+
+    .btn{
+      padding: .657rem .75rem;
+      font-size: 18px;
+      letter-spacing: 0.050em;
+      -webkit-transition: all 0.3s ease-in-out;
+      -moz-transition: all 0.3s ease-in-out;
+      -o-transition: all 0.3s ease-in-out;
+      transition: all 0.3s ease-in-out;
+    }
+
+
+    .btn-dark:hover {
+      color: #00bcd9;
+      background-color: #ffffff;
+      border-color: #00bcd9;
+      -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+    }
+
+    .btn-dark:focus, .btn-dark.focus {
+      color: #00bcd9;
+      background-color: #ffffff;
+      border-color: #00bcd9;
+      -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+    }
+
+    .btn-dark:not(:disabled):not(.disabled):active, .btn-dark:not(:disabled):not(.disabled).active,
+    .show > .btn-dark.dropdown-toggle {
+      color: #00bcd9;
+      background-color: #ffffff;
+      border-color: #00bcd9;
+    }
+
+    .btn-dark:not(:disabled):not(.disabled):active:focus, .btn-dark:not(:disabled):not(.disabled).active:focus,
+    .show > .btn-dark.dropdown-toggle:focus {
+      -webkit-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      -moz-box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body style="font-family: Roboto!important">
+<div class="container" style="margin-bottom: 100px">
+  <header class="header">
+    <h1 id="title" class="text-center text-dark" style="font-family: Roboto">Phiếu Khám Bệnh</h1>
+  </header>
+  <div class="form-wrap">
+      <div class="row">
+        <h4 class="text-dark pb-4" style="font-family: Roboto"><b>Thông tin bệnh nhân</b></h4>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="patientName"><b>Tên bệnh nhân</b></label>
+            <!--                        <input type="text" name="patientName" id="patientName" class="form-control hidden input" value="${pres.getPatientName()}" required>-->
+            <span id="patientName" class="text" th:text="${record.getPatient().firstName+' '+record.getPatient().lastName}"></span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="yearDate"><b>Năm Sinh:</b></label>
+            <!--                        <input type="number" name="age" id="age" min="10" max="99" class="form-control hidden input" placeholder="18" value="${pres.getAge()}" required>-->
+            <span id="yearDate" class="text" th:text="${#temporals.format(record.getPatient().dob, 'yyyy')}"></span>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="address"><b>Địa Chỉ</b></label>
+            <!--                        <input type="number" name="height" id="height" min="100" max="300" class="form-control hidden input" placeholder="160" value="${pres.getHeight()}">-->
+            <span id="address" class="text" th:text="${record.getPatient().address}"></span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="phone"><b>Điện thoại:</b></label>
+            <!--                        <input type="number" name="weight" id="weight" min="30" max="200" class="form-control hidden input" value="${pres.getWeight()}">-->
+            <span id="phone" class="text" th:value="${record.getPatient().phone}"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="medicalHistory"><b>Tiền sử bệnh</b></label>
+            <!--                        <input type="text" name="medicalHistory" id="medicalHistory" class="form-control hidden input" value="${pres.getMedicalHistory()}" required>-->
+            <span id="medicalHistory" class="text" th:text="${record.getPatient().medicalHistory}"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="reason"><b>Lý do Khám:</b></label>
+            <!--                        <input type="text" name="diagnose" id="diagnose" class="form-control hidden input" value="${pres.getDiagnose()}" required>-->
+            <span id="reason" class="text" th:text="${record.getReason()}"></span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label for="diagnose"><b>Chuẩn đoán</b></label>
+            <!--                        <input type="text" name="diagnose" id="diagnose" class="form-control hidden input" value="${pres.getDiagnose()}" required>-->
+            <span id="diagnose" class="text" th:text="${record.getDiagnose()}"></span>
+          </div>
+        </div>
+      </div>
+
+      <!--            <div class="row">-->
+      <!--                <div class="col-md-6">-->
+      <!--                    <div class="form-group">-->
+      <!--                        <label for="createDate"><b>Ngày tạo đơn</b></label>-->
+      <!--                        <input type="date" name="createDate" id="createDate" value="${pres.getCreateDate()}" class="form-control hidden input" required>-->
+      <!--                    </div>-->
+      <!--                    <span class="text">${pres.getCreateDate()}</span>-->
+      <!--                </div>-->
+      <!--                <div class="col-md-6">-->
+      <!--                    <div class="form-group">-->
+      <!--                        <label for="doctorName"><b>Tên bác sĩ</b></label>-->
+      <!--                        <input type="text" name="doctorName" id="doctorName" value="${pres.getDoctorName()}" class="form-control hidden input" required>-->
+      <!--                        <span class="text">${pres.getDoctorName()}</span>-->
+      <!--                    </div>-->
+      <!--                </div>-->
+      <!--            </div>-->
+    <div class="">
+      <table class="table text-center mt-3">
+        <thead>
+        <tr>
+          <th>STT</th>
+          <th>Tên thủ thuật điều trị</th>
+          <th>Bác Sĩ</th>
+          <th>Chi phí</th>
+          <th>Ghi chú</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="service, stat : ${services}">
+          <td th:text="${stat.index + 1}"></td>
+          <td th:text="${service.getService().getServiceName()}"></td>
+          <td th:text="${record.getEmployee().first_name+' '+record.getEmployee().last_name}"></td>
+          <td th:text="${service.getService().getPrice()}"></td>
+          <td th:text="${service.getNote()}"></td>
+<!--          <td style="width:14%;font-size: 18px">-->
+<!--          </td>-->
+        </tr>
+        </tbody>
+      </table>
+    </div>
+      <div class=" row align-items-center">
+        <h4 class="text-dark pt-2" style="font-family: Roboto"><b>Thông tin Đơn Thuốc:</b></h4>
+        <div th:each="medicine,stats:${medicines}">
+          <span>
+            <b th:text="${medicine.getRegNumber().getMedicineName()+' x ' + medicine.getQuantity()}"></b>
+            <br/>
+            <i th:text="${medicine.getNote()}"></i>
+            <br/><br/>
+          </span>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 pt-2">
+          <div class="form-group">
+            <label for="Note"><b>Ghi chú</b></label>
+            <textarea  id="Note" class="form-control input" th:text="${record.getNote()}" readonly></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <a href="showPres" class="btn btn-dark mt-4"><i style="font-size: 13px" class="fa-solid fa-arrow-left"></i>&nbsp; Quay lại</a>
+        </div>
+      </div>
+  </div>
+</div>
+</body>
+
+</html>

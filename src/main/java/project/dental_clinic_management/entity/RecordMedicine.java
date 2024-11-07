@@ -15,7 +15,7 @@ public class RecordMedicine {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int record_medicine_id;
+    int re_medicine_id;
     int quantity;
     double price;
     String note;

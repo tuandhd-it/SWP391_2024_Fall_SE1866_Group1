@@ -58,11 +58,8 @@
                         <td th:text="${record.getEmployee().getFirst_name()+' '+record.getEmployee().getLast_name()}"></td>
                         <td th:text="${record.getRecordDate()}"></td>
                         <!-- Ngày Tạo đơn -->
-                        <td><a th:href="@{recordDetail?ID=${record.getRecordId()}}" class="btn btn-sm btn-dark" style="width:45%">Xem</a>
-                            <a href="#" class="btn btn-sm btn-danger delete-btn" style="width: 45%;"
-                               data-ID="${pres.getID()}"
-                               data-bs-toggle="modal"
-                               data-bs-target="#confirmationModal">  <!-- Đổi thông tin truyền vào Xóa -->  <i class="fas fa-times"></i></a>
+                        <td>
+                            <a th:href="@{/admin/recordDetails/{id}(id=${record.getRecordId()})}" class="btn btn-sm btn-dark">Xem</a>
                         </td>
                     </tr>
                 </tbody>
