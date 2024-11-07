@@ -39,8 +39,8 @@
           <td th:text="${equipmentImport.equipImportId}"></td>
           <td th:text="${equipmentImport.equipment.equipmentName}"></td>
           <td th:text="${equipmentImport.equipment.quantity}"></td>
-          <td th:text="${equipmentImport.equipment.price}"></td>
-          <td th:text="${equipmentImport.totalPrice}"></td>
+          <td th:text="${#numbers.formatDecimal(equipmentImport.equipment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
+          <td th:text="${#numbers.formatDecimal(equipmentImport.totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
           <td th:text="${equipmentImport.employee.emp_id}"></td>
           <td th:text="${equipmentImport.branch.bran_id}"></td>
           <td th:text="${equipmentImport.date}"></td>

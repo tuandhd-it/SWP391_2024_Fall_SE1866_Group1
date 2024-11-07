@@ -208,7 +208,7 @@ public class ReceptionistController {
         return "/employee/recepListPatient"; // Update this path as necessary for your project structure
     }
 
-    @GetMapping("/recep/patientPayment")
+    @GetMapping("/patientPayment")
     public String processPatientPayment(@RequestParam("id") int patientId, Model model) {
         Patient patient = receptionistService.findPatientById(patientId);
         Record record = receptionistService.findRecordByPatientId(patientId);

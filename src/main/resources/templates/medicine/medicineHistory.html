@@ -39,8 +39,8 @@
                     <td th:text="${medicineImport.medImportId}"></td>
                     <td th:text="${medicineImport.medicine.medicineName}"></td>
                     <td th:text="${medicineImport.medicine.quantity}"></td>
-                    <td th:text="${medicineImport.medicine.price}"></td>
-                    <td th:text="${medicineImport.totalPrice}"></td>
+                    <td th:text="${#numbers.formatDecimal(medicineImport.medicine.price, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
+                    <td th:text="${#numbers.formatDecimal(medicineImport.totalPrice, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
                     <td th:text="${medicineImport.employee.emp_id}"></td>
                     <td th:text="${medicineImport.branch.bran_id}"></td>
                     <td th:text="${medicineImport.date}"></td>
