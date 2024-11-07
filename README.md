@@ -103,3 +103,92 @@ VALUES
 ('hà nội', 'Bác sĩ chuyên khoa Răng Hàm Mặt, 4 năm kinh nghiệm tại các phòng khám lớn', NULL, 'doctor1@gmail.com', 'Phạm', 'Nam', 'a1acca01-772c-43de-a6d7-47db68ba178f_pham-dinh-duc-2.png', b'1', 'Đình Đức', '$2a$10$gozMI9OS6kMLukBxf/EixeBREdA73tQ8CBvy4lwtAfwTT4GRYkRQi', '0987654123', 3, 2, NULL, 3, NULL, 'Tốt nghiệp Đại học Y', 'Nha khoa thẩm mỹ'),
 ('test manager', 'manager', '2023-12-12', 'manage@gmail.com', 'Quản', NULL, 'manage', b'1', 'Lý', '$2a$10$ZUnBf0zqtg9sjeKC/fG4juaNEjQpcGipE2r1J2UMRuCORTxUZN6iy', '987654356', 1234543, 2, NULL, 2, 2, NULL, NULL),
 ('hà nội', '4 năm kinh nghiệm tại các phòng khám lớn', '2024-10-30', 'doctor2@gmail.com', 'Lã', 'Nữ', '71d05b64-1e5d-4c91-8be9-3e6198d49b01_la-trinh-dieu-lan-300x300.png', b'1', 'Trịnh Diệu Lan', '$2a$10$gozMI9OS6kMLukBxf/EixeBREdA73tQ8CBvy4lwtAfwTT4GRYkRQi', '0987654123', 111111111, 2, NULL, 3, NULL, 'Tốt nghiệp nha khoa tại Trung Quốc', 'Nha khoa tổng quát');
+
+INSERT INTO `dental_clinic_management`.`patient`
+(`address`, `dob`, `email`, `first_name`, `gender`, `last_name`, `medical_history`, `phone`)
+VALUES
+('918A Đường Láng', '2024-10-29', 'nguyentuankhanh1310@gmail.com', 'Nguyễn', 'Nam', 'Khanh', 'Bệnh nhân có tiền sử hút thuốc lá, không đánh răng thường xuyên', '0357284999'),
+('25 Hai Bà Trưng', '1990-05-14', 'tranthithao90@gmail.com', 'Trần', 'Nữ', 'Thảo', 'Bệnh nhân có tiền sử viêm lợi, thường xuyên uống nước ngọt', '0987654321'),
+('56B Nguyễn Huệ', '1985-08-20', 'lehoanganh1985@gmail.com', 'Lê', 'Nam', 'Hoàng Anh', 'Tiền sử cao huyết áp, ăn uống nhiều đồ ngọt', '0901234567'),
+('123 Cầu Giấy', '2000-12-25', 'phamkimthanh2000@gmail.com', 'Phạm', 'Nữ', 'Kim Thanh', 'Bệnh nhân chăm chỉ đánh răng nhưng thường xuyên ăn đồ ngọt', '0912345678'),
+('345 Lý Thường Kiệt', '1978-07-15', 'dangquanghung78@gmail.com', 'Đặng', 'Nam', 'Quang Hưng', 'Tiền sử viêm nha chu, không súc miệng nước muối', '0923456789'),
+('678A Phan Đình Phùng', '1995-03-30', 'truongminhhoa95@gmail.com', 'Trương', 'Nữ', 'Minh Hòa', 'Bệnh nhân bị sâu răng thường xuyên, ăn nhiều đồ ngọt', '0934567890'),
+('89 Đinh Tiên Hoàng', '1988-09-10', 'nguyenhongan88@gmail.com', 'Nguyễn', 'Nam', 'Hồng An', 'Bệnh nhân không đánh răng trước khi ngủ, có tiền sử hút thuốc', '0945678901'),
+('101 Bà Triệu', '2002-04-22', 'phanthilinh02@gmail.com', 'Phan', 'Nữ', 'Thị Linh', 'Thích uống nước có ga, ít uống nước lọc', '0956789012'),
+('223 Nguyễn Trãi', '1993-01-05', 'vudinhcuong93@gmail.com', 'Vũ', 'Nam', 'Đình Cường', 'Bệnh nhân có tiền sử bệnh tiểu đường, thường xuyên ăn bánh kẹo', '0967890123'),
+('12B Trần Hưng Đạo', '1997-11-11', 'hoangthuytrang97@gmail.com', 'Hoàng', 'Nữ', 'Thùy Trang', 'Chăm chỉ đánh răng nhưng có tiền sử sâu răng', '0978901234');
+
+
+INSERT INTO `record` (`diagnose`, `note`, `reason`, `record_date`, `bran_id`, `emp_id`, `patient_id`)
+VALUES
+('Sâu răng mãn tính', 'Uống thuốc đầy đủ, Không uống khi đói, Ăn ít bánh kẹo', 'Đến Khám vì đau răng', '2024-11-06', '1', '3', '1'),
+('Viêm lợi', 'Súc miệng nước muối mỗi ngày, Tránh đồ ăn cay nóng', 'Đến khám vì lợi sưng đau', '2024-11-07', '1', '3', '1'),
+('Chỉnh nha', 'Đeo niềng răng, Tuân thủ lịch tái khám hàng tháng', 'Khám chỉnh nha', '2024-11-08', '1', '3', '1'),
+('Sâu răng hàm dưới', 'Tránh ăn uống đồ ngọt, Đánh răng thường xuyên', 'Đau nhức răng hàm', '2024-11-09', '1', '3', '1'),
+('Viêm tủy răng', 'Tránh ăn uống đồ quá nóng hoặc lạnh, Uống thuốc theo chỉ định', 'Đau buốt khi ăn uống', '2024-11-10', '1', '3', '1'),
+('Nhổ răng khôn', 'Không ăn uống trong vòng 30 phút sau khi nhổ, Tái khám sau 1 tuần', 'Đến khám để nhổ răng khôn', '2024-11-11', '1', '3', '1');
+
+
+INSERT INTO `dental_clinic_management`.`record_medicine`
+(`note`, `price`, `quantity`, `recordid`, `medicine_id`)
+VALUES
+-- Record 1
+('Uống 2 viên/ lần, chia làm 2 lần trong ngày', '1000000', '3', '1', '1'),
+('Uống 1 viên sau khi ăn', '150000', '2', '1', '2'),
+('Dùng trước khi đi ngủ', '200000', '1', '1', '3'),
+('Sáng và tối mỗi lần 1 viên', '120000', '2', '1', '4'),
+
+-- Record 2
+('Uống sau khi ăn sáng', '80000', '5', '2', '5'),
+('Uống trước bữa trưa', '250000', '2', '2', '6'),
+('Uống vào buổi tối', '50000', '3', '2', '7'),
+
+-- Record 3
+('Uống cùng bữa sáng', '90000', '2', '3', '8'),
+('Uống 1 viên trước khi đi ngủ', '300000', '1', '3', '9'),
+('Uống 2 viên sáng, 2 viên tối', '400000', '4', '3', '10'),
+
+-- Record 4
+('Uống 1 viên sáng, 1 viên tối', '200000', '3', '4', '1'),
+('Uống sau ăn trưa', '100000', '2', '4', '2'),
+('Dùng mỗi tối sau bữa ăn', '150000', '3', '4', '3'),
+
+-- Record 5
+('Dùng trước bữa sáng', '120000', '2', '5', '4'),
+('Uống 3 viên vào buổi tối', '200000', '3', '5', '5'),
+('Uống 1 viên mỗi sáng', '180000', '1', '5', '6'),
+('Dùng mỗi tối', '300000', '2', '5', '7');
+
+INSERT INTO `dental_clinic_management`.`record_service`
+(`note`, `recordid`, `service_id`)
+VALUES
+-- Record 1
+('Kiểm tra hàm trên', '1', '1'),
+('Vệ sinh răng miệng', '1', '2'),
+('Chụp X-quang', '1', '3'),
+('Tư vấn niềng răng', '1', '4'),
+
+-- Record 2
+('Kiểm tra hàm dưới', '2', '5'),
+('Làm sạch cao răng', '2', '6'),
+('Lấy mẫu xét nghiệm', '2', '7'),
+('Tẩy trắng răng', '2', '8'),
+
+-- Record 3
+('Kiểm tra sâu răng', '3', '9'),
+('Trám răng', '3', '1'),
+('Đánh bóng răng', '3', '2'),
+('Phục hồi răng sứ', '3', '3'),
+
+-- Record 4
+('Kiểm tra nướu răng', '4', '4'),
+('Chỉnh nha', '4', '5'),
+('Nhổ răng khôn', '4', '6'),
+('Lấy tủy răng', '4', '7'),
+
+-- Record 5
+('Khám răng định kỳ', '5', '8'),
+('Lấy dấu hàm', '5', '9'),
+('Kiểm tra răng giả', '5', '10'),
+('Vệ sinh răng miệng', '5', '1');
+
