@@ -24,17 +24,18 @@ INSERT INTO waiting_room (waiting_roomid, is_available, capacity, branch_id)
 VALUES (1, true, 10, 1);
 
 //Create data for Medicine table
-INSERT INTO dental_clinic_management.medicine (reg_number, medicine_name, unit, quantity, price, ingredients) VALUES 
-(1, 'Paracetamol', 'hộp', 1000, 5000, 'Acetaminophen'),
-(2, 'Ibuprofen', 'vỉ', 500, 7000, 'Ibuprofen'),
-(3, 'Amoxicillin', 'chai', 300, 10000, 'Amoxicillin'),
-(4, 'Metronidazole', 'viên', 1500, 8000, 'Metronidazole'),
-(5, 'Cephalexin', 'hộp', 200, 12000, 'Cephalexin'),
-(6, 'Aspirin', 'chai', 600, 6000, 'Aspirin'),
-(7, 'Clarithromycin', 'vỉ', 400, 15000, 'Clarithromycin'),
-(8, 'Azithromycin', 'viên', 1000, 14000, 'Azithromycin'),
-(9, 'Doxycycline', 'hộp', 350, 9000, 'Doxycycline'),
-(10, 'Ciprofloxacin', 'chai', 250, 13000, 'Ciprofloxacin');
+INSERT INTO dental_clinic_management.medicine ( medicine_name, unit, quantity, price, ingredients) VALUES
+( 'Paracetamol', 'hộp', 1000, 5000, 'Acetaminophen'),
+('Ibuprofen', 'vỉ', 500, 7000, 'Ibuprofen'),
+( 'Amoxicillin', 'chai', 300, 10000, 'Amoxicillin'),
+( 'Metronidazole', 'viên', 1500, 8000, 'Metronidazole'),
+('Cephalexin', 'hộp', 200, 12000, 'Cephalexin'),
+( 'Aspirin', 'chai', 600, 6000, 'Aspirin'),
+( 'Clarithromycin', 'vỉ', 400, 15000, 'Clarithromycin'),
+( 'Azithromycin', 'viên', 1000, 14000, 'Azithromycin'),
+( 'Doxycycline', 'hộp', 350, 9000, 'Doxycycline'),
+( 'Ciprofloxacin', 'chai', 250, 13000, 'Ciprofloxacin');
+
 
 //Create data for Equipment table
 INSERT INTO dental_clinic_management.equipment (equipment_id, equipment_name, unit, quantity, price, note) VALUES 

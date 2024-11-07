@@ -221,7 +221,7 @@
                                                 <div class="salary">
                                                     <span class="label-span"
                                                           style="display:inline-block; word-wrap:break-word; max-width: 100%;"
-                                                          th:text="${employee.salary}"></span>
+                                                          th:text="${#numbers.formatDecimal(employee.salary, 0, 'COMMA', 0, 'POINT') + ' VND'}"></span>
                                                     <input class="form-control" name="salary" style="display:none;"
                                                            th:field="*{salary}"
                                                            max="999999999"
