@@ -24,7 +24,35 @@ INSERT INTO waiting_room (waiting_roomid, is_available, capacity, branch_id)
 VALUES (1, true, 10, 1);
 
 //Create data for Medicine table
-INSERT INTO dental_clinic_management.medicine (reg_number, medicine_name, unit, quantity, price, ingredients) VALUES (4, 'Paracetamol', 'hộp', '1000', 5000, 'Acetaminophen'), (2, 'Thuoc te', 'hộp', '1000', 1000, 'abc'), (3, 'Thuoc ho', 'chai', '0', 5000, 'xyz');
+INSERT INTO dental_clinic_management.medicine (reg_number, medicine_name, unit, quantity, price, ingredients) VALUES 
+(1, 'Paracetamol', 'hộp', 1000, 5000, 'Acetaminophen'),
+(2, 'Ibuprofen', 'vỉ', 500, 7000, 'Ibuprofen'),
+(3, 'Amoxicillin', 'chai', 300, 10000, 'Amoxicillin'),
+(4, 'Metronidazole', 'viên', 1500, 8000, 'Metronidazole'),
+(5, 'Cephalexin', 'hộp', 200, 12000, 'Cephalexin'),
+(6, 'Aspirin', 'chai', 600, 6000, 'Aspirin'),
+(7, 'Clarithromycin', 'vỉ', 400, 15000, 'Clarithromycin'),
+(8, 'Azithromycin', 'viên', 1000, 14000, 'Azithromycin'),
+(9, 'Doxycycline', 'hộp', 350, 9000, 'Doxycycline'),
+(10, 'Ciprofloxacin', 'chai', 250, 13000, 'Ciprofloxacin');
+
+//Create data for Equipment table
+INSERT INTO dental_clinic_management.equipment (equipment_id, equipment_name, unit, quantity, price, note) VALUES 
+(1, 'Ghế nha khoa', 'cái', 10, 15000000, 'Ghế điều trị nha khoa'),
+(2, 'Máy X-quang', 'cái', 5, 50000000, 'Máy chụp X-quang nha khoa'),
+(3, 'Máy siêu âm', 'cái', 3, 30000000, 'Máy siêu âm cầm tay'),
+(4, 'Đèn trám răng', 'cái', 20, 700000, 'Đèn dùng trong trám răng'),
+(5, 'Tủ tiệt trùng', 'cái', 4, 10000000, 'Tủ khử trùng thiết bị'),
+(6, 'Máy nén khí', 'cái', 6, 12000000, 'Máy nén khí nha khoa'),
+(7, 'Khay dụng cụ', 'cái', 50, 100000, 'Khay đựng dụng cụ nha khoa'),
+(8, 'Bộ lấy cao răng', 'bộ', 30, 500000, 'Bộ dụng cụ lấy cao răng'),
+(9, 'Bàn khám', 'cái', 8, 2000000, 'Bàn dùng trong phòng khám'),
+(10, 'Gương khám răng', 'cái', 100, 20000, 'Gương soi miệng nha khoa'),
+(11, 'Khẩu trang y tế', 'hộp', 200, 50000, 'Khẩu trang phòng dịch'),
+(12, 'Găng tay y tế', 'hộp', 150, 70000, 'Găng tay sử dụng 1 lần'),
+(13, 'Kìm nhổ răng', 'cái', 40, 150000, 'Kìm nhổ răng nha khoa'),
+(14, 'Bộ dụng cụ trám', 'bộ', 25, 400000, 'Bộ dụng cụ trám răng'),
+(15, 'Đèn chiếu sáng', 'cái', 12, 1500000, 'Đèn chiếu sáng phòng khám');
 
 
 //Create data for Service
