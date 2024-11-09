@@ -26,11 +26,11 @@
             </li>
             <li class="sidebar-item">
                 <a href="#" class="sidebar-link collapsed has-dropdown" data-bs-toggle="collapse"
-                   data-bs-target="#auth" aria-expanded="true" aria-controls="auth" th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Doctor'')')}">
+                   data-bs-target="#auth" aria-expanded="true" aria-controls="auth" th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Doctor'',''Receptionist'')')}">
                     <i class="lni lni-protection"></i>
                     <span>Danh sách đăng ký</span>
                 </a>
-                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar" th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Doctor'')')}">
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar" th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Doctor'', ''Receptionist'')')}">
                     <li class="sidebar-item">
                         <a th:href="@{/manager/viewRegistration}" class="sidebar-link">
                             <i class="lni lni-popup"></i>

@@ -178,6 +178,7 @@ public class DoctorController {
             return "redirect:/doctor/newRecord/"+patientId;
         }
         recordService.addRecord(newRecord);
+
         redirectAttributes.addFlashAttribute("errors", "Tạo hồ sơ bệnh nhân thành công!<b>");
         PatientWaitingRoom patient = patientWaitingRoomRepository.findById(patientWaitingId).get();
         patient.setStatus("Done");
