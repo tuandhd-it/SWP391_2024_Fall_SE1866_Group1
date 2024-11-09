@@ -123,7 +123,7 @@ public class DoctorController {
 
     @GetMapping("/newRecord/{patientId}")
     public String createNewRecord(@PathVariable("patientId") Integer patientId,
-                                  @RequestParam(required = false) Integer patientWaitingId,
+                                  @RequestParam("patientWaitingId") Integer patientWaitingId,
                                   @AuthenticationPrincipal UserDetails userDetails,
                                   Model model) {
         String username = userDetails.getUsername();

@@ -297,7 +297,6 @@
                     </tr>
                     </thead>
                     <tbody id="service-rows">
-                        <td>
                         <select id="service-select-0" th:field="*{services[__${0}__].id}" class="form-control" required>
                             <option th:each="i : ${services}"
                                     th:value="${i.getServiceId()}"
@@ -396,10 +395,6 @@
             <td style="border-bottom: none" class="col-md-6">
                 <!-- Input to get note -->
                 <input type="text" id="note-${medicineCount}" name="medicines[${medicineCount}].note" class="form-control" required>
-            </td>
-
-            <td style="border-bottom: none;">
-                <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
             </td>
         `;
 
