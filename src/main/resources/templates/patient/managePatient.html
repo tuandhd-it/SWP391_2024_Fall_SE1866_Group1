@@ -44,7 +44,8 @@
                 <div class="col-md-12 mt-5">
                     <h1 style="margin-bottom: 0px;">Danh sách Bệnh Nhân</h1>
                     <div style="display: flex">
-                        <button class="btn mt-2 ms-auto" style="color: #6c757d;font-size: 20px" data-bs-toggle="modal" data-bs-target="#createModal">
+                        <button th:if="${#authorization.expression('hasAuthority(''Receptionist'')')}"
+                                class="btn mt-2 ms-auto" style="color: #6c757d;font-size: 20px" data-bs-toggle="modal" data-bs-target="#createModal">
                             + Thêm Mới
                         </button>
                     </div>
@@ -69,7 +70,8 @@
                                 <td th:text="${patient.getGender()}"></td>
                                 <td th:text="${patient.getPhone()}"></td>
                                 <td style="width:14%;font-size: 18px">
-                                    <button style="border: none;background-color: var(--bs-table-bg)"
+                                    <button th:if="${#authorization.expression('hasAnyAuthority( ''Admin'',''Manager'')')}"
+                                            style="border: none;background-color: var(--bs-table-bg)"
                                              data-bs-toggle="modal" data-bs-target="#editModal"
                                              th:data-id="${patient.getPatientId()}"
                                              th:data-name="${patient.getFirstName()}"
@@ -84,7 +86,7 @@
                                 </button>
                                      <!--Delete Patient Button-->
 
-                                    <a style="color: black" th:href="@{deletePatient/{id}(id=${patient.getPatientId()})}">
+                                    <a style="color: black" th:href="@{deletePatient/{id}(id=${patient.getPatientId()})}" th:if="${#authorization.expression('hasAnyAuthority( ''Admin'',''Manager'')')}">
                                         <i class="fa-solid fa-trash"></i>
                                     </a>
                                     <!--View Patient Records-->
@@ -106,8 +108,8 @@
                             </tbody>
                         </table>
 
-                        <!-- Paging Section-->
-                        <div style="display: flex">
+                        <!-- Paging Section Admin-->
+                        <div style="display: flex" th:if="${#authorization.expression('hasAnyAuthority( ''Admin'',''Manager'')')}">
                             <span th:text="'Hiển thị từ ' + ${start} + ' đến ' + ${end} + ' trên ' + ${totalPatient} + ' Bệnh Nhân '"></span>
                             <nav class="ms-auto">
                                 <ul class="pagination">
@@ -129,6 +131,29 @@
                             </nav>
                         </div>
 
+                        <!-- Paging Section Doctor-->
+                        <div style="display: flex" th:if="${!#authorization.expression('hasAnyAuthority( ''Admin'',''Manager'')')}">
+                            <span th:text="'Hiển thị từ ' + ${start} + ' đến ' + ${end} + ' trên ' + ${totalPatient} + ' Bệnh Nhân '"></span>
+                            <nav class="ms-auto">
+                                <ul class="pagination">
+                                    <li class="page-item" th:classappend="${patients.hasPrevious() ? '' : 'disabled'}">
+                                        <a class="page-link" th:href="@{/doctor/managePatient(page=${patients.number - 1}, size=${patients.size})}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item" th:each="i : ${#numbers.sequence(0, patients.totalPages - 1)}"
+                                        th:classappend="${i == patients.number ? 'active' : ''}">
+                                        <a class="page-link" th:href="@{/doctor/managePatient(page=${i}, size=${patients.size})}">[[${i + 1}]]</a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${patients.hasNext() ? '' : 'disabled'}">
+                                        <a class="page-link" th:href="@{/doctor/managePatient(page=${patients.number + 1}, size=${patients.size})}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -138,7 +163,8 @@
 
 
 <!--Edit Modal -->
-<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+<div th:if="${#authorization.expression('hasAnyAuthority( ''Admin'',''Manager'')')}"
+        class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <form id="editForm" th:action="@{/admin/editPatient}" th:object="${editPatient}" method="post">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -152,11 +178,11 @@
                         <input type="number" class="form-control" id="editPatientId" th:field="*{patientId}">
                     </div>
                     <div class="mb-3">
-                        <label for="editFirstName" class="form-label">Họ Bệnh Nhân</label>
+                        <label for="editFirstName" class="form-label">Họ Bệnh Nhân *</label>
                         <input type="text" class="form-control" id="editFirstName" th:field="*{firstName}" placeholder="Tên Họ bệnh nhân">
                     </div>
                     <div class="mb-3">
-                        <label for="editLastName" class="form-label">Tên Bệnh Nhân</label>
+                        <label for="editLastName" class="form-label">Tên Bệnh Nhân *</label>
                         <input type="text" class="form-control" id="editLastName" th:field="*{lastName}" placeholder="Tên bệnh nhân">
                     </div>
                     <div class="mb-3">
@@ -174,15 +200,15 @@
                                required>
                     </div>
                     <div class="mb-3">
-                        <label for="editAddress" class="form-label">Địa Chỉ</label>
+                        <label for="editAddress" class="form-label">Địa Chỉ *</label>
                         <input type="text" class="form-control" id="editAddress" th:field="*{address}" placeholder="Địa chỉ">
                     </div>
                     <div class="mb-3">
-                        <label for="editPhone" class="form-label">Điện Thoại</label>
+                        <label for="editPhone" class="form-label">Điện Thoại *</label>
                         <input type="number" class="form-control" id="editPhone" th:field="*{phone}" placeholder="Số điện thoại liên hệ">
                     </div>
                     <div class="mb-3">
-                        <label for="editEmail" class="form-label">Email</label>
+                        <label for="editEmail" class="form-label">Email *</label>
                         <input type="text" class="form-control" id="editEmail" th:field="*{email}" placeholder="Email">
                     </div>
                     <div class="mb-3">
@@ -200,8 +226,9 @@
 </div>
 
 <!--Create Modal-->
-<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-    <form id="createForm" th:action="@{/admin/patientCreate}" method="post" th:object="${newPatient}">
+<div th:if="${#authorization.expression('hasAuthority(''Receptionist'')')}"
+        class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+    <form id="createForm" th:action="@{/recep/patientCreate}" method="post" th:object="${newPatient}">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -301,8 +328,8 @@
                     </div>
 
                 </div>
-                <div class="modal-footer">
-                        <a id="viewRecords">
+                <div class="modal-footer" >
+                        <a id="viewRecords" th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Manager'',''Doctor'',''Nurse'')')}">
                             <button type="submit" class="btn btn-success">
                                 Hồ Sơ Bệnh Án  <i class="fa-solid fa-stethoscope"></i>
                             </button>
@@ -381,7 +408,7 @@
             viewPhone.textContent = phone;
             viewAddress.textContent = address;
             viewMedicalHistory.textContent = medicalHistory;
-            viewRecords.href = `/admin/listRecord/`+patientID;
+            viewRecords.href = `/doctor/listRecord/`+patientID;
         });
     });
 
@@ -466,6 +493,156 @@
             return true;
         }
     });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("createForm");
+        const firstName = document.getElementById("firstName");
+        const lastName = document.getElementById("lastName");
+        const email = document.getElementById("email");
+        const phone = document.getElementById("phone");
+        const address = document.getElementById("address");
+        const medicalHistory = document.getElementById("medicalHistory");
+        const dob = document.getElementById("dob");
+        const examRegisterDate = document.getElementById("date");
+
+        // Trim spaces and validate empty names
+        function trimFields() {
+            firstName.value = firstName.value.trim();
+            lastName.value = lastName.value.trim();
+            email.value = email.value.trim();
+            address.value = address.value.trim();
+            medicalHistory.value = medicalHistory.value.trim();
+        }
+
+        function isFieldEmpty(value) {
+            return value === "";
+        }
+
+        // Validate phone number format for Vietnam (+84 or starting with 0)
+        function validatePhoneNumber(phoneNumber) {
+            const regex = /^(0|\+84)[3|5|7|8|9][0-9]{8}$/;
+            return regex.test(phoneNumber);
+        }
+
+        // Check if a date is not in the future
+        function validateDateNotInFutureAndAtLeastTwoYearsOld(dateField) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const twoYearsAgo = new Date();
+            twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
+            twoYearsAgo.setHours(0, 0, 0, 0);
+
+            const selectedDate = new Date(dateField.value);
+            selectedDate.setHours(0, 0, 0, 0);
+
+            return selectedDate <= today && selectedDate <= twoYearsAgo;
+        }
+
+        // Validate that names do not contain numbers
+        function validateName(name) {
+            const regex = /^[^\d]*$/; // Chuỗi không chứa chữ số
+            return regex.test(name);
+        }
+
+        // Add event listener to form submission
+        form.addEventListener("submit", function (e) {
+            // Trim fields
+            trimFields();
+
+            // Reset custom validity messages
+            firstName.setCustomValidity("");
+            lastName.setCustomValidity("");
+            phone.setCustomValidity("");
+            dob.setCustomValidity("");
+            examRegisterDate.setCustomValidity("");
+
+            // Check for empty first name or only spaces
+            if (isFieldEmpty(firstName.value)) {
+                firstName.setCustomValidity("Họ không được để trống hoặc chỉ chứa dấu cách.");
+                firstName.reportValidity();
+                e.preventDefault();
+                return;
+            }
+
+            // Check for empty last name or only spaces
+            if (isFieldEmpty(lastName.value)) {
+                lastName.setCustomValidity("Tên không được để trống hoặc chỉ chứa dấu cách.");
+                lastName.reportValidity();
+                e.preventDefault();
+                return;
+            }
+
+            // Validate first name and last name
+            if (!validateName(firstName.value)) {
+                firstName.setCustomValidity("Họ không được chứa số. Vui lòng nhập lại.");
+                firstName.reportValidity();
+                e.preventDefault();
+                return;
+            }
+
+            if (!validateName(lastName.value)) {
+                lastName.setCustomValidity("Tên không được chứa số. Vui lòng nhập lại.");
+                lastName.reportValidity();
+                e.preventDefault();
+                return;
+            }
+
+            // Validate phone number
+            if (!validatePhoneNumber(phone.value)) {
+                phone.setCustomValidity("Số điện thoại không đúng định dạng Việt Nam. Vui lòng nhập số bắt đầu bằng +84 hoặc 0 và có 9 chữ số sau.");
+                phone.reportValidity();
+                e.preventDefault();
+                return;
+            }
+
+            // Validate DOB not in the future
+            if (!validateDateNotInFutureAndAtLeastTwoYearsOld(dob)) {
+                dob.setCustomValidity("Ngày sinh không được vượt quá ngày hôm nay và ít nhất 2 tuổi. Vui lòng kiểm tra lại.");
+                dob.reportValidity();
+                e.preventDefault();
+                return;
+            }
+        });
+
+        // Add event listener for name input fields to clear error when retyping
+        firstName.addEventListener("input", function () {
+            if (isFieldEmpty(firstName.value) || !validateName(firstName.value)) {
+                firstName.setCustomValidity("Họ không hợp lệ. Vui lòng nhập lại.");
+            } else {
+                firstName.setCustomValidity("");
+            }
+        });
+
+        lastName.addEventListener("input", function () {
+            if (isFieldEmpty(lastName.value) || !validateName(lastName.value)) {
+                lastName.setCustomValidity("Tên không hợp lệ. Vui lòng nhập lại.");
+            } else {
+                lastName.setCustomValidity("");
+            }
+        });
+
+        // Add event listener for phone input field to clear error when retyping
+        phone.addEventListener("input", function () {
+            if (validatePhoneNumber(phone.value)) {
+                phone.setCustomValidity("");
+            } else {
+                phone.setCustomValidity("Số điện thoại không đúng định dạng Việt Nam. Vui lòng nhập số bắt đầu bằng +84 hoặc 0 và có 9 chữ số sau.");
+            }
+        });
+
+        // Add event listener for DOB input field to clear error when retyping
+        dob.addEventListener("input", function () {
+            if (validateDateNotInFutureAndAtLeastTwoYearsOld(dob)) {
+                dob.setCustomValidity("");
+            } else {
+                dob.setCustomValidity("Ngày sinh không được vượt quá ngày hôm nay. Vui lòng kiểm tra lại.");
+            }
+        });
+    });
+
 </script>
 
 </body>

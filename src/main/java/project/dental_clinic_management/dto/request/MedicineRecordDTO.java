@@ -1,5 +1,6 @@
 package project.dental_clinic_management.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
