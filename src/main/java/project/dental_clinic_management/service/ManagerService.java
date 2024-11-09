@@ -1,6 +1,9 @@
 package project.dental_clinic_management.service;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,9 +13,6 @@ import project.dental_clinic_management.dto.MailBody;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.repository.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -202,6 +202,7 @@ public class ManagerService {
         // Create a MedicineImport record with import information
         MedicineImport medicineImport = new MedicineImport();
         medicineImport.setMedicine(medicine);
+        medicineImport.setMedicineName(medicine.getMedicineName()); // Set medicineName field
         medicineImport.setTotalPrice(medicine.getQuantity() * medicine.getPrice());
         medicineImport.setEmployee(currentEmployee);
         medicineImport.setBranch(currentEmployee.getBranch());
@@ -215,13 +216,6 @@ public class ManagerService {
         return customEmployeeDetails.getEmployee();
     }
 
-    public List<Medicine> findAllByOrderByPriceAsc() {
-        return medicineRepository.findAllByOrderByPriceAsc();
-    }
-
-    public List<Medicine> findAllByOrderByPriceDesc() {
-        return medicineRepository.findAllByOrderByPriceDesc();
-    }
 
     public List<MedicineImport> getAllMedicineImports() {
         return medicineImportRepository.findAll();
@@ -253,6 +247,10 @@ public class ManagerService {
     public List<Medicine> searchMedicineByName(String name) {
         return medicineRepository.findByMedicineNameContaining(name);
     }
+    //search medicine history
+    public List<MedicineImport> searchMedImportByName(String name) {
+        return medicineImportRepository.findByMedImportNameContaining(name);
+    }
     //List equipment
     public List<Equipment> getAllEquipments() {
         return equipmentRepository.findAll();
@@ -283,6 +281,7 @@ public class ManagerService {
         // Create a equipmentImport record with import information
         EquipmentImport equipmentImport = new EquipmentImport();
         equipmentImport.setEquipment(equipment);
+        equipmentImport.setEquipmentName(equipment.getEquipmentName());
         equipmentImport.setTotalPrice(equipment.getQuantity() * equipment.getPrice());
         equipmentImport.setEmployee(currentEmployee);
         equipmentImport.setBranch(currentEmployee.getBranch());
@@ -315,5 +314,10 @@ public class ManagerService {
     public List<Equipment> searchEquipmentByName(String name) {
         return equipmentRepository.findByEquipmentNameContaining(name);
     }
+    //search equipment history
+    public List<EquipmentImport> searchEquImportByName(String name) {
+        return equipmentImportRepository.findByEquImportNameContaining(name);
+    }
+
 
 }

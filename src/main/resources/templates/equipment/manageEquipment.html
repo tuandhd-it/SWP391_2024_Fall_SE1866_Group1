@@ -69,6 +69,7 @@
                 <th>Đơn vị</th>
                 <th>Số lượng</th>
                 <th>Giá</th>
+                <th>Ghi chú</th>
                 <th>Hành động</th>
               </tr>
               </thead>
@@ -78,7 +79,8 @@
                 <td th:text="${equipment.equipmentName}"></td>
                 <td th:text="${equipment.unit}"></td>
                 <td th:text="${equipment.quantity}"></td>
-                <td th:text="${equipment.price}"></td>
+                <td th:text="${#numbers.formatDecimal(equipment.price, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
+                <td th:text="${equipment.note}"></td>
                 <td>
                                 <span class="table-action-icons">
                                     <button type="button" class="btn btn-link p-0" data-bs-toggle="modal"
@@ -221,6 +223,50 @@
       document.querySelector('input[name="equipmentId"]').value = equipmentId;
     });
   });
+</script>
+<script>
+  function validateForm() {
+    const name = document.getElementById('newEquipmentName').value.trim();
+    const quantity = document.getElementById('newQuantity').value.trim();
+    const price = document.getElementById('newPrice').value.trim();
+    const ingredients = document.getElementById('newNote').value.trim();
+
+    let isValid = true;
+
+    // Kiểm tra tên thuốc
+    if (name.length < 1 || name.length > 200) {
+      document.getElementById('nameError').textContent = "Tên thuốc phải từ 1 đến 200 ký tự.";
+      isValid = false;
+    } else {
+      document.getElementById('nameError').textContent = "";
+    }
+
+    // Kiểm tra số lượng
+    if (quantity < 0 || quantity > 1000000000) {
+      document.getElementById('quantityError').textContent = "Số lượng phải nằm trong khoảng 0 đến 1.000.000.000.";
+      isValid = false;
+    } else {
+      document.getElementById('quantityError').textContent = "";
+    }
+
+    // Kiểm tra giá
+    if (price < 0 || price > 1000000000) {
+      document.getElementById('priceError').textContent = "Giá phải nằm trong khoảng 0 đến 1.000.000.000.";
+      isValid = false;
+    } else {
+      document.getElementById('priceError').textContent = "";
+    }
+
+    // Kiểm tra thành phần
+    if (ingredients.length < 1 || ingredients.length > 1000) {
+      document.getElementById('ingredientsError').textContent = "Thành phần phải từ 1 đến 1000 ký tự.";
+      isValid = false;
+    } else {
+      document.getElementById('ingredientsError').textContent = "";
+    }
+
+    return isValid; // Ngăn gửi form nếu có lỗi
+  }
 </script>
 
 </body>

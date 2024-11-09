@@ -11,6 +11,6 @@ import java.util.List;
 
 @Repository
 public interface EquipmentRepository extends JpaRepository<Equipment, Integer> {
-    @Query("SELECT m FROM Equipment m WHERE LOWER(m.equipmentName) LIKE LOWER(CONCAT('%', :name, '%'))")
+    @Query("SELECT e FROM Equipment e WHERE LOWER(e.equipmentName) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Equipment> findByEquipmentNameContaining(@Param("name") String name);
 }

@@ -20,6 +20,4 @@ public interface MedicineRepository extends JpaRepository<Medicine, Integer> {
     @Query("SELECT m FROM Medicine m WHERE LOWER(m.medicineName) LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<Medicine> findAllMedicine(Pageable pageable);
 
-    List<Medicine> findAllByOrderByPriceAsc();
-    List<Medicine> findAllByOrderByPriceDesc();
 }

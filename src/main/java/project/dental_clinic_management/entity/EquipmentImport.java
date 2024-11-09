@@ -28,7 +28,7 @@ public class EquipmentImport {
     @ManyToOne
     @JoinColumn(name = "bran_id")
     Branch branch;
-
+    String equipmentName;
     LocalDate date;
     double totalPrice;
 }

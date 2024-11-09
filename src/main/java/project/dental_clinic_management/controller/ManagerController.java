@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,6 +21,7 @@ import project.dental_clinic_management.dto.request.ViewExamRegistrationRequest;
 import project.dental_clinic_management.dto.response.BranchEmployeeResponse;
 import project.dental_clinic_management.dto.response.ScheduleEmployeeInfoResponse;
 import project.dental_clinic_management.entity.*;
+import project.dental_clinic_management.repository.MedicineImportRepository;
 import project.dental_clinic_management.repository.MedicineRepository;
 import project.dental_clinic_management.service.ManagerService;
 import project.dental_clinic_management.service.ReceptionistService;
@@ -28,6 +30,7 @@ import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/manager")
@@ -39,6 +42,8 @@ public class ManagerController {
 
     @Autowired
     private MedicineRepository medicineRepository;
+    @Autowired
+    private MedicineImportRepository medicineImportRepository;
 
     @Autowired
     public ManagerController(ManagerService managerService, ReceptionistService receptionistService) {
@@ -302,24 +307,6 @@ public class ManagerController {
         model.addAttribute("medicines", medicines);
         return "medicine/manageMedicine";
     }
-    @GetMapping("/sortMedicine")
-    public String sortMedicine(@RequestParam(name = "sortPrice") String sortPrice,
-                               Model model) {
-        List<Medicine> medicines;
-
-        // Kiểm tra người dùng muốn lọc theo giá tăng hoặc giảm
-        if ("asc".equals(sortPrice)) {
-            medicines = managerService.findAllByOrderByPriceAsc();
-        } else if ("desc".equals(sortPrice)) {
-            medicines = managerService.findAllByOrderByPriceDesc();
-        } else {
-            // Nếu giá trị không hợp lệ, có thể trả về lỗi hoặc xử lý như mong muốn
-            throw new IllegalArgumentException("Invalid sort option");
-        }
-
-        model.addAttribute("medicines", medicines);
-        return "medicine/manageMedicine";
-    }
 
     @GetMapping("/medicineHistory")
     public String getAllMedicineImports(Model model) {
@@ -384,6 +371,20 @@ public class ManagerController {
         List<EquipmentImport> equipmentImports = managerService.getAllEquipmentImports();
         model.addAttribute("equipmentImports", equipmentImports);
         return "/equipment/equipmentHistory";
+    }
+
+    @GetMapping("/searchImportMedicine")
+    public String searchMedImport(@RequestParam("name") String name, Model model) {
+        List<MedicineImport> medicineImports = managerService.searchMedImportByName(name);
+        model.addAttribute("medicineImports", medicineImports);
+        return "medicine/medicineHistory";
+    }
+
+    @GetMapping("/searchImportEquipment")
+    public String searchEquImport(@RequestParam("name") String name, Model model) {
+        List<EquipmentImport> equipmentImports = managerService.searchEquImportByName(name);
+        model.addAttribute("equipmentImports", equipmentImports);
+        return "equipment/equipmentHistory";
     }
 
 }

@@ -19,8 +19,18 @@
   <aside th:replace="~{/layout/dashboardNav :: sidebar}"></aside>
   <div class="main">
     <nav th:replace="~{/layout/dashboardHeader :: header}"></nav>
-    <div class="container mt-5">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12 profile">
       <h1>Lịch sử nhập thiết bị</h1>
+          <!-- Form tìm kiếm thuốc -->
+
+          <form th:action="@{/manager/searchImportEquipment}" method="get" class="mb-3">
+            <div class="input-group">
+              <input class="form-control" type="search" placeholder="Tìm kiếm thuốc" aria-label="Search" name="name">
+              <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+            </div>
+          </form>
       <table class="table table-bordered table-hover">
         <thead>
         <tr>
@@ -49,6 +59,8 @@
       </table>
       <a th:href="@{/manager/manageEquipment}" class="btn btn-secondary">Quay lại</a>
     </div>
+  </div>
+</div>
   </div>
 </div>
 <script th:src="@{/js/dashboard.js}"></script>

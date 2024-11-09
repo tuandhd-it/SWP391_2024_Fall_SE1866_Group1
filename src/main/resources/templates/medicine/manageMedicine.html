@@ -78,21 +78,21 @@
                                 <td th:text="${medicine.medicineName}"></td>
                                 <td th:text="${medicine.unit}"></td>
                                 <td th:text="${medicine.quantity}"></td>
-                                <td th:text="${#numbers.formatCurrency(medicine.price)}"></td>
+                                <td th:text="${#numbers.formatDecimal(medicine.price, 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
                                 <td th:text="${medicine.ingredients}"></td>
                                 <td>
-                                <span class="table-action-icons">
-                                    <button type="button" class="btn btn-link p-0" data-bs-toggle="modal"
+                                    <span class="table-action-icons">
+                                        <button type="button" class="btn btn-link p-0" data-bs-toggle="modal"
                                             data-bs-target="#editMedicineModal"
-                                            th:data-medicine-reg="${medicine.regNumber}"
+                                            th:data-medicine-id="${medicine.regNumber}"
                                             th:data-medicine-name="${medicine.medicineName}"
                                             th:data-medicine-unit="${medicine.unit}"
                                             th:data-medicine-quantity="${medicine.quantity}"
                                             th:data-medicine-price="${medicine.price}"
                                             th:data-medicine-ingredients="${medicine.ingredients}">
                                         <i class="fa-solid fa-pen" title="Chỉnh sửa"></i>
-                                    </button>
-                                </span>
+                                        </button>
+                                    </span>
                                 </td>
                             </tr>
                             </tbody>
@@ -199,7 +199,6 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script>
-    // Lấy tất cả các nút chỉnh sửa
     const editButtons = document.querySelectorAll('[data-bs-target="#editMedicineModal"]');
     editButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -220,7 +219,8 @@
             document.querySelector('input[name="regNumber"]').value = regNumber;
         });
     });
-
+</script>
+<script>
     function checkFormValidity() {
         const serviceName = document.getElementById('medicineName').value.trim();
         const price = document.getElementById('price').value.trim();
@@ -234,40 +234,49 @@
             document.getElementById('saveButton').disabled = true; // Disable nút lưu
         }
     }
-    // if (medicineName.length < 1 || medicineName.length > 200) {
-    //     Swal.fire({
-    //         icon: "error",
-    //         title: "Lỗi",
-    //         text: "Tên thuốc phải từ 1 đến 200 ký tự!"
-    //     });
-    //     return;
-    // }
-    // if (price.length < 1 || price.length > 9 || price < 0) {
-    //     Swal.fire({
-    //         icon: "error",
-    //         title: "Lỗi",
-    //         text: "Giá thuốc phải nằm trong khoảng 0 đến 1.000.000.000"
-    //     });
-    //     return;
-    // }
-    //
-    // if (quantity.length < 1 || quantity.length > 9 || quantity < 0) {
-    //     Swal.fire({
-    //         icon: "error",
-    //         title: "Lỗi",
-    //         text: "Số lượng thuốc phải nằm trong khoảng 0 đến 1.000.000.000"
-    //     });
-    //     return;
-    // }
-    //
-    // if (ingredients.length < 1 || ingredients.length > 1000) {
-    //     Swal.fire({
-    //         icon: "error",
-    //         title: "Lỗi",
-    //         text: "Thành phần thuốc phải từ 1 đến 1000 ký tự!"
-    //     });
-    //     return;
-    // }
+    function validateForm() {
+        // Lấy giá trị từ các trường
+        const name = document.getElementById('newMedicineName').value.trim();
+        const quantity = document.getElementById('newQuantity').value.trim();
+        const price = document.getElementById('newPrice').value.trim();
+        const ingredients = document.getElementById('newIngredients').value.trim();
+
+        let isValid = true;
+
+        // Kiểm tra tên thuốc
+        if (name.length < 1 || name.length > 200) {
+            document.getElementById('nameError').textContent = "Tên thuốc phải từ 1 đến 200 ký tự.";
+            isValid = false;
+        } else {
+            document.getElementById('nameError').textContent = "";
+        }
+
+        // Kiểm tra số lượng
+        if (quantity < 0 || quantity > 1000000000) {
+            document.getElementById('quantityError').textContent = "Số lượng phải nằm trong khoảng 0 đến 1.000.000.000.";
+            isValid = false;
+        } else {
+            document.getElementById('quantityError').textContent = "";
+        }
+
+        // Kiểm tra giá
+        if (price < 0 || price > 1000000000) {
+            document.getElementById('priceError').textContent = "Giá phải nằm trong khoảng 0 đến 1.000.000.000.";
+            isValid = false;
+        } else {
+            document.getElementById('priceError').textContent = "";
+        }
+
+        // Kiểm tra thành phần
+        if (ingredients.length < 1 || ingredients.length > 1000) {
+            document.getElementById('ingredientsError').textContent = "Thành phần phải từ 1 đến 1000 ký tự.";
+            isValid = false;
+        } else {
+            document.getElementById('ingredientsError').textContent = "";
+        }
+
+        return isValid; // Ngăn gửi form nếu có lỗi
+    }
 </script>
 </body>
 </html>

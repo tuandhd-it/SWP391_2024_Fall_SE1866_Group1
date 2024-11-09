@@ -29,7 +29,7 @@ public class MedicineImport {
     @ManyToOne
     @JoinColumn(name = "bran_id")
     Branch branch;
-
+    String medicineName;
     LocalDate date;
     double totalPrice;
 }
