@@ -32,6 +32,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .requestMatchers("/doctor/managePatient").hasAnyAuthority("Doctor","Manager","Admin","Nurse","Receptionist")
                         .requestMatchers("/doctor/recordDetails/*").hasAnyAuthority("Doctor","Manager","Admin","Nurse")
                         .requestMatchers("/doctor/listRecord/*").hasAnyAuthority("Doctor","Manager","Admin","Nurse")
                         .requestMatchers("/recep/patientList/").hasAnyAuthority("Admin", "Doctor", "Manager", "Nurse", "Receptionist")

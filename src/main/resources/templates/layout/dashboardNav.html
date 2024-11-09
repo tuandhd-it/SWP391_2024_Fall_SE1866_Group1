@@ -30,9 +30,9 @@
                     <i class="lni lni-protection"></i>
                     <span>Danh sách đăng ký</span>
                 </a>
-                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar" th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Doctor'', ''Receptionist'')')}">
+                <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar" th:if="${#authorization.expression('hasAnyAuthority(''Manager'', ''Receptionist'')')}">
                     <li class="sidebar-item">
-                        <a th:href="@{/manager/viewRegistration}" class="sidebar-link">
+                        <a th:href="@{/manager/viewRegistration}" class="sidebar-link" th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
                             <i class="lni lni-popup"></i>
                             <span>Đăng ký khám bệnh</span>
                         </a>
