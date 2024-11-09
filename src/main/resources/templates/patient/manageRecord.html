@@ -34,9 +34,11 @@
 
                 <form th:if="${#authorization.expression('hasAnyAuthority(''Doctor'',''Nurse'')')}"
 
-                      th:action="@{'/doctor/newRecord/' + ${patientId} + '?patientWaitingId=' + ${patientWaitingRoom.getId()}}"
+                      th:action="@{'/doctor/newRecord/' + ${patientId}}"
                       method="get" class="d-inline ms-auto">
-                    <h1 th:text="${patientWaitingRoom.getId()}"></h1>
+
+                    <input type="hidden" name="patientWaitingId" th:value="${patientWaitingRoom==null?'':patientWaitingRoom.getId()}">
+
                     <button type="submit" class="btn" style="color: #6c757d; font-size: 20px">
                         Thêm Đơn <i class="fa-solid fa-notes-medical"></i>
                     </button>

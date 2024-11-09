@@ -154,10 +154,10 @@ public class DoctorController {
     }
 
 
-    @PostMapping("/createRecord")
+    @PostMapping("/createRecord/{patientWaitingId}")
     public String createRecord(@ModelAttribute @Valid RecordCreationRequest newRecord,
                                BindingResult bindingResult,
-                               @RequestParam(required = false) Integer patientWaitingId,
+                               @PathVariable("patientWaitingId") Integer patientWaitingId,
                                Model model,
                                RedirectAttributes redirectAttributes) {
         int patientId = newRecord.getPatientId();
@@ -183,6 +183,7 @@ public class DoctorController {
         PatientWaitingRoom patient = patientWaitingRoomRepository.findById(patientWaitingId).get();
         patient.setStatus("Done");
         patientWaitingRoomRepository.save(patient);
+
         return "redirect:/doctor/listRecord/"+patientId;
     }
 

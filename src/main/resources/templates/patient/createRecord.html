@@ -162,7 +162,7 @@
 
     </header>
     <div class="form-wrap">
-        <form th:action="@{'/doctor/createRecord'+ ${patientWaitingId}}" id="survey-form" th:method="post" th:object="${newRecord}">
+        <form th:action="@{'/doctor/createRecord/'+ ${patientWaitingId}}" id="survey-form" th:method="post" th:object="${newRecord}">
             <div class="row">
                 <h4 class="text-dark pb-4" style="font-family: Roboto"><b>Thông tin bệnh nhân</b></h4>
                 <input style="display: none;" th:field="${patient.patientId}">
