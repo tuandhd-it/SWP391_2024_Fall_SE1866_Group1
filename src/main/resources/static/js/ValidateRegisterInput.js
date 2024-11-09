@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const rePasswordInput = document.getElementById('re_password');
     const firstNameInput = document.getElementById('firstName');
     const lastNameInput = document.getElementById('lastName');
+    const dobInput = document.getElementById('dob'); // New Date of Birth input
 
     // Chọn tất cả các input liên quan, bao gồm cả password
     const allInputs = document.querySelectorAll('input, textarea');
@@ -22,6 +23,13 @@ document.addEventListener('DOMContentLoaded', function () {
     function validateName(name) {
         const namePattern = /^[^\d]*$/; // Không chứa số
         return namePattern.test(name);
+    }
+
+    // Hàm kiểm tra ngày sinh không được lớn hơn ngày hôm nay
+    function validateDob(dob) {
+        const selectedDate = new Date(dob);
+        const today = new Date();
+        return selectedDate <= today;
     }
 
     document.getElementById('validationForm').addEventListener('submit', function (event) {
@@ -77,6 +85,14 @@ document.addEventListener('DOMContentLoaded', function () {
             rePasswordInput.setCustomValidity('');
         }
 
+        // Kiểm tra ngày sinh không lớn hơn ngày hôm nay
+        if (!validateDob(dobInput.value)) {
+            dobInput.setCustomValidity('Ngày sinh không được lớn hơn ngày hôm nay.');
+            isValid = false;
+        } else {
+            dobInput.setCustomValidity('');
+        }
+
         // Nếu tất cả đều hợp lệ, thực hiện hành động
         if (isValid) {
             this.submit(); // Gửi form nếu hợp lệ
@@ -87,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
             phoneInput.reportValidity();
             passwordInput.reportValidity();
             rePasswordInput.reportValidity();
+            dobInput.reportValidity(); // Report DOB validity
         }
     });
 
@@ -124,6 +141,15 @@ document.addEventListener('DOMContentLoaded', function () {
             rePasswordInput.setCustomValidity('Mật khẩu và xác nhận mật khẩu không khớp.');
         } else {
             rePasswordInput.setCustomValidity('');
+        }
+    });
+
+    // Kiểm tra ngày sinh khi người dùng nhập lại
+    dobInput.addEventListener('input', function () {
+        if (validateDob(dobInput.value)) {
+            dobInput.setCustomValidity('');
+        } else {
+            dobInput.setCustomValidity('Ngày sinh không được lớn hơn ngày hôm nay.');
         }
     });
 });

@@ -240,11 +240,6 @@ public class AdminController {
     }
 
 
-    /**
-     * Edit the specified branch and navigate to
-     * @param branchRequest
-     * @return a url <code>java.lang.String</code>
-     */
     @PostMapping("/editBranch")
     public String editBranch(@ModelAttribute ClinicBranchUpdateRequest branchRequest) {
         adminService.updateBranch(branchRequest.getId(), branchRequest); // Update branch
@@ -271,13 +266,10 @@ public class AdminController {
             @RequestParam(defaultValue = "5") int size,
             Model model) {
 
-        // Retrieve paginated list of patients
         Page<Patient> list = adminService.getPatientPaging(page, size);
 
-        // Add attributes to the model for use in the view
         model.addAttribute("patients", list);
         model.addAttribute("editPatient", new PatientUpdateRequest());
-        model.addAttribute("newPatient", new PatientCreationRequest());
         model.addAttribute("totalPatient", list.getTotalElements());
         model.addAttribute("start", page * size + 1);
         model.addAttribute("end", Math.min((page + 1) * size, (int) list.getTotalElements()));
@@ -285,74 +277,6 @@ public class AdminController {
         return "/patient/managePatient";
     }
 
-    @PostMapping("/patientCreate")
-    public String createPatient(@ModelAttribute @Valid @RequestBody PatientCreationRequest patientRequest, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        if(bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-
-            bindingResult.getFieldErrors().forEach(
-                    error -> errors.put(error.getField(), error.getDefaultMessage())
-            );
-
-            StringBuilder errorMsg = new StringBuilder();
-            errorMsg.append("Tạo mới bệnh nhân thất bại").append("<br>");
-
-            for (String key : errors.keySet()) {
-                errorMsg.append(key).append(": ").append(errors.get(key)).append("<br>");;
-            }
-            model.addAttribute("errors", errorMsg);
-            int page=0,size=5;
-            Page<Patient> list = adminService.getPatientPaging(page,size);
-            model.addAttribute("patients", list);
-            model.addAttribute("editPatient",new PatientUpdateRequest());
-            model.addAttribute("newPatient", patientRequest);
-            model.addAttribute("totalPatient", list.getTotalElements());
-            model.addAttribute("start", 1);
-            model.addAttribute("end", Math.min((page + 1) * size, (int)list.getTotalElements()));
-            return "patient/managePatient";
-        }else{
-            Patient patient = adminService.createPatient(patientRequest);
-            model.addAttribute("errors", "Thêm mới Bệnh Nhân Thành Công!");
-            PatientWaitingRoomRequest patientWaitingRoom = new PatientWaitingRoomRequest();
-            patientWaitingRoom.setPatient(patient);
-            model.addAttribute("patientWaitingRoom", patientWaitingRoom);
-            return "/branch/addPatientWaitingRoom";
-        }
-    }
-
-    @PostMapping("/addPatientWaitingRoom")
-    public String addPatientToWaitingRoom(@ModelAttribute @Valid @RequestBody PatientWaitingRoomRequest patientWaitingRoom,
-                                          @RequestParam(name = "book", defaultValue = "false") String book,
-                                          @RequestParam(name = "urgent", defaultValue = "false") String urgent,
-                                          @RequestParam(name = "patientId") String patientId,
-                                          @AuthenticationPrincipal UserDetails userDetails) {
-        // Lưu thông tin bệnh nhân vào phòng chờ
-        boolean booked = false;
-        boolean urgented = false;
-        int patientid;
-        try {
-            if (book.equals("true")) {
-                booked = true;
-            }
-            if (urgent.equals("true")) {
-                urgented = true;
-            }
-            patientid = Integer.parseInt(patientId);
-            Patient patient = adminService.findPatientById(patientid);
-            patientWaitingRoom.setPatient(patient);
-            patientWaitingRoom.setBooked(booked);
-            patientWaitingRoom.setUrgency(urgented);
-            String username = userDetails.getUsername();
-            Employee receptionist = adminService.findByUsername(username);
-            patientWaitingRoom.setWaitingRoom(adminService.findWaitingRoomByBranchId(receptionist.getBranch().getBran_id()));
-            adminService.addPatientWaitingRoom(patientWaitingRoom);
-        } catch (Exception e){
-
-        }
-
-        // Điều hướng lại trang hiển thị danh sách bệnh nhân trong phòng chờ hoặc trang khác
-        return "redirect:/admin/listWaitingRoom"; // Cập nhật URL theo cấu trúc của bạn
-    }
 
     @PostMapping("/editPatient")
     public String editPatient(
@@ -396,85 +320,7 @@ public class AdminController {
         return "redirect:/admin/managePatient";
     }
 
-    @GetMapping("/listRecord/{id}")
-    public String getRecordOfPatient(@PathVariable Integer id,
-                                     @RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "5") int size,
-                                     Model model) {
-        Page<Record> records = recordService.getAllRecordsByPatientID(id,page,size);
-        model.addAttribute("records",records);
-        model.addAttribute("totalRecord", records.getTotalElements());
-        model.addAttribute("patientId",id);
-        model.addAttribute("start", page * size + 1);
-        model.addAttribute("end", Math.min((page + 1) * size, (int)records.getTotalElements()));
-        return "/patient/manageRecord";
-    }
 
-    @GetMapping("/newRecord/{patientId}")
-    public String createNewRecord(@PathVariable("patientId") Integer patientId, @AuthenticationPrincipal UserDetails userDetails,Model model) {
-        String username = userDetails.getUsername();
-        Employee employee = customUserDetailService.findByUsername(username);
-        model.addAttribute("doctor", employee);
-        Patient patient = adminService.getPatient(patientId);
-        model.addAttribute("patient", patient);
-        List<Medicine> medicines = medicineRepository.findAll();
-        model.addAttribute("medicines", medicines);
-        List<Service> servicesList = serviceRepository.findAll();
-        List<PassDataServiceDTO>  services = new ArrayList<>();
-        for (Service s:servicesList){
-            services.add(new PassDataServiceDTO(s.getServiceId(),s.getServiceName(),s.getPrice()));
-        }
-        model.addAttribute("services", services);
-        if(model.getAttribute("newRecord")==null){
-            RecordCreationRequest newRecord = new RecordCreationRequest();
-            for (int i=0;i<=10;i++){
-                newRecord.addService(new ServiceRecordDTO());
-                newRecord.addMedicine(new MedicineRecordDTO());
-            }
-            newRecord.setBranch_id(employee.getBranch().getBran_id());
-            newRecord.setDoctorId(employee.getEmp_id());
-            model.addAttribute("newRecord", newRecord);
-        }
-        return "patient/createRecord";
-    }
-
-    @PostMapping("/createRecord")
-    public String createRecord(@ModelAttribute @Valid RecordCreationRequest newRecord,
-                               BindingResult bindingResult,
-                               Model model,
-                               RedirectAttributes redirectAttributes) {
-        int patientId = newRecord.getPatientId();
-        if(bindingResult.hasErrors()){
-            Map<String, String> errors = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(
-                    error -> errors.put(error.getField(), error.getDefaultMessage())
-            );
-
-            StringBuilder errorMsg = new StringBuilder();
-            errorMsg.append("<b>Tạo hồ sơ thất bại</b>").append("<br><br>");
-
-            for (String key : errors.keySet()) {
-                errorMsg.append("<b>"+key+"</b>").append(": ").append(errors.get(key)).append("<br>");
-            }
-            redirectAttributes.addFlashAttribute("newRecord",newRecord);
-            redirectAttributes.addFlashAttribute("errors", errorMsg.toString());
-            return "redirect:/admin/newRecord/"+patientId;
-        }
-        recordService.addRecord(newRecord);
-        redirectAttributes.addFlashAttribute("errors", "Tạo hồ sơ bệnh nhân thành công!<b>");
-        return "redirect:/admin/listRecord/"+patientId;
-    }
-
-    @GetMapping("recordDetails/{id}")
-    public String getRecordDetails(@PathVariable("id") Long recordId, Model model ){
-        Record record = recordService.getRecordById(recordId);
-        List<project.dental_clinic_management.entity.RecordService> recordServices = recordServiceRepository.findRecordServicesByRecord_RecordId(recordId);
-        List<RecordMedicine> recordMedicines = recordMedicineRepository.findRecordMedicinesByRecordId_RecordId(recordId);
-        model.addAttribute("record",record);
-        model.addAttribute("services",recordServices);
-        model.addAttribute("medicines",recordMedicines);
-        return "patient/recordDetails";
-    }
 
 
 

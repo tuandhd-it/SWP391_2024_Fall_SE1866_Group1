@@ -162,12 +162,11 @@
 
     </header>
     <div class="form-wrap">
-        <form th:action="@{/admin/createRecord}" id="survey-form" th:method="post" th:object="${newRecord}">
+        <form th:action="@{'/doctor/createRecord'+ ${patientWaitingId}}" id="survey-form" th:method="post" th:object="${newRecord}">
             <div class="row">
                 <h4 class="text-dark pb-4" style="font-family: Roboto"><b>Thông tin bệnh nhân</b></h4>
                 <input style="display: none;" th:field="${patient.patientId}">
                 <div class="col-md-6">
-
                     <div class="form-group">
                         <label for="patientName">Tên bệnh nhân:</label>
                         <input id="patientName"  class="form-control" th:value="${patient.getFirstName() +' '+ patient.getLastName()}">

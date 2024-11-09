@@ -8,9 +8,12 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('validationForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Ngăn chặn gửi form
 
-        // Kiểm tra mật khẩu không để trống
+        // Kiểm tra mật khẩu không để trống và độ dài từ 8 đến 45 ký tự
         if (passwordInput.value.trim() === '') {
             passwordInput.setCustomValidity('Mật khẩu không được để trống.');
+            isValid = false;
+        } else if (passwordInput.value.length < 8 || passwordInput.value.length > 45) {
+            passwordInput.setCustomValidity('Mật khẩu phải từ 8 đến 45 ký tự.');
             isValid = false;
         } else {
             passwordInput.setCustomValidity(''); // Xóa thông báo lỗi
@@ -43,7 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     passwordInput.addEventListener('input', function() {
-        passwordInput.setCustomValidity(''); // Xóa thông báo lỗi
+        // Kiểm tra độ dài mật khẩu khi người dùng nhập lại
+        if (passwordInput.value.length >= 8 && passwordInput.value.length <= 45) {
+            passwordInput.setCustomValidity(''); // Xóa thông báo lỗi
+        } else {
+            passwordInput.setCustomValidity('Mật khẩu phải từ 8 đến 45 ký tự.');
+        }
     });
 
     rePasswordInput.addEventListener('input', function() {

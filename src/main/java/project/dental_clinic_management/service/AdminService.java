@@ -487,6 +487,7 @@ public class AdminService {
         newPatient.setAddress(request.getAddress());
         newPatient.setGender(request.getGender());
         newPatient.setDob(request.getDob());
+        newPatient.setMedicalHistory(request.getMedicalHistory());
         return patientRepository.save(newPatient);
     }
 

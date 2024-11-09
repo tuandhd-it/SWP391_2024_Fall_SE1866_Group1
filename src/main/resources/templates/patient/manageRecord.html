@@ -28,12 +28,18 @@
         <div class="container-fluid profile">
             <h2 class="mb-4 text-dark"><strong>Quản lý Đơn Thuốc</strong></h2>
             <div class="button-group d-flex">
-                <form th:action="@{/admin/managePatient}" method="get" class="d-inline">
+                <form th:action="@{/doctor/managePatient}" method="get" class="d-inline">
                     <button type="submit" class="btn" style="color: #00BCD4;font-size: 20px"> <i class="fa-solid fa-chevron-left"></i></button>
                 </form>
-                <form th:action="@{'/admin/newRecord/' + ${patientId}}" method="get" class="d-inline ms-auto">
-                    <button type="submit" class="btn" style="color: #6c757d;font-size: 20px">Thêm Đơn
-                        <i class="fa-solid fa-notes-medical"></i></button>
+
+                <form th:if="${#authorization.expression('hasAnyAuthority(''Doctor'',''Nurse'')')}"
+
+                      th:action="@{'/doctor/newRecord/' + ${patientId} + '?patientWaitingId=' + ${patientWaitingRoom.getId()}}"
+                      method="get" class="d-inline ms-auto">
+                    <h1 th:text="${patientWaitingRoom.getId()}"></h1>
+                    <button type="submit" class="btn" style="color: #6c757d; font-size: 20px">
+                        Thêm Đơn <i class="fa-solid fa-notes-medical"></i>
+                    </button>
                 </form>
             </div>
         <div class="table-responsive w-100">
@@ -59,7 +65,7 @@
                         <td th:text="${record.getRecordDate()}"></td>
                         <!-- Ngày Tạo đơn -->
                         <td>
-                            <a th:href="@{/admin/recordDetails/{id}(id=${record.getRecordId()})}" class="btn btn-sm btn-dark">Xem</a>
+                            <a th:href="@{/doctor/recordDetails/{id}(id=${record.getRecordId()})}" class="btn btn-sm btn-dark">Xem</a>
                         </td>
                     </tr>
                 </tbody>
