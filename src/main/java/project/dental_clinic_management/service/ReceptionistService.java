@@ -66,7 +66,7 @@ public class ReceptionistService {
     }
 
     public Patient findPatientById(int id){
-        return patientRepository.findById(id);
+        return patientRepository.getReferenceById(id);
     }
 
     //Create a new receptionist

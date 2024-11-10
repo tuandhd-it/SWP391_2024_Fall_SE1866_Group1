@@ -307,6 +307,7 @@ function loadEmployeeList(selectedEmployee) {
             let hasSelected = false;
 
             employees.forEach(employee => {
+                console.log(employee);
                 const isSelected = employee.employeeId.toString() === selectedEmployee ? 'selected' : '';
                 if (isSelected !== '') hasSelected = true;
                 employeeSelect.append(`<option value="${employee.employeeId}" ${isSelected}>${employee.employeeFullName}</option>`);

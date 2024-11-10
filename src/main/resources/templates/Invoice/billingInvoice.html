@@ -37,7 +37,7 @@
                 <tbody>
                 <tr th:each="service : ${recordServices}">
                     <td th:text="${service.getService().getServiceName()}"></td>
-                    <td th:text="${service.getService().getPrice()}"></td>
+                    <td th:text="${#numbers.formatDecimal(service.getService().getPrice(), 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -55,9 +55,10 @@
                 <tbody>
                 <tr th:each="medicine : ${recordMedicines}">
                     <td th:text="${medicine.getRegNumber().getMedicineName()}"></td>
-                    <td th:text="${medicine.getRegNumber().getPrice()}"></td>
+                    <td th:text="${#numbers.formatDecimal(medicine.getRegNumber().getPrice(), 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
                     <td th:text="${medicine.getQuantity()}"></td>
-                    <td th:text="${medicine.getRegNumber().getPrice()*medicine.getQuantity()}"></td>
+                    <td th:text="${#numbers.formatDecimal(medicine.getRegNumber().getPrice()*medicine.getQuantity(), 0, 'COMMA', 0, 'POINT') + ' VND'}"></td>
+
                 </tr>
                 </tbody>
             </table>
@@ -71,7 +72,7 @@
                 <input type="hidden" name="recordId" th:value="${record.getFirst().getRecordId()}"/>
 
                 <div class="d-flex justify-content-between align-items-center">
-                    <h4 class="text-right">Tổng Tiền: <strong th:text="${totalAmount}"></strong></h4>
+                    <h4 class="text-right">Tổng Tiền: <strong th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')}"></strong></h4>
                     <div class="ml-3">
                         <h4>Phương Thức Thanh Toán</h4>
                         <div class="form-check">
