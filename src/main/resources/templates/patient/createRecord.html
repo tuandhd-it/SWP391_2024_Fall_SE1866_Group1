@@ -200,7 +200,7 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <label for="medicalHistory">Tiền sử bệnh</label>
-                        <textarea style="height: 100px" class="form-control" id="medicalHistory" th:value="${patient.medicalHistory}"
+                        <textarea style="height: 100px" class="form-control" id="medicalHistory" th:text="${patient.medicalHistory}"
                                   readonly type="text" placeholder="Bệnh nhân không có tiền sử bệnh"></textarea>
                     </div>
                 </div>
@@ -267,7 +267,7 @@
 
                     <td style="border-bottom: none" class="col-md-2">
                         <!-- Input to get quantity -->
-                        <input type="number" id="quantity-${medicineCount}" th:field="*{medicines[__${0}__].quantity}" class="form-control" required>
+                        <input type="number" min="1" id="quantity-${medicineCount}" th:field="*{medicines[__${0}__].quantity}" class="form-control" required>
                     </td>
 
                     <td style="border-bottom: none" class="col-md-6">
@@ -297,6 +297,7 @@
                     </tr>
                     </thead>
                     <tbody id="service-rows">
+                        <td>
                         <select id="service-select-0" th:field="*{services[__${0}__].id}" class="form-control" required>
                             <option th:each="i : ${services}"
                                     th:value="${i.getServiceId()}"
@@ -389,12 +390,16 @@
 
             <td style="border-bottom: none" class="col-md-2">
                 <!-- Input to get quantity -->
-                <input type="number" id="quantity-${medicineCount}" name="medicines[${medicineCount}].quantity" class="form-control" required>
+                <input type="number" min="1" id="quantity-${medicineCount}" name="medicines[${medicineCount}].quantity" class="form-control" required>
             </td>
 
             <td style="border-bottom: none" class="col-md-6">
                 <!-- Input to get note -->
                 <input type="text" id="note-${medicineCount}" name="medicines[${medicineCount}].note" class="form-control" required>
+            </td>
+
+            <td style="border-bottom: none;">
+                <button class="btn btn-outline-secondary delete-btn" type="button" style="font-size:16px">Xóa</button>
             </td>
         `;
 
@@ -447,7 +452,7 @@
 </script>
 <script th:inline="javascript">
     /*<![CDATA[*/
-    let serviceCount = 0; // Counter to track the number of service inputs
+    let serviceCount = 1; // Counter to track the number of service inputs
 
     // Convert the Java list to a JavaScript object
     const services = /*[[${services}]]*/ []; // Assuming services data is provided from Java backend

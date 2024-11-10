@@ -9,11 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import project.dental_clinic_management.dto.request.*;
 import project.dental_clinic_management.entity.*;
 import project.dental_clinic_management.entity.Record;
+import project.dental_clinic_management.repository.PatientRepository;
 import project.dental_clinic_management.service.AdminService;
 import project.dental_clinic_management.service.ReceptionistService;
 
@@ -32,32 +34,39 @@ public class ReceptionistController {
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private PatientRepository patientRepository;
 
 
     @PostMapping("/patientCreate")
     public String createPatient(@ModelAttribute @Valid @RequestBody PatientCreationRequest patientRequest, BindingResult bindingResult, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        if(bindingResult.hasErrors()) {
+        if (patientRepository.findByPhone(patientRequest.getPhone()) != null) {
+            bindingResult.addError(new ObjectError("phone", "Số điện thoại đã tồn tại!"));
+        }
+
+        if (bindingResult.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
 
             bindingResult.getFieldErrors().forEach(
                     error -> errors.put(error.getField(), error.getDefaultMessage())
             );
 
-            StringBuilder errorMsg = new StringBuilder();
-            errorMsg.append("Tạo mới bệnh nhân thất bại").append("<br>");
+            StringBuilder errorMsg = new StringBuilder("Tạo mới bệnh nhân thất bại").append("<br>");
 
-            for (String key : errors.keySet()) {
-                errorMsg.append(key).append(": ").append(errors.get(key)).append("<br>");;
-            }
-            model.addAttribute("errors", errorMsg);
-            int page=0,size=5;
-            Page<Patient> list = adminService.getPatientPaging(page,size);
+            errors.forEach((key, value) -> errorMsg.append(key).append(": ").append(value).append("<br>"));
+
+            model.addAttribute("errors", errorMsg.toString());
+
+            int page = 0, size = 5;
+            Page<Patient> list = adminService.getPatientPaging(page, size);
+
             model.addAttribute("patients", list);
-            model.addAttribute("editPatient",new PatientUpdateRequest());
+            model.addAttribute("editPatient", new PatientUpdateRequest());
             model.addAttribute("newPatient", patientRequest);
             model.addAttribute("totalPatient", list.getTotalElements());
             model.addAttribute("start", 1);
-            model.addAttribute("end", Math.min((page + 1) * size, (int)list.getTotalElements()));
+            model.addAttribute("end", Math.min((page + 1) * size, (int) list.getTotalElements()));
+
             return "patient/managePatient";
         }else{
             Patient patient = adminService.createPatient(patientRequest);
@@ -295,28 +304,27 @@ public class ReceptionistController {
 
     @GetMapping("/patientPayment")
     public String processPatientPayment(@RequestParam("id") int patientId, Model model) {
-//        Patient patient = receptionistService.findPatientById(patientId);
-//        Record record = receptionistService.findRecordByPatientId(patientId);
-//        List<RecordService> recordServices = receptionistService.findRecordServicesByRecordId(record.getRecordId());
-//        List<RecordMedicine> recordMedicines = receptionistService.findRecordMedicinesByRecordId(record.getRecordId());
+        Patient patient = receptionistService.findPatientById(patientId);
+        List<Record> record = receptionistService.findRecordByPatientId(patientId);
+        List<RecordService> recordServices = receptionistService.findRecordServicesByRecordId(record.getFirst().getRecordId());
+        List<RecordMedicine> recordMedicines = receptionistService.findRecordMedicinesByRecordId(record.getFirst().getRecordId());
+        LocalDate date = LocalDate.now();
 
-//        LocalDate date = LocalDate.now();
-//
-//        UUID uuid = UUID.randomUUID();
-//
-//        double total = receptionistService.totalAmout(recordServices, recordMedicines);
-//
-//        model.addAttribute("patient", patient);
-//        model.addAttribute("recordServices", recordServices);
-//        model.addAttribute("recordMedicines", recordMedicines);
-//        model.addAttribute("record", record);
-//        model.addAttribute("invoice", new Invoice());
-//        model.addAttribute("date", date);
-//        model.addAttribute("uuid", uuid);
-//        model.addAttribute("totalAmount", total);
-//
-//        model.addAttribute("successMessage", model.asMap().get("successMessage"));
-//        model.addAttribute("errorMessage", model.asMap().get("errorMessage"));
+        UUID uuid = UUID.randomUUID();
+
+        double total = receptionistService.totalAmout(recordServices, recordMedicines);
+
+        model.addAttribute("patient", patient);
+        model.addAttribute("recordServices", recordServices);
+        model.addAttribute("recordMedicines", recordMedicines);
+        model.addAttribute("record", record);
+        model.addAttribute("invoice", new Invoice());
+        model.addAttribute("date", date);
+        model.addAttribute("uuid", uuid);
+        model.addAttribute("totalAmount", total);
+
+        model.addAttribute("successMessage", model.asMap().get("successMessage"));
+        model.addAttribute("errorMessage", model.asMap().get("errorMessage"));
         return "/Invoice/billingInvoice";
     }
 
