@@ -66,7 +66,7 @@ public class ReceptionistService {
     }
 
     public Patient findPatientById(int id){
-        return findPatientById(id);
+        return patientRepository.findById(id);
     }
 
     //Create a new receptionist
@@ -461,7 +461,7 @@ public class ReceptionistService {
         return new PageImpl<>(filteredAndSortedRequests.subList(start, end), pageable, filteredAndSortedRequests.size());
     }
 
-    public Record findRecordByPatientId(int patientId) {
+    public List<Record> findRecordByPatientId(int patientId) {
         return recordRepository.findByPatient_PatientId(patientId);
     }
 
