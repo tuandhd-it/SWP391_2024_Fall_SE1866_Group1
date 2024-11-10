@@ -91,15 +91,11 @@
                 </a>
             </li>
             <li class="sidebar-item">
-                <a th:href="@{/admin/listWaitingRoom}" class="sidebar-link" th:if="${#authorization.expression('hasAuthority(''Admin'')')}">
+                <a th:href="@{/admin/listWaitingRoom}" class="sidebar-link" th:if="${#authorization.expression('hasAnyAuthority(''Admin'',''Manager'')')}">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý phòng chờ</span>
                 </a>
                 <a th:href="@{/doctor/patientList}" class="sidebar-link" th:if="${#authorization.expression('hasAnyAuthority(''Doctor'',''Nurse'')')}">
-                    <i class="lni lni-popup"></i>
-                    <span>Quản lý phòng chờ</span>
-                </a>
-                <a th:href="@{/admin/patientList}" class="sidebar-link" th:if="${#authorization.expression('hasAuthority(''Manager'')')}">
                     <i class="lni lni-popup"></i>
                     <span>Quản lý phòng chờ</span>
                 </a>
