@@ -420,7 +420,7 @@ public class ReceptionistService {
 
         // Sort the waiting requests: First by urgency (true first), then by booking status (true first)
         List<PatientWaitingRoom> filteredAndSortedRequests = waitingRequests.stream()
-                .filter(request -> "Waiting".equals(request.getStatus())) // Filter only "Waiting" patients
+                .filter(request -> "Waiting".equals(request.getStatus()) || "Done".equals(request.getStatus())) // Filter "Waiting" and "Done" patients
                 .sorted(Comparator.comparing(PatientWaitingRoom::isUrgency)
                         .thenComparing(PatientWaitingRoom::isBooked).reversed())
                 .collect(Collectors.toList());
