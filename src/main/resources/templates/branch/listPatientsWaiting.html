@@ -40,7 +40,7 @@
                 <tbody>
                 <!-- Hiển thị danh sách bệnh nhân -->
                 <tr th:each="patient : ${listPatient}">
-                    <td th:text="${patient.getPatient().getLastName()} + ' ' + ${patient.getPatient().getFirstName()}"></td>
+                    <td th:text="${patient.getPatient().getFirstName()} + ' ' + ${patient.getPatient().getLastName()}"></td>
                     <!-- Tên bệnh nhân -->
                     <td th:text="${patient.getPatient().getDob()}"></td> <!-- Tuổi -->
                     <td th:text="${patient.getStatus()}"></td> <!-- Tình trạng -->

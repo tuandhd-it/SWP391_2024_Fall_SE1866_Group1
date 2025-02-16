@@ -152,6 +152,7 @@ public class ManagerController {
                         .employeeFullName(employee.getFirst_name() + " " + employee.getLast_name())
                         .build());
             }
+            System.out.println("check tên" + responseList.size());
             return responseList;
         }
     }

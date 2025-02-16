@@ -125,7 +125,7 @@ public class TrackingController {
                                       @AuthenticationPrincipal UserDetails userDetails,
                                       Model model) {
         Employee employee = employeeRepository.findByEmail(userDetails.getUsername());
-        if (!Objects.equals(employee.getRole().getRoleName(), "Admin")) {
+        if (!Objects.equals(employee.getRole().getRoleName(), "Admin")&&!Objects.equals(employee.getRole().getRoleName(), "Manager")) {
             model.addAttribute("message", "Bạn không có quyền truy cập vào trang này!");
             return "redirect:/tracking/attendance";
         }

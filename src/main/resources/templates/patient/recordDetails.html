@@ -253,7 +253,8 @@
           <td th:text="${stat.index + 1}"></td>
           <td th:text="${service.getService().getServiceName()}"></td>
           <td th:text="${record.getEmployee().first_name+' '+record.getEmployee().last_name}"></td>
-          <td th:text="${service.getService().getPrice()}"></td>
+          <td th:text="${#numbers.formatDecimal(service.getService().getPrice(), 0, 'COMMA', 0, 'POINT') + ' VND'}">
+          </td>
           <td th:text="${service.getNote()}"></td>
 <!--          <td style="width:14%;font-size: 18px">-->
 <!--          </td>-->

@@ -304,28 +304,27 @@ public class ReceptionistController {
 
     @GetMapping("/patientPayment")
     public String processPatientPayment(@RequestParam("id") int patientId, Model model) {
-//        Patient patient = receptionistService.findPatientById(patientId);
-//        Record record = receptionistService.findRecordByPatientId(patientId);
-//        List<RecordService> recordServices = receptionistService.findRecordServicesByRecordId(record.getRecordId());
-//        List<RecordMedicine> recordMedicines = receptionistService.findRecordMedicinesByRecordId(record.getRecordId());
+        Patient patient = receptionistService.findPatientById(patientId);
+        List<Record> record = receptionistService.findRecordByPatientId(patientId);
+        List<RecordService> recordServices = receptionistService.findRecordServicesByRecordId(record.getFirst().getRecordId());
+        List<RecordMedicine> recordMedicines = receptionistService.findRecordMedicinesByRecordId(record.getFirst().getRecordId());
+        LocalDate date = LocalDate.now();
 
-//        LocalDate date = LocalDate.now();
-//
-//        UUID uuid = UUID.randomUUID();
-//
-//        double total = receptionistService.totalAmout(recordServices, recordMedicines);
-//
-//        model.addAttribute("patient", patient);
-//        model.addAttribute("recordServices", recordServices);
-//        model.addAttribute("recordMedicines", recordMedicines);
-//        model.addAttribute("record", record);
-//        model.addAttribute("invoice", new Invoice());
-//        model.addAttribute("date", date);
-//        model.addAttribute("uuid", uuid);
-//        model.addAttribute("totalAmount", total);
-//
-//        model.addAttribute("successMessage", model.asMap().get("successMessage"));
-//        model.addAttribute("errorMessage", model.asMap().get("errorMessage"));
+        UUID uuid = UUID.randomUUID();
+
+        double total = receptionistService.totalAmout(recordServices, recordMedicines);
+
+        model.addAttribute("patient", patient);
+        model.addAttribute("recordServices", recordServices);
+        model.addAttribute("recordMedicines", recordMedicines);
+        model.addAttribute("record", record);
+        model.addAttribute("invoice", new Invoice());
+        model.addAttribute("date", date);
+        model.addAttribute("uuid", uuid);
+        model.addAttribute("totalAmount", total);
+
+        model.addAttribute("successMessage", model.asMap().get("successMessage"));
+        model.addAttribute("errorMessage", model.asMap().get("errorMessage"));
         return "/Invoice/billingInvoice";
     }
 

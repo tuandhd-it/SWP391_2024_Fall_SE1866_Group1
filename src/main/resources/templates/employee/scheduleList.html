@@ -137,12 +137,12 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>\
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         <form th:action="@{/manager/deleteSchedule}" method="post">
                             <input type="hidden" id="delete-schedule-btn" name="dateValue" value="">
                             <input type="hidden" id="delete-emp-btn" name="empId" value="">
                             <input type="hidden" id="delete-shift-btn" name="shift" value="">
-                            <button  type="submit" class="btn btn-primary">Xoá lịch</button>
+                            <button  type="submit" class="btn btn-primary" th:if="${currentUserRole.equals('Manager')}">Xoá lịch</button>
                         </form>
                     </div>
                 </div>
@@ -180,6 +180,7 @@
                                     <div class="col-md-6">
                                         <label for="employee" class="form-label">Nhân viên*</label>
                                         <select class="form-select" id="employee" name="employee" required>
+
                                         </select>
                                     </div>
                                 </div>

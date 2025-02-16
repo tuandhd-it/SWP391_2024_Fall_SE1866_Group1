@@ -40,13 +40,13 @@
                     <th scope="col">Ghi chú</th>
                     <th scope="col">Khẩn cấp</th>
                     <th scope="col">Đặt trước</th>
-                    <th scope="col"></th>
+                    <th scope="col">Thanh toán</th>
                 </tr>
                 </thead>
                 <tbody>
                 <!-- Hiển thị danh sách bệnh nhân -->
                 <tr th:each="patient : ${listPatient}">
-                    <td th:text="${patient.getPatient().getLastName()} + ' ' + ${patient.getPatient().getFirstName()}"></td>
+                    <td th:text="${patient.getPatient().getFirstName()} + ' ' + ${patient.getPatient().getLastName()}"></td>
                     <td th:text="${patient.getPatient().getDob()}"></td>
                     <td th:text="${patient.getStatus()}"></td>
                     <td th:text="${patient.getWaitingDate()}"></td>
