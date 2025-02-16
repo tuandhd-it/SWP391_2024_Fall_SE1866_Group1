@@ -11,7 +11,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h4>Thông Tin Khách Hàng</h4>
-                    <p><strong>Tên:</strong> <span th:text="${patient.getLastName()} ${patient.getFirstName()}"></span></p>
+                    <p><strong>Tên:</strong> <span th:text="${patient.getLastName()} +' '+ ${patient.getFirstName()}"></span></p>
                     <p><strong>Giới Tính:</strong> <span th:text="${patient.getGender()}"></span></p>
                     <p><strong>Ngày Sinh:</strong> <span th:text="${patient.getDob()}"></span></p>
                     <p><strong>Địa Chỉ:</strong> <span th:text="${patient.getAddress()}"></span></p>

@@ -10,6 +10,7 @@ import project.dental_clinic_management.entity.Medicine;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -19,5 +20,8 @@ public interface MedicineRepository extends JpaRepository<Medicine, Integer> {
 
     @Query("SELECT m FROM Medicine m WHERE LOWER(m.medicineName) LIKE LOWER(CONCAT('%', :name, '%'))")
     Page<Medicine> findAllMedicine(Pageable pageable);
+
+    @Query("SELECT m FROM Medicine m WHERE m.regNumber= ?1")
+    Optional<Medicine> findById(int medicineId);
 
 }

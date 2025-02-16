@@ -203,7 +203,7 @@
     editButtons.forEach(button => {
         button.addEventListener('click', function() {
             // Lấy thông tin thuốc từ thuộc tính data-
-            const regNumber = this.getAttribute('data-medicine-reg');
+            const regNumber = this.getAttribute('data-medicine-id');
             const name = this.getAttribute('data-medicine-name');
             const unit = this.getAttribute('data-medicine-unit');
             const quantity = this.getAttribute('data-medicine-quantity');
